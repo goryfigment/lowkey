@@ -1,0 +1,93 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Treasure Trails</title>
+
+    <script>
+        var globals = {};
+        globals.base_url = '{{base_url}}';
+    </script>
+
+    <!-- Libraries -->
+    <script src="{% static 'js/libs/jquery.js' %}"></script>
+    <script src="{% static 'js/libs/handlebars.js' %}"></script>
+    <!-- Libraries -->
+
+    <!-- CSS -->
+    <link href="{% static 'css/main.css' %}" type="text/css" rel="stylesheet">
+    <link href="{% static 'css/treasure_trails.css' %}" type="text/css" rel="stylesheet">
+    <!-- CSS -->
+
+    <!-- JS -->
+    <script src="{% static 'js/helpers.js' %}"></script>
+    <script src="{% static 'js/treasure_trails.js' %}"></script>
+    <!-- JS -->
+
+    {% include "static/partial/treasure_trails_partial.html" %}
+
+</head>
+<body>
+    <nav id="navigation_bar">
+        <div id="logo_container">
+            <span id="rs_logo">RS</span><span id="effiency_log">Efficiency</span>
+        </div>
+        <div id="nav_links_container">
+            <a>Home</a>
+            <a class="active">Treasure Trails</a>
+        </div>
+    </nav>
+
+    <div id="treasure_trail_wrapper">
+        <div id="clue_search_popup">
+
+        </div>
+
+        <input id="clue_search" type="search" placeholder="Search for a clue.." />
+
+        <div id="clue_result_container">
+            <div id="coordinate_clue">
+                <div id="clue_spot_wrapper">
+                    <div class="clue_title">Clue Spot</div>
+                    <div class="clue_image_container">
+                        <img id="clue_map" src="static/assets/treasure_trail/clue_spot/0000N0713W.png" />
+                    </div>
+                </div>
+
+                <div id="clue_info_wrapper">
+                    <div class="clue_panel_wrapper">
+                        <div id="clue_map_wrapper">
+                            <div class="clue_title">Map</div>
+                            <div class="clue_image_container">
+                                <img id="clue_map" src="static/assets/treasure_trail/clue_map/0000N0713W-map.png" />
+                            </div>
+                        </div>
+
+                        <div id="clue_info_container">
+                            <div class="clue_title">Clue Info</div>
+                            <div id="clue_details_container">
+                                <div id="clue_label_wrapper">
+                                    <div id="clue_difficulty_label">Difficulty</div>
+                                    <div id="clue_requirements_label">Requirements</div>
+                                    <div id="clue_challenge_label">Fight</div>
+                                    <div id="clue_label">Coordinates</div>
+                                </div>
+
+                                <div id="clue_details_wrapper">
+                                    <div id="clue_difficulty">Hard</div>
+                                    <div id="clue_requirements">Regicide</div>
+                                    <div id="clue_challenge">Saradomin Wizard</div>
+                                    <div id="clue">00 degrees 00 minutes north, 07 degrees 13 minutes west</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
