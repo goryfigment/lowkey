@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+import sys
 from settings_secret import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -23,15 +24,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECRET_KEY = SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = (len(sys.argv) > 1 and sys.argv[1] == 'runserver')
 
 ALLOWED_HOSTS = ['*']
-
-HTTPS = 'http'
-HOST_NAME = 'localhost'
-HOST_PORT = '8001'
-BASE_URL = HTTPS + '://' + HOST_NAME + ':' + HOST_PORT
-
+if DEBUG:
+    HTTPS = 'http'
+    HOST_NAME = 'localhost'
+    HOST_PORT = '8001'
+    BASE_URL = HTTPS + '://' + HOST_NAME + ':' + HOST_PORT
+else:
+    BASE_URL = 'http://goryfigment.pythonanywhere.com'
 # Application definition
 
 INSTALLED_APPS = [
