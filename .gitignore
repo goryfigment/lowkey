@@ -96,3 +96,9 @@ ENV/
 # Pycharm settings
 .idea
 .idea/
+
+# Files I don't want git to see
+database.py
+settings_secret.py
+treasure_trails_format.json
+

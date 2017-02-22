@@ -1,11 +1,7 @@
 from django.shortcuts import render
-
-from django.http import HttpResponse
-from rsefficiency.models import *
-from django.core import serializers
 import json
-from rsefficiency.modules.base import *
-from django.db.models import Q
+from django.http import HttpResponse
+from rsefficiency.modules.base import get_base_url, render_json
 
 
 def main(request):
@@ -31,18 +27,18 @@ def clue_search(request):
 
     search_value = request.GET['search_value']
 
-    clue_list = TreasureTrails.objects.filter(Q(clue__istartswith=search_value) | Q(keywords__istartswith=search_value))
+    clue_data = json.loads(open('static_data/treasure_trails.json').read())
+    data_list = []
 
-    return render_json({'success': True, 'clue_list': models_to_dict(clue_list)})
+    for clue in clue_data:
+        riddle = clue['clue']
 
-# def ge_search(request):
-#     if 'rs_item_name' not in request.GET:
-#         data = {'success': False, 'error_id': 1}
-#         return HttpResponse(json.dumps(data), 'application/json')
-#
-#     rs_item_name = request.GET['rs_item_name']
-#
-#     rs_item_json = ge_search_response(rs_item_name)
+        if clue['clue_types'] == 'coordinate' and riddle.startswith('0') and not search_value.startswith('0'):
+            if riddle[1:].startswith(search_value):
+                data_list.append(clue)
+                continue
 
+        if riddle.startswith(search_value):
+            data_list.append(clue)
 
-#    return HttpResponse(json.dumps(rs_item_json), 'application/json')
+    return render_json({'success': True, 'clue_list': data_list})

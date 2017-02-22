@@ -3,7 +3,6 @@ from django.contrib import admin
 from django.views.decorators.csrf import csrf_exempt
 from rsefficiency.controllers import site
 
-
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', site.main, name='site'),
