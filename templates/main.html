@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +9,28 @@
         var globals = {};
         globals.base_url = '{{base_url}}';
     </script>
+
+    <link href="{% static 'css/general.css' %}" type="text/css" rel="stylesheet">
+    <link href="{% static 'css/main.css' %}" type="text/css" rel="stylesheet">
+
+    <script src="{% static 'js/libs/jquery.js' %}"></script>
+    <script src="{% static 'js/general.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
 </head>
+<body>
+
+    {% include "static/partial/navigation_bar.html" %}
+
+    <div id="update_container">
+        <span id="rs_logo">RS</span><span id="efficiency_log">Efficiency Updates</span>
+    </div>
+
+    <div id="twitter_feed">
+        <a class="twitter-timeline" href="https://twitter.com/RsEfficiency" width="600" data-chrome="noheader nofooter noborders" data-tweet-limit="10">Tweets by RsEfficiency</a>
+    </div>
+
+    <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+</body>
 
 </html>

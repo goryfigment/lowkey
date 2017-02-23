@@ -1,6 +1,12 @@
+function init() {
+    $('#treasure_trail_link').addClass('active');
+    $('#clue_search').focus();
+}
+
+
 $(document).ready(function() {
 
-    $('#clue_search').focus();
+    init();
 
     //Search for a clue stored in database
     $(document).on('keyup', '#clue_search', function (e) {

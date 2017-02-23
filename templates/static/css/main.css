@@ -1,59 +1,16 @@
-@font-face {
-    font-family: 'Abel';
-    src: url('../assets/fonts/Abel-Regular.ttf') format('truetype');
-    font-style: normal;
-    font-weight: 400;
+#twitter_feed {
+    display: flex;
+    justify-content: center;
+}
+
+#efficiency_log {
     color: #ffffff;
 }
 
-body {
-    font-family: 'Abel';
-    background-color: #BFBFBF;
-    margin: 0;
-    height: 100%;
-    min-height: 100vh;
-}
-
-#navigation_bar {
-    display: flex;
-    background-color: #3A3939;
-    color: #F1EEE6;
-    border-bottom: solid 1px #404040;
-}
-
-#nav_links_container {
-    cursor: pointer;
-    font-size: 18px;
-    display: flex;
-    align-items: stretch;
-    color: #CACACA;
-}
-
-#nav_links_container a {
-    padding: 0 7px;
-    line-height: 63px;
-}
-
-#nav_links_container a.active {
-    background-color: #737D7C;
-    color: #17F5EB;
-}
-
-#nav_links_container a:hover {
-    color: #ffffff;
-}
-
-#logo_container {
+#update_container {
+    text-align: center;
     font-size: 35px;
-    padding: 9px 8px;
-    cursor: pointer;
-    margin: 0 22px;
-}
-
-#rs_logo {
-    color: #35ECFF;
-}
-
-.active {
-    display: block !important;
+    padding: 20px 0;
+    cursor: default;
+    -webkit-text-stroke: 0.1px black;
 }

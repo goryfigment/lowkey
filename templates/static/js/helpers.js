@@ -38,17 +38,10 @@ Handlebars.registerHelper('concat', function() {
 });
 
 
-function handlebars_helper(response, $template, $container, store_data) {
+function handlebars_helper(response, $template) {
     var html_template = Handlebars.compile($template.html());
     var $generated_html = $(html_template(response));
     return $generated_html;
-
-    //if(store_data) {
-    //    $(generated_html).data('response', JSON.stringify(response));
-    //    console.log($(generated_html).data('response'));
-    //}
-    //
-    //$container.append(generated_html);
 }
 
 function scroll_to_element($container, $element, speed){

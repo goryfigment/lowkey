@@ -10,34 +10,21 @@
         globals.base_url = '{{base_url}}';
     </script>
 
-    <!-- Libraries -->
+    <link href="{% static 'css/general.css' %}" type="text/css" rel="stylesheet">
+    <link href="{% static 'css/treasure_trails.css' %}" type="text/css" rel="stylesheet">
+
     <script src="{% static 'js/libs/jquery.js' %}"></script>
     <script src="{% static 'js/libs/handlebars.js' %}"></script>
-    <!-- Libraries -->
-
-    <!-- CSS -->
-    <link href="{% static 'css/main.css' %}" type="text/css" rel="stylesheet">
-    <link href="{% static 'css/treasure_trails.css' %}" type="text/css" rel="stylesheet">
-    <!-- CSS -->
-
-    <!-- JS -->
     <script src="{% static 'js/helpers.js' %}"></script>
+    <script src="{% static 'js/general.js' %}"></script>
     <script src="{% static 'js/treasure_trails.js' %}"></script>
-    <!-- JS -->
 
     {% include "static/partial/treasure_trails_partial.html" %}
 
 </head>
 <body>
-    <nav id="navigation_bar">
-        <div id="logo_container">
-            <span id="rs_logo">RS</span><span id="effiency_log">Efficiency</span>
-        </div>
-        <div id="nav_links_container">
-            <a>Home</a>
-            <a class="active">Treasure Trails</a>
-        </div>
-    </nav>
+
+    {% include "static/partial/navigation_bar.html" %}
 
     <div id="treasure_trail_wrapper">
         <div id="clue_search_popup">
