@@ -33,7 +33,7 @@ if DEBUG:
     HOST_PORT = '8001'
     BASE_URL = HTTPS + '://' + HOST_NAME + ':' + HOST_PORT
 else:
-    BASE_URL = 'http://rsefficiency.com'
+    BASE_URL = 'http://www.rsefficiency.com'
 # Application definition
 
 INSTALLED_APPS = [
