@@ -4,7 +4,7 @@ function init() {
 
     var clue_data = localStorage.getItem("clue_data");
 
-    if(clue_data.length) {
+    if(clue_data !== null && clue_data.length !== 0) {
         clue_data = JSON.parse(clue_data);
 
         if(clue_data['keywords'] == '0000N0713W') {
