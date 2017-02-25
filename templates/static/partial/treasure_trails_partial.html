@@ -6,9 +6,12 @@
 
 {% verbatim %}
 <script id="coordinate_template" type="text/x-handlebars-template">
+
+    <h1 id="clue_title">{{ clue }}</h1>
+
     <div id="coordinate_clue">
         <div id="clue_spot_wrapper">
-            <div class="clue_title">Clue Spot</div>
+            <div class="clue_subtitle">Clue Spot</div>
             <div class="clue_image_container">
                 <img id="clue_map" src="{{concat 'static/assets/treasure_trail/clue_spot/' keywords '.png'}}" />
             </div>
@@ -16,29 +19,27 @@
 
         <div id="clue_info_wrapper">
             <div class="clue_panel_wrapper">
-                <div id="clue_map_wrapper">
-                    <div class="clue_title">Map</div>
-                    <div class="clue_image_container">
-                        <img id="clue_map" src="{{concat 'static/assets/treasure_trail/clue_map/' keywords '-map.png'}}" />
-                    </div>
-                </div>
-
                 <div id="clue_info_container">
-                    <div class="clue_title">Clue Info</div>
-                    <div id="clue_details_container">
+                    <div class="clue_subtitle">Clue Info</div>
+                    <div id="clue_details_container" class="{{ difficulty }}">
                         <div id="clue_label_wrapper">
                             <div id="clue_difficulty_label">Difficulty</div>
                             <div id="clue_requirements_label">Requirements</div>
                             <div id="clue_challenge_label">Fight</div>
-                            <div id="clue_label">Coordinates</div>
                         </div>
 
                         <div id="clue_details_wrapper">
-                            <div id="clue_difficulty">{{ clue_difficulty }}</div>
+                            <div id="clue_difficulty">{{ difficulty }}</div>
                             <div id="clue_requirements">{{ requirements }}</div>
                             <div id="clue_challenge">{{ challenge }}</div>
-                            <div id="clue">{{ clue }}</div>
                         </div>
+                    </div>
+                </div>
+
+                <div id="clue_map_wrapper">
+                    <div class="clue_subtitle">Map</div>
+                    <div class="clue_image_container">
+                        <img id="clue_map" src="{{concat 'static/assets/treasure_trail/clue_map/' keywords '-map.png'}}" />
                     </div>
                 </div>
             </div>

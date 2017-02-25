@@ -40,10 +40,8 @@ def clue_search(request):
     for clue in clue_data:
         riddle = clue['clue']
 
-        if clue['clue_types'] == 'coordinate' and riddle.startswith('0') and not search_value.startswith('0'):
-            if riddle[1:].startswith(search_value):
-                data_list.append(clue)
-                continue
+        if search_value.startswith('0') and clue['type'] == 'coordinate':
+            search_value = search_value[1:]
 
         if riddle.startswith(search_value):
             data_list.append(clue)

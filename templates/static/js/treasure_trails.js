@@ -1,8 +1,24 @@
 function init() {
     $('#treasure_trail_link').addClass('active');
     $('#clue_search').focus();
-}
 
+    var clue_data = localStorage.getItem("clue_data");
+
+    if(clue_data.length) {
+        clue_data = JSON.parse(clue_data);
+
+        if(clue_data['keywords'] == '0000N0713W') {
+            return;
+        }
+
+        var $coordinate_template = $('#coordinate_template');
+        var $clue_result_container = $('#clue_result_container');
+        var $generated_html = handlebars_helper(clue_data, $coordinate_template);
+
+        $clue_result_container.empty();
+        $clue_result_container.append($generated_html);
+    }
+}
 
 $(document).ready(function() {
 
@@ -27,13 +43,13 @@ $(document).ready(function() {
             return;
         }
 
-        var search_value = $clue_search.val();
+        var search_value = $clue_search.val().toLowerCase().trim();
 
         var post_data = {
             search_value: search_value
         };
 
-        if(search_value.length > 1) {
+        if(search_value.length > 0) {
             $.ajax({
                 url: globals.base_url + '/clue/search',
                 data: post_data,
@@ -41,7 +57,7 @@ $(document).ready(function() {
                 type: "GET",
                 success: function (response) {
                     if (response['success']) {
-                        console.log(JSON.stringify(response));
+                        //console.log(JSON.stringify(response));
                         var $clue_item_template = $('#clue_item_template');
                         var clue_list = response['clue_list'];
 
@@ -54,6 +70,11 @@ $(document).ready(function() {
                         }
 
                         for (var i = 0; i < clue_list.length; i++) {
+                            if(clue_list[i]['type'] == 'coordinate') {
+                                clue_list[i]['clue'] = clue_list[i]['clue'].replace('north', 'North')
+                                    .replace('south', 'South').replace('east', 'East').replace('west', 'West');
+                            }
+
                             var $generated_html = handlebars_helper(clue_list[i], $clue_item_template);
                             $generated_html.data('clue_data', clue_list[i]);
                             $clue_search_popup.append($generated_html);
@@ -83,6 +104,7 @@ $(document).ready(function() {
         $clue_result_container.empty();
 
         $clue_result_container.append($generated_html);
+        localStorage.setItem("clue_data", JSON.stringify(clue_data));
     });
 
     $(document).on({
