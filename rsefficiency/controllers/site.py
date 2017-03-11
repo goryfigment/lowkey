@@ -38,12 +38,29 @@ def clue_search(request):
         return HttpResponse(json.dumps(data), 'application/json')
 
     for clue in clue_data:
-        riddle = clue['clue']
-
-        if search_value.startswith('0') and clue['type'] == 'coordinate':
-            search_value = search_value[1:]
+        riddle = clue['clue'].lower()
 
         if riddle.startswith(search_value):
             data_list.append(clue)
 
+        print clue
+
     return render_json({'success': True, 'clue_list': data_list})
+
+
+def clue_id_search(request):
+    if 'search_id' not in request.GET:
+        data = {'success': False, 'error_id': 1, 'error_msg:': 'Data not set'}
+        return HttpResponse(json.dumps(data), 'application/json')
+
+    search_id = int(request.GET['search_id'])
+
+    try:
+        my_dir = os.path.dirname(__file__)
+        file_path = os.path.join(my_dir, 'static_data/treasure_trails.json')
+        clue_data = json.loads(open(file_path).read())
+    except:
+        data = {'success': False, 'error_id': 2, 'error_msg:': 'IO Error', 'directory': file_path}
+        return HttpResponse(json.dumps(data), 'application/json')
+
+    return render_json({'success': True, 'clue': clue_data[search_id - 1]})

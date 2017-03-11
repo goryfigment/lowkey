@@ -11,20 +11,47 @@ function init() {
             return;
         }
 
-        var $coordinate_template = $('#coordinate_template');
+        var $clue_template = $('#clue_template');
         var $clue_result_container = $('#clue_result_container');
-        var $generated_html = handlebars_helper(clue_data, $coordinate_template);
+        var $generated_html = handlebars_helper(clue_data, $clue_template);
 
         $clue_result_container.empty();
         $clue_result_container.append($generated_html);
     }
 }
 
+function add_clue_data(clue_data) {
+    if(globals.clue_data[clue_data['id']] !== undefined) {
+        extra_clue_data = globals.clue_data[clue_data['id']];
+
+        if(extra_clue_data['spot_title'] !== undefined) {
+            clue_data['spot_title'] = extra_clue_data['spot_title'];
+        }
+    }
+
+    return clue_data;
+}
+
 $(document).ready(function() {
 
     init();
 
-    //Search for a clue stored in database
+    $(document).on('click', 'body', function () {
+        var $clue_search_popup = $('#clue_search_popup');
+        if($clue_search_popup.hasClass('active')){
+            $clue_search_popup.removeClass('active');
+        }
+    });
+
+    $(document).on('click', '#clue_search', function (e) {
+        e.stopPropagation();
+
+        var $clue_search_popup = $('#clue_search_popup');
+        if(!$clue_search_popup.hasClass('active') && $clue_search_popup.children().length != 0){
+            $clue_search_popup.addClass('active');
+        }
+    });
+
     $(document).on('keyup', '#clue_search', function (e) {
         var $clue_search = $(this);
 
@@ -70,13 +97,15 @@ $(document).ready(function() {
                         }
 
                         for (var i = 0; i < clue_list.length; i++) {
-                            if(clue_list[i]['type'] == 'coordinate') {
-                                clue_list[i]['clue'] = clue_list[i]['clue'].replace('north', 'North')
+                            clue_data = add_clue_data(clue_list[i]);
+
+                            if(clue_data['type'] == 'coordinate') {
+                                clue_data['clue'] = clue_data['clue'].replace('north', 'North')
                                     .replace('south', 'South').replace('east', 'East').replace('west', 'West');
                             }
 
-                            var $generated_html = handlebars_helper(clue_list[i], $clue_item_template);
-                            $generated_html.data('clue_data', clue_list[i]);
+                            var $generated_html = handlebars_helper(clue_data, $clue_item_template);
+                            $generated_html.data('clue_data', clue_data);
                             $clue_search_popup.append($generated_html);
                         }
                     } else {
@@ -90,17 +119,16 @@ $(document).ready(function() {
     $(document).on('click', '.clue_item', function () {
         var $clue_item = $(this);
         var clue_data = $clue_item.data('clue_data');
-        console.log(clue_data);
 
         var $clue_search_popup = $clue_item.closest('#clue_search_popup');
         var $clue_search = $clue_search_popup.siblings('#clue_search');
         var $clue_result_container = $clue_search.siblings('#clue_result_container');
-        var $coordinate_template = $('#coordinate_template');
+        var $clue_template = $('#clue_template');
 
         $clue_search_popup.removeClass('active');
         $clue_search.val(clue_data['clue']);
 
-        var $generated_html = handlebars_helper(clue_data, $coordinate_template);
+        var $generated_html = handlebars_helper(clue_data, $clue_template);
         $clue_result_container.empty();
 
         $clue_result_container.append($generated_html);
