@@ -24,8 +24,9 @@ function add_clue_data(clue_data) {
     if(globals.clue_data[clue_data['id']] !== undefined) {
         extra_clue_data = globals.clue_data[clue_data['id']];
 
-        if(extra_clue_data['spot_title'] !== undefined) {
-            clue_data['spot_title'] = extra_clue_data['spot_title'];
+        if(extra_clue_data['spot_title_1'] !== undefined && extra_clue_data['spot_title_2'] !== undefined) {
+            clue_data['spot_title_1'] = extra_clue_data['spot_title_1'];
+            clue_data['spot_title_2'] = extra_clue_data['spot_title_2'];
         }
     }
 
