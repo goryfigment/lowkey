@@ -35,8 +35,9 @@
         </table>
     </div>
 
-    {{#if spot_title_2}}
-    <h1 id="clue_title">{{ spot_title_2 }}</h1>
+    {{#if spot_title_1}}
+    <h1 id="clue_title">{{ spot_title_1 }}</h1>
+    {{/if}}
 
     <div id="coordinate_clue">
         <div id="clue_spot_wrapper">
@@ -59,9 +60,8 @@
         </div>
     </div>
 
-    {{#if spot_title_1}}
-    <h1 id="clue_title">{{ spot_title_1 }}</h1>
-    {{/if}}
+    {{#if spot_title_2}}
+    <h1 id="clue_title">{{ spot_title_2 }}</h1>
 
     <div id="coordinate_clue">
         <div id="clue_spot_wrapper">
@@ -84,5 +84,6 @@
         </div>
     </div>
     {{/if}}
+
 </script>
 {% endverbatim %}
