@@ -1,6 +1,7 @@
 from django.shortcuts import render
 import json
 import os
+import re
 from django.http import HttpResponse
 from rsefficiency.modules.base import get_base_url, render_json
 
@@ -40,10 +41,11 @@ def clue_search(request):
     for clue in clue_data:
         riddle = clue['clue'].lower()
 
-        if riddle.startswith(search_value):
-            data_list.append(clue)
+        riddle_search_string = re.sub(r'[^\w]', '', riddle)
+        value_search_string = re.sub(r'[^\w]', '', search_value)
 
-        print clue
+        if riddle_search_string.startswith(value_search_string):
+            data_list.append(clue)
 
     return render_json({'success': True, 'clue_list': data_list})
 

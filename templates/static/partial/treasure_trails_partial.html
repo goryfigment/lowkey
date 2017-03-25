@@ -67,7 +67,7 @@
         <div id="clue_spot_wrapper">
             <div class="clue_subtitle">NPC Spot</div>
             <div class="clue_image_container">
-                <img id="clue_map" src="{{concat 'static/assets/treasure_trail/' type '_spot/' keywords '1.png'}}" />
+                <img id="clue_map" src="{{concat 'static/assets/treasure_trail/' type '_spot/' keywords '-2.png'}}" />
             </div>
         </div>
 
@@ -77,7 +77,32 @@
                 <div id="clue_map_wrapper">
                     <div class="clue_subtitle">Map</div>
                     <div class="clue_image_container">
-                        <img id="clue_map" src="{{concat 'static/assets/treasure_trail/' type '_map/' keywords '-map1.png'}}" />
+                        <img id="clue_map" src="{{concat 'static/assets/treasure_trail/' type '_map/' keywords '-map2.png'}}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+
+    {{#if spot_title_3}}
+    <h1 id="clue_title">{{ spot_title_3 }}</h1>
+
+    <div id="coordinate_clue">
+        <div id="clue_spot_wrapper">
+            <div class="clue_subtitle">NPC Spot</div>
+            <div class="clue_image_container">
+                <img id="clue_map" src="{{concat 'static/assets/treasure_trail/' type '_spot/' keywords '-3.png'}}" />
+            </div>
+        </div>
+
+        <div id="clue_info_wrapper">
+            <div class="clue_panel_wrapper">
+
+                <div id="clue_map_wrapper">
+                    <div class="clue_subtitle">Map</div>
+                    <div class="clue_image_container">
+                        <img id="clue_map" src="{{concat 'static/assets/treasure_trail/' type '_map/' keywords '-map3.png'}}" />
                     </div>
                 </div>
             </div>

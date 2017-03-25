@@ -28,6 +28,10 @@ function add_clue_data(clue_data) {
             clue_data['spot_title_1'] = extra_clue_data['spot_title_1'];
             clue_data['spot_title_2'] = extra_clue_data['spot_title_2'];
         }
+
+        if(extra_clue_data['spot_title_3'] !== undefined) {
+            clue_data['spot_title_3'] = extra_clue_data['spot_title_3'];
+        }
     }
 
     return clue_data;
