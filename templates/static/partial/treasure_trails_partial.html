@@ -28,7 +28,19 @@
             <tbody>
                 <tr>
                     <td>{{ difficulty }}</td>
-                    <td>{{ requirements }}</td>
+                    <td>
+                        {{#ifCond type '==' 'emote'}}
+                            {{#ifCond requirements '!=' 'Nothing'}}
+                                {{#each requirements}}
+                                <img id="osrs_item" title={{this}} src="{{concat 'static/assets/rs_items/icons/' this '.png'}}" />
+                                {{/each}}
+                            {{else}}
+                                {{ requirements }}
+                            {{/ifCond}}
+                        {{else}}
+                            {{ requirements }}
+                        {{/ifCond}}
+                    </td>
                     <td>{{ challenge }}</td>
                 </tr>
             </tbody>

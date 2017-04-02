@@ -109,6 +109,10 @@ $(document).ready(function() {
                                     .replace('south', 'South').replace('east', 'East').replace('west', 'West');
                             }
 
+                            if(clue_data['type'] == 'emote') {
+                                clue_data['requirements'] = clue_data['requirements'].split(',');
+                            }
+
                             var $generated_html = handlebars_helper(clue_data, $clue_item_template);
                             $generated_html.data('clue_data', clue_data);
                             $clue_search_popup.append($generated_html);
