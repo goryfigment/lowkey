@@ -10,9 +10,12 @@
     <h1 id="clue_title">{{ clue }}</h1>
 
     <div id="clue_info_container">
-        <table id="clue_table" summary="Clue Information">
+        <table class="clue_table" summary="Clue Information">
             <thead>
                 <tr>
+                {{#ifCond type '==' 'map'}}
+                    <th scope="col">Clue</th>
+                {{/ifCond}}
                     <th scope="col">Difficulty</th>
                     <th scope="col">Requirements</th>
                     <th scope="col">Challenge Answer</th>
@@ -21,18 +24,21 @@
             {{#ifCond description '!=' ''}}
             <tfoot>
                 <tr>
-                    <td colspan="3">{{ description }}</td>
+                    <td colspan={{#ifCond type '==' 'map'}}4{{else}}3{{/ifCond}}>{{ description }}</td>
                 </tr>
             </tfoot>
             {{/ifCond}}
             <tbody>
                 <tr>
+                {{#ifCond type '==' 'map'}}
+                    <td><img id="map_clue" src="{{concat 'base_url' '/static/assets/treasure_trail/map_clues/' keywords '.png'}}" /></td>
+                {{/ifCond}}
                     <td>{{ difficulty }}</td>
                     <td>
                         {{#ifCond type '==' 'emote'}}
                             {{#ifCond requirements '!=' 'Nothing'}}
                                 {{#each requirements}}
-                                <img id="osrs_item" title={{this}} src="{{concat 'static/assets/rs_items/icons/' this '.png'}}" />
+                                <img id="osrs_item" title={{this}} src="{{concat 'base_url' '/static/assets/rs_items/icons/' this '.png'}}" />
                                 {{/each}}
                             {{else}}
                                 {{ requirements }}
@@ -55,7 +61,7 @@
         <div id="clue_spot_wrapper">
             <div class="clue_subtitle">NPC Spot</div>
             <div class="clue_image_container">
-                <img id="clue_map" src="{{concat 'static/assets/treasure_trail/' type '_spot/' keywords '.png'}}" />
+                <img class="clue_spot" src="{{concat 'base_url' '/static/assets/treasure_trail/' type '_spot/' keywords '.png'}}" />
             </div>
         </div>
 
@@ -65,7 +71,7 @@
                 <div id="clue_map_wrapper">
                     <div class="clue_subtitle">Map</div>
                     <div class="clue_image_container">
-                        <img id="clue_map" src="{{concat 'static/assets/treasure_trail/' type '_map/' keywords '-map.png'}}" />
+                        <img class="clue_map" src="{{concat 'base_url' '/static/assets/treasure_trail/' type '_map/' keywords '-map.png'}}" />
                     </div>
                 </div>
             </div>
@@ -79,7 +85,7 @@
         <div id="clue_spot_wrapper">
             <div class="clue_subtitle">NPC Spot</div>
             <div class="clue_image_container">
-                <img id="clue_map" src="{{concat 'static/assets/treasure_trail/' type '_spot/' keywords '-2.png'}}" />
+                <img class="clue_spot" src="{{concat 'base_url' '/static/assets/treasure_trail/' type '_spot/' keywords '-2.png'}}" />
             </div>
         </div>
 
@@ -89,7 +95,7 @@
                 <div id="clue_map_wrapper">
                     <div class="clue_subtitle">Map</div>
                     <div class="clue_image_container">
-                        <img id="clue_map" src="{{concat 'static/assets/treasure_trail/' type '_map/' keywords '-map2.png'}}" />
+                        <img class="clue_map" src="{{concat 'base_url' '/static/assets/treasure_trail/' type '_map/' keywords '-map2.png'}}" />
                     </div>
                 </div>
             </div>
@@ -104,7 +110,7 @@
         <div id="clue_spot_wrapper">
             <div class="clue_subtitle">NPC Spot</div>
             <div class="clue_image_container">
-                <img id="clue_map" src="{{concat 'static/assets/treasure_trail/' type '_spot/' keywords '-3.png'}}" />
+                <img class="clue_spot" src="{{concat 'base_url' '/static/assets/treasure_trail/' type '_spot/' keywords '-3.png'}}" />
             </div>
         </div>
 
@@ -114,7 +120,7 @@
                 <div id="clue_map_wrapper">
                     <div class="clue_subtitle">Map</div>
                     <div class="clue_image_container">
-                        <img id="clue_map" src="{{concat 'static/assets/treasure_trail/' type '_map/' keywords '-map3.png'}}" />
+                        <img class="clue_map" src="{{concat 'base_url' '/static/assets/treasure_trail/' type '_map/' keywords '-map3.png'}}" />
                     </div>
                 </div>
             </div>
@@ -122,5 +128,87 @@
     </div>
     {{/if}}
 
+</script>
+{% endverbatim %}
+
+{% verbatim %}
+<script id="clue_index_template" type="text/x-handlebars-template">
+    {{#each clues}}
+        <h1 id="clue_title">
+            {{#ifCond ../type '==' 'Coordinate'}}
+                {{../type}}s starting with '{{@key}} Degree{{#ifCond @key '!=' '1'}}s{{else}}{{/ifCond}}'
+            {{/ifCond}}
+            {{#ifCond ../type '==' 'Anagram'}}
+                {{../type}}s starting with '{{ascii_to_char @key}}'
+            {{/ifCond}}
+            {{#ifCond ../type '==' 'Cipher'}}
+                {{../type}}s starting with '{{ascii_to_char @key}}'
+            {{/ifCond}}
+            {{#ifCond ../type '==' 'Cryptic'}}
+                {{../type}}s starting with '{{ascii_to_char @key}}'
+            {{/ifCond}}
+            {{#ifCond ../type '==' 'Emote'}}
+                {{this.0.challenge}} {{../type}} Clues
+            {{/ifCond}}
+            {{#ifCond ../type '==' 'Map'}}
+                {{this.0.difficulty}} {{../type}} Clues
+            {{/ifCond}}
+        </h1>
+        <table class="index clue_table" summary="Clue Information">
+            <thead>
+                <tr>
+                    <th scope="col">{{../type}}</th>
+                    <th scope="col">Difficulty</th>
+                    {{#ifCond ../type '==' 'Emote'}}
+                        <th scope="col">Items</th>
+                    {{/ifCond}}
+                    <th scope="col">NPC/Spot</th>
+                    <th scope="col">Map</th>
+                </tr>
+            </thead>
+            {{#each this}}
+                <tbody>
+                    <tr>
+                        <td>
+                            <a href={{concat '/treasure_trails/' id}}>
+                                {{#ifCond type '==' 'coordinate'}}
+                                    {{{replace clue ',' ',<br />'}}}
+                                {{/ifCond}}
+                                {{#ifCond type '==' 'anagram'}}
+                                    {{clue}}
+                                {{/ifCond}}
+                                {{#ifCond type '==' 'cipher'}}
+                                    {{clue}}
+                                {{/ifCond}}
+                                {{#ifCond type '==' 'cryptic'}}
+                                    {{clue}}
+                                {{/ifCond}}
+                                {{#ifCond type '==' 'emote'}}
+                                    {{clue}}
+                                {{/ifCond}}
+                                {{#ifCond type '==' 'map'}}
+                                    <img id="map_clue" src="{{concat 'base_url' '/static/assets/treasure_trail/map_clues/' keywords '.png'}}" />
+                                {{/ifCond}}
+                            </a>
+                        </td>
+                        <td>{{ difficulty }}</td>
+                        {{#ifCond type '==' 'emote'}}
+                            <td>
+                                {{#ifCond requirements '!=' 'Nothing'}}
+                                    {{#each requirements}}
+                                    <img id="osrs_item" title={{this}} src="{{concat 'base_url' '/static/assets/rs_items/icons/' this '.png'}}" />
+                                    {{/each}}
+                                {{else}}
+                                    {{ requirements }}
+                                {{/ifCond}}
+                            </td>
+                        {{/ifCond}}
+                        <td><img class="clue_spot" src="{{concat 'base_url' '/static/assets/treasure_trail/' type '_spot/' keywords '.png'}}" /></td>
+                        <td><img class="clue_map" src="{{concat 'base_url' '/static/assets/treasure_trail/' type '_map/' keywords '-map.png'}}" /></td>
+                    </tr>
+                </tbody>
+            {{/each}}
+        </table>
+    {{/each}}
 </script>
 {% endverbatim %}

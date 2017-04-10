@@ -31,12 +31,22 @@ Handlebars.registerHelper('concat', function() {
     var outStr = '';
     for(var arg in arguments){
         if(typeof arguments[arg]!='object'){
+            if(arguments[arg] == 'base_url') {
+                arguments[arg] = globals.base_url;
+            }
             outStr += arguments[arg];
         }
     }
     return outStr;
 });
 
+Handlebars.registerHelper('replace', function(string, string_to_replace, string_replacement) {
+    return string.split(string_to_replace).join(string_replacement);
+});
+
+Handlebars.registerHelper('ascii_to_char', function(ascii) {
+    return String.fromCharCode(ascii);
+});
 
 function handlebars_helper(response, $template) {
     var html_template = Handlebars.compile($template.html());

@@ -8,8 +8,10 @@
 
     <script>
         var globals = {};
-        globals.base_url = '{{base_url}}';
 
+        globals.base_url = '{{base_url}}';
+        globals.type = '{{type}}';
+        globals.clue = {{clue|safe}};
         globals.clue_data = {
             '188': {'spot_title_1': "Before Fairy Tale II - Cure a Queen", 'spot_title_2': "After Fairy Tale II - Cure a Queen"},
             '215': {'spot_title_1': "Brother Tranquility at Mos Le'Harmless", 'spot_title_2': "Brother Tranquility at Harmony Island"},
@@ -31,7 +33,8 @@
             '462': {'spot_title_1': "Kill a confused barbarian or lost barbarian within the Ancient Cavern to receive mangled bones", 'spot_title_2': "Go back up top by the whirlpool to construct a pyre ship with mangled bones, a tinderbox, logs, and an axe", 'spot_title_3': "Kill the Ferocious Barbarian Spirit that spawns to receive a clue casket."},
             '479': {'spot_title_1': "Male Barbarian can be found at Barbarian Outpost (picture) or Barbarian Village", 'spot_title_2': "The chest is located underneath the Red Dragon's head in the Exam Centre"},
             '503': {'spot_title_1': "Kill a monk for a key", 'spot_title_2': "Search a chest at Varrock church"},
-            '577': {'spot_title_1': "Enter through the tombstone south-east from the Fenkenstrain Castle", 'spot_title_2': "Go northwest through the experiments cave, up the ladders", 'spot_title_3': "Panic by the tombstone with no boots equipped"}
+            '577': {'spot_title_1': "Enter through the tombstone south-east from the Fenkenstrain Castle", 'spot_title_2': "Go northwest through the experiments cave, up the ladders", 'spot_title_3': "Panic by the tombstone with no boots equipped"},
+            '640': {'spot_title_1': "Talk to Murphy at Port Khazard", 'spot_title_2': "Collect Five Rocks just outside the Mudskipper Cave and then go inside", 'spot_title_3': "Dig on this spot inside the Mudskipper Cave"}
         }
     </script>
 
@@ -56,6 +59,22 @@
 
         </div>
 
+        <div id="directory">
+            <div class="empty">|</div>
+            <a class="clue_type" href="/treasure_trails/coordinate">Coordinates</a>
+            <div>|</div>
+            <a class="clue_type" href="/treasure_trails/anagram">Annagrams</a>
+            <div>|</div>
+            <a class="clue_type" href="/treasure_trails/cipher">Ciphers</a>
+            <div>|</div>
+            <a class="clue_type" href="/treasure_trails/cryptic">Cryptics</a>
+            <div>|</div>
+            <a class="clue_type" href="/treasure_trails/emote">Emotes</a>
+            <div>|</div>
+            <a class="clue_type" href="/treasure_trails/map">Maps</a>
+            <div class="empty">|</div>
+        </div>
+
         <input id="clue_search" type="search" placeholder="Search for a clue.." />
 
         <div id="clue_result_container">
@@ -63,7 +82,7 @@
             <h1 id="clue_title">A Baker</h1>
 
             <div id="clue_info_container">
-                <table id="clue_table" summary="Clue Information">
+                <table class="clue_table" summary="Clue Information">
                     <thead>
                         <tr>
                             <th scope="col">Difficulty</th>
@@ -90,7 +109,7 @@
                 <div id="clue_spot_wrapper">
                     <div class="clue_subtitle">NPC Spot</div>
                     <div class="clue_image_container">
-                        <img id="clue_map" src="static/assets/treasure_trail/anagram_spot/baraek.png" />
+                        <img class="clue_spot" src="{% static 'assets/treasure_trail/anagram_spot/baraek.png' %}" />
                     </div>
                 </div>
 
@@ -100,7 +119,7 @@
                         <div id="clue_map_wrapper">
                             <div class="clue_subtitle">Map</div>
                             <div class="clue_image_container">
-                                <img id="clue_map" src="static/assets/treasure_trail/anagram_map/baraek-map.png" />
+                                <img class="clue_map" src="{% static 'assets/treasure_trail/anagram_map/baraek-map.png' %}" />
                             </div>
                         </div>
                     </div>

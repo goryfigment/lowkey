@@ -21,17 +21,24 @@
 <body>
 
     {% include "static/partial/navigation_bar.html" %}
+    <div id="update_wrapper">
+        <div id="update_logo_container">
+            <span id="rs_logo">RS</span><span id="efficiency_log">Efficiency</span>
+        </div>
 
-    <div id="update_container">
-        <span id="rs_logo">RS</span><span id="efficiency_log">Efficiency Updates</span>
+        <div id="motto_container">
+            Where efficiency is priority.
+        </div>
+
+        <h1 id="update_title">Treasure Trails</h1>
+
+        <div class="post_update_container">
+            <p class="post_date">Posted on April 9, 2017 4:17 PM PT by Gory Figment</p>
+            <img class="post_img" src="{% static 'assets/rsefficiency/updates/update-1.png' %}" />
+            <p class="post_body">Treasure Trails is completed and available as of today. Players will be able to to look up any clue using the search bar. An index for different type of clues can be access in the directory on the top. If you have any suggestions, bugs, and inquiries about the Treasure Trail feature please email: osrsefficiency@gmail.com</p>
+        </div>
+
     </div>
-
-    <div id="twitter_feed">
-        <a class="twitter-timeline" href="https://twitter.com/RsEfficiency" width="600" data-chrome="noheader nofooter noborders" data-tweet-limit="10">Tweets by RsEfficiency</a>
-    </div>
-
-    <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
 </body>
 
 </html>

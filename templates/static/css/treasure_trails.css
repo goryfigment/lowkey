@@ -8,7 +8,7 @@
 
 #clue_search {
     border-radius: 2px;
-    margin-bottom: 40px;
+    margin: 35px 0 12px;
     height: 45px;
     outline: none;
     width: 55%;
@@ -38,7 +38,7 @@
     min-width: 300px;
     background: white;
     position: absolute;
-    top: 45px;
+    top: 109px;
     right: 0;
     left: 0;
     margin: auto;
@@ -73,10 +73,14 @@
 }
 
 #clue_title {
-    margin: 0 0 23px;
+    margin: 25px 0;
     text-align: center;
     color: white;
     cursor: default;
+    background: rgba(35, 51, 60, 0.45);
+    border-radius: 3px;
+    max-width: 736px;
+    padding: 7px 10px;
 }
 
 #clue_details_container {
@@ -132,8 +136,9 @@
     margin: 0 46px 20px 0;
 }
 
-#clue_table {
+.clue_table {
     font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+    max-width: 756px;
     font-size: 13px;
     text-align: left;
     border-collapse: collapse;
@@ -141,12 +146,12 @@
     cursor: default;
 }
 
-#clue_table tbody tr:hover td {
+.clue_table tbody tr:hover td {
     background: #d9d9d9;
     color: #000000;
 }
 
-#clue_table th {
+.clue_table th {
     font-size: 13px;
     font-weight: normal;
     background: #404040;
@@ -156,11 +161,49 @@
     color: #ffffff;
 }
 
-#clue_table td {
-    border-bottom: 1px solid #fff;
+.clue_table td {
+    border: 1px solid #ffffff;
     color: #000;
-    border-top: 1px solid #fff;
     background: #C1C1C1;
     padding: 5px;
     text-align: center;
+}
+
+.index td {
+    padding: 10px;
+}
+
+.index .clue_spot, .index .clue_map {
+    height: 175px;
+    width: auto;
+}
+
+#directory {
+    width: 100%;
+    max-width: 756px;
+    display: flex;
+    justify-content: space-around;
+    background: #000000;
+}
+
+#directory a {
+    color: #FFBD04;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 4px;
+}
+
+#directory div {
+    color: #ffffff;
+    padding: 4px;
+}
+
+#directory .empty {
+    color: rgba(0, 0, 0, 0);
+    margin: -10px;
+}
+
+#map_clue {
+    width: 200px;
+    height: auto;
 }

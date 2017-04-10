@@ -2,16 +2,24 @@ function init() {
     $('#treasure_trail_link').addClass('active');
     $('#clue_search').focus();
 
-    var clue_data = localStorage.getItem("clue_data");
+    if(!$.isEmptyObject(globals.clue)) {
+        var clue_data = globals.clue;
+    } else {
+        clue_data = localStorage.getItem("clue_data");
+    }
 
     if(clue_data !== null && clue_data.length !== 0) {
-        clue_data = JSON.parse(clue_data);
-
-        if(clue_data['keywords'] == '0000N0713W') {
-            return;
+        if(typeof clue_data == 'string') {
+            clue_data = JSON.parse(clue_data);
         }
 
-        var $clue_template = $('#clue_template');
+        if(!$.isEmptyObject(globals.clue) && globals.type != '') {
+            var $clue_template = $('#clue_index_template');
+            clue_data = {type: globals.type, clues: globals.clue}
+        } else {
+            $clue_template = $('#clue_template');
+        }
+
         var $clue_result_container = $('#clue_result_container');
         var $generated_html = handlebars_helper(clue_data, $clue_template);
 
@@ -39,6 +47,9 @@ function add_clue_data(clue_data) {
 
 $(document).ready(function() {
 
+    //console.log('hello');
+    //console.log(JSON.stringify(globals.clue));
+
     init();
 
     $(document).on('click', 'body', function () {
@@ -55,6 +66,24 @@ $(document).ready(function() {
         if(!$clue_search_popup.hasClass('active') && $clue_search_popup.children().length != 0){
             $clue_search_popup.addClass('active');
         }
+    });
+
+    $(document).on('click', '.clue_type', function (e) {
+        var clue_type = $(this).attr('data-clue_type');
+
+        $.ajax({
+            url: globals.base_url + '/clue/type_search',
+            data: {search_type: clue_type},
+            dataType: 'json',
+            type: "GET",
+            success: function (response) {
+                if (response['success']) {
+                    console.log(JSON.stringify(response));
+                } else {
+                    console.log(JSON.stringify(response));
+                }
+            }
+        });
     });
 
     $(document).on('keyup', '#clue_search', function (e) {
@@ -83,7 +112,7 @@ $(document).ready(function() {
 
         if(search_value.length > 0) {
             $.ajax({
-                url: globals.base_url + '/clue/search',
+                url: globals.base_url + '/clue/string_search',
                 data: post_data,
                 dataType: 'json',
                 type: "GET",
@@ -142,6 +171,8 @@ $(document).ready(function() {
 
         $clue_result_container.append($generated_html);
         localStorage.setItem("clue_data", JSON.stringify(clue_data));
+        var url = globals.base_url + '/treasure_trails/' + parseInt(clue_data['id']);
+        window.history.pushState(clue_data, clue_data['clue'], url);
     });
 
     $(document).on({
