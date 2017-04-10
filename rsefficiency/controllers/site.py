@@ -114,7 +114,7 @@ def clue_type_search(request, clue_type):
     else:
         clue_dict = {ord(k): v for k, v in clue_dict.items()}
 
-    data = {'success': True, 'base_url': get_base_url(), 'type': clue_type.title(), 'clue': clue_dict}
+    data = {'success': True, 'base_url': get_base_url(), 'type': clue_type.title(), 'clue': json.dumps(clue_dict)}
     return render(request, 'treasure_trails.html', data)
 
 
@@ -127,6 +127,6 @@ def clue_id_search(request, clue_id):
         data = {'success': False, 'error_id': 2, 'error_msg:': 'IO Error', 'directory': file_path}
         return HttpResponse(json.dumps(data), 'application/json')
 
-    data = {'success': True, 'base_url': get_base_url(), 'clue': clue_data[int(clue_id) - 1]}
+    data = {'success': True, 'base_url': get_base_url(), 'clue': json.dumps(clue_data[int(clue_id) - 1])}
 
     return render(request, 'treasure_trails.html', data)
