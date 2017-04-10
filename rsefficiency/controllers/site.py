@@ -127,6 +127,12 @@ def clue_id_search(request, clue_id):
         data = {'success': False, 'error_id': 2, 'error_msg:': 'IO Error', 'directory': file_path}
         return HttpResponse(json.dumps(data), 'application/json')
 
-    data = {'success': True, 'base_url': get_base_url(), 'clue': json.dumps(clue_data[int(clue_id) - 1])}
+    clue = clue_data[int(clue_id) - 1]
+
+    if clue['type'] == 'emote':
+        if clue['requirements'] != 'Nothing':
+            clue['requirements'] = clue['requirements'].split(',')
+
+    data = {'success': True, 'base_url': get_base_url(), 'clue': json.dumps(clue)}
 
     return render(request, 'treasure_trails.html', data)
