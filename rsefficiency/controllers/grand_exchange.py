@@ -1,5 +1,10 @@
 from django.shortcuts import render
-import json, math, requests, os, re, grequests
+import json
+import math
+import requests
+import os
+import re
+import grequests
 from django.http import HttpResponse
 from rsefficiency.modules.base import get_base_url, render_json, ge_price_updater
 
