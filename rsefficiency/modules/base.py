@@ -2,7 +2,7 @@ from django.conf import settings
 from django.core import serializers
 from django.http import HttpResponse
 import json
-# import requests
+import requests
 
 
 def get_base_url():
@@ -35,17 +35,17 @@ def render_json(data):
     return HttpResponse(json.dumps(data), 'application/json')
 
 
-# def ge_price_updater(item_id, key):
-#     rsbuddy_json = requests.get('http://api.rsbuddy.com/grandExchange?a=graph&g=30&i=' + str(item_id)).json()
-#     updated_price = 0
-#     updated_time = ''
-#
-#     for item in reversed(rsbuddy_json):
-#         if key not in item or item[key] == 0:
-#             continue
-#         else:
-#             updated_price = item[key]
-#             updated_time = str(item['ts'])
-#             break
-#
-#     return [updated_price, updated_time]
+def ge_price_updater(item_id, key):
+    rsbuddy_json = requests.get('http://api.rsbuddy.com/grandExchange?a=graph&g=30&i=' + str(item_id)).json()
+    updated_price = 0
+    updated_time = ''
+
+    for item in reversed(rsbuddy_json):
+        if key not in item or item[key] == 0:
+            continue
+        else:
+            updated_price = item[key]
+            updated_time = str(item['ts'])
+            break
+
+    return [updated_price, updated_time]
