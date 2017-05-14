@@ -1,7 +1,8 @@
 from django.conf import settings
 from django.core import serializers
 from django.http import HttpResponse
-import json, requests
+import json
+import requests
 
 
 def get_base_url():
