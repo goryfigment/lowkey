@@ -46,10 +46,6 @@ function add_clue_data(clue_data) {
 }
 
 $(document).ready(function() {
-
-    //console.log('hello');
-    //console.log(JSON.stringify(globals.clue));
-
     init();
 
     $(document).on('click', 'body', function () {
@@ -88,12 +84,9 @@ $(document).ready(function() {
 
     $(document).on('keyup', '#clue_search', function (e) {
         var $clue_search = $(this);
-
         var $clue_search_popup = $clue_search.siblings('#clue_search_popup');
         var $clue_items = $clue_search_popup.find('.clue_item');
         var $active_clue_item = $clue_search_popup.find('.clue_item.selected');
-
-        //Handle up and down
         var keycode = e.keyCode;
 
         if($clue_search_popup.is(':visible') && (keycode == 38 || keycode == 40)) {

@@ -1,0 +1,314 @@
+{% verbatim %}
+<script id="ge_item_template" type="text/x-handlebars-template">
+  <div class="ge_item"> <img class="osrs_item" src="{{concat 'base_url' '/static/assets/rs_items/icons/' file_name}}" /> {{name}}</div>
+</script>
+{% endverbatim %}
+
+{% verbatim %}
+<script id="update_price_template" type="text/x-handlebars-template">
+  <div id="update_price_wrapper">{{updated_price}} <a id="question" title="The last known result was updated {{timestamp}} ago.">?</a></div>
+</script>
+{% endverbatim %}
+
+{% verbatim %}
+<script id="update_margin_template" type="text/x-handlebars-template">
+  <div id="update_margin_wrapper" class={{value}}>{{#ifCond value '==' 'positive'}}+{{/ifCond}} {{updated_margin}}</div>
+</script>
+{% endverbatim %}
+
+{% verbatim %}
+<script id="margin_ratio_template" type="text/x-handlebars-template">
+  <div id="margin_ratio" class={{value}}>({{#ifCond value '==' 'positive'}}+{{/ifCond}}{{updated_margin}}%)</div>
+</script>
+{% endverbatim %}
+
+{% verbatim %}
+<script id="margin_template" type="text/x-handlebars-template">
+    <h1>Highest Margins</h1>
+
+    <table id="table_container">
+        <thead>
+            <tr>
+                <th></th>
+                <th scope="col">Item</th>
+                <th scope="col">Buy At</th>
+                <th scope="col">Sell At</th>
+                <th scope="col">GE Limit</th>
+                <th scope="col">Profit</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{#each this}}
+            <tr>
+                <td class="img_column"> <a href="{{concat 'base_url' '/grand_exchange/' item_data.id}}"> <img class="item_img" src="{{concat 'base_url' '/static/assets/rs_items/icons/' item_data.file_name}}" /> </a></td>
+                <td><a href="{{concat 'base_url' '/grand_exchange/' item_data.id}}"> {{item_data.name}} </a></td>
+                <td>{{num_comma_format sell_price}}</td>
+                <td>{{num_comma_format buy_price}}</td>
+                <td>{{num_comma_format item_data.limit}}</td>
+                <td class="{{#ifCond total_cost '>' 0}}positive{{/ifCond}}{{#ifCond total_cost '<' 0}}negative{{/ifCond}}">{{#ifCond total_cost '>' 0}}+{{/ifCond}} {{num_comma_format total_cost}}</td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</script>
+{% endverbatim %}
+
+{% verbatim %}
+<script id="decant_potions_template" type="text/x-handlebars-template">
+    <a href="{{concat 'base_url' '/grand_exchange/decant_potions'}}"><h1>Decant Potions</h1></a>
+
+    <table id="table_container">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Potion</th>
+                <th scope="col">Dose (1) Cost</th>
+                <th scope="col">Dose (2) Cost</th>
+                <th scope="col">Dose (3) Cost</th>
+                <th scope="col">Cheapest Dose</th>
+                <th scope="col">Cheapest Cost</th>
+                <th scope="col">Sell Price</th>
+                <th scope="col">GE Limit</th>
+                <th scope="col">Max Profit</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{#each this}}
+            <tr>
+                <td class="img_column"> <a href="{{concat 'base_url' '/grand_exchange/' potion_id}}"> <img class="item_img" src="{{concat 'base_url' '/static/assets/rs_items/icons/' file_name}}" /> </a></td>
+                <td>{{name}}</td>
+                <td>{{num_comma_format one_dose_cost}}{{#if one_dose_updated_time}}<a id="question" title="The last known result was updated {{time_passed one_dose_updated_time}} ago.">?</a>{{/if}}</td>
+                <td>{{num_comma_format two_dose_cost}}{{#if two_dose_updated_time}}<a id="question" title="The last known result was updated {{time_passed two_dose_updated_time}} ago.">?</a>{{/if}}</td>
+                <td>{{num_comma_format three_dose_cost}}{{#if three_dose_updated_time}}<a id="question" title="The last known result was updated {{time_passed three_dose_updated_time}} ago.">?</a>{{/if}}</td>
+                <td>{{cheapest_dose}}</td>
+                <td>{{num_comma_format cheapest_cost}}</td>
+                <td>{{num_comma_format four_dose_cost}}{{#if four_dose_updated_time}}<a id="question" title="The last known result was updated {{time_passed four_dose_updated_time}} ago.">?</a>{{/if}}</td>
+                <td>{{num_comma_format limit}}</td>
+                <td class="{{#ifCond profit '>' 0}}positive{{/ifCond}}{{#ifCond profit '<' 0}}negative{{/ifCond}}">{{#ifCond profit '>' 0}}+{{/ifCond}} {{num_comma_format profit}}</td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</script>
+{% endverbatim %}
+
+{% verbatim %}
+<script id="clean_herbs_template" type="text/x-handlebars-template">
+    <a href="{{concat 'base_url' '/grand_exchange/clean_herbs'}}"><h1>Clean Herbs</h1></a>
+
+    <table id="table_container">
+        <thead>
+            <tr>
+                <th scope="col">Reqs.</th>
+                <th scope="col">Item</th>
+                <th scope="col">Grimy</th>
+                <th scope="col">Buy Price</th>
+                <th scope="col">Clean</th>
+                <th scope="col">Sell Price</th>
+                <th scope="col">GE Limit</th>
+                <th scope="col">Profit</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{#each this}}
+            <tr>
+                <td>{{requirement}}</td>
+                <td>{{name}}</td>
+                <td class="img_column"> <a href="{{concat 'base_url' '/grand_exchange/' grimy_id}}"> <img class="item_img" src="{{concat 'base_url' '/static/assets/rs_items/icons/' grimy_file_name}}" /> </a></td>
+                <td>{{num_comma_format grimy_cost}}{{#if grimy_updated_time}}<a id="question" title="The last known result was updated {{time_passed grimy_updated_time}} ago.">?</a>{{/if}}</td>
+                <td class="img_column"> <a href="{{concat 'base_url' '/grand_exchange/' clean_id}}"> <img class="item_img" src="{{concat 'base_url' '/static/assets/rs_items/icons/' clean_file_name}}" /> </a></td>
+                <td>{{num_comma_format clean_sale}}{{#if clean_updated_time}}<a id="question" title="The last known result was updated {{time_passed clean_updated_time}} ago.">?</a>{{/if}}</td>
+                <td>{{num_comma_format grimy_buy_limit}}</td>
+                <td class="{{#ifCond profit '>' 0}}positive{{/ifCond}}{{#ifCond profit '<' 0}}negative{{/ifCond}}">{{#ifCond profit '>' 0}}+{{/ifCond}} {{num_comma_format profit}}</td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</script>
+{% endverbatim %}
+
+{% verbatim %}
+<script id="unfinished_potions_template" type="text/x-handlebars-template">
+    <a href="{{concat 'base_url' '/grand_exchange/unfinished_potions'}}"><h1>Unfinished Potions</h1></a>
+    <a id="substitute_cost" href="{{concat 'base_url' '/grand_exchange/227'}}"><img class="item_img" src="{{concat 'base_url' '/static/assets/rs_items/icons/vial-of-water.png'}}" /> Vial of Water Cost: {{this.0.vial_of_water_cost}}</a>
+
+    <table id="table_container">
+        <thead>
+            <tr>
+                <th scope="col">Item</th>
+                <th scope="col">Herb</th>
+                <th scope="col">Buy Price</th>
+                <th scope="col">Potion</th>
+                <th scope="col">Sell Price</th>
+                <th scope="col">GE Limit</th>
+                <th scope="col">Profit</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{#each this}}
+            <tr>
+                <td>{{name}}</td>
+                <td class="img_column"> <a href="{{concat 'base_url' '/grand_exchange/' herb_id}}"> <img class="item_img" src="{{concat 'base_url' '/static/assets/rs_items/icons/' herb_file_name}}" /> </a></td>
+                <td>{{num_comma_format herb_cost}}{{#if herb_updated_time}}<a id="question" title="The last known result was updated {{time_passed herb_updated_time}} ago.">?</a>{{/if}}</td>
+                <td class="img_column"> <a href="{{concat 'base_url' '/grand_exchange/' potion_id}}"> <img class="item_img" src="{{concat 'base_url' '/static/assets/rs_items/icons/' potion_file_name}}" /> </a></td>
+                <td>{{num_comma_format potion_sale}}{{#if potion_updated_time}}<a id="question" title="The last known result was updated {{time_passed potion_updated_time}} ago.">?</a>{{/if}}</td>
+                <td>{{num_comma_format limit}}</td>
+                <td class="{{#ifCond profit '>' 0}}positive{{/ifCond}}{{#ifCond profit '<' 0}}negative{{/ifCond}}">{{#ifCond profit '>' 0}}+{{/ifCond}} {{num_comma_format profit}}</td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</script>
+{% endverbatim %}
+
+{% verbatim %}
+<script id="potion_making_template" type="text/x-handlebars-template">
+    <a href="{{concat 'base_url' '/grand_exchange/unfinished_potions'}}"><h1>Unfinished Potions</h1></a>
+    <a id="substitute_cost" href="{{concat 'base_url' '/grand_exchange/227'}}"><img class="item_img" title="Vial of water" src="{{concat 'base_url' '/static/assets/rs_items/icons/vial-of-water.png'}}" /> Vial of Water Cost: {{this.0.vial_of_water_cost}}</a>
+
+    <table id="table_container">
+        <thead>
+            <tr>
+                <th scope="col">Potion</th>
+                <th scope="col">Item</th>
+                <th scope="col">Ingredients (Buy Price)</th>
+                <th scope="col">Sell Price</th>
+                <th scope="col">Total Cost</th>
+                <th scope="col">Profit</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{#each this}}
+            <tr>
+                <td class="img_column"> <a href="{{concat 'base_url' '/grand_exchange/' id}}"> <img class="item_img" title="{{name}}" src="{{concat 'base_url' '/static/assets/rs_items/icons/' file_name}}" /> </a></td>
+                <td>{{name}}</td>
+                <td class="ingredient">{{#each ingredient_list}}<span class="content"><span class="multiple">{{#if multiple}}{{access_dict multiple id}}x{{/if}}</span><a href="{{concat 'base_url' '/grand_exchange/' id}}"> <img class="ingredient_img" title="{{#if multiple}}{{access_dict multiple id}}x{{/if}} {{name}}" src="{{concat 'base_url' '/static/assets/rs_items/icons/' file_name}}" /> </a> ({{num_comma_format buy_price}} gp)</span>{{/each}}</td>
+                <td>{{num_comma_format potion_sale}}{{#if potion_updated_time}}<a id="question" title="The last known result was updated {{time_passed potion_updated_time}} ago.">?</a>{{/if}}</td>
+                <td>{{num_comma_format total_cost}}</td>
+                <td class="{{#ifCond profit '>' 0}}positive{{/ifCond}}{{#ifCond profit '<' 0}}negative{{/ifCond}}">{{#ifCond profit '>' 0}}+{{/ifCond}} {{num_comma_format profit}}</td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</script>
+{% endverbatim %}
+
+{% verbatim %}
+<script id="barrows_repair_template" type="text/x-handlebars-template">
+    <a href="{{concat 'base_url' '/grand_exchange/barrows_repair'}}"><h1>Barrows Repair</h1></a>
+
+    <table id="table_container">
+        <thead>
+            <tr>
+                <th scope="col">Item</th>
+                <th scope="col">Repair Price</th>
+                <th scope="col">Broken</th>
+                <th scope="col">Buy Price</th>
+                <th scope="col">Repaired</th>
+                <th scope="col">Sell Price</th>
+                <th scope="col">GE Limit</th>
+                <th scope="col">Profit</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{#each this}}
+            <tr>
+                <td>{{name}}</td>
+                <td>{{num_comma_format repair}}</td>
+                <td class="img_column"> <a href="{{concat 'base_url' '/grand_exchange/' broken_id}}"> <img class="item_img" src="{{concat 'base_url' '/static/assets/rs_items/icons/' broken_file_name}}" /> </a></td>
+                <td>{{num_comma_format broken_cost}}{{#if broken_updated_time}}<a id="question" title="The last known result was updated {{time_passed broken_updated_time}} ago.">?</a>{{/if}}</td>
+                <td class="img_column"> <a href="{{concat 'base_url' '/grand_exchange/' fixed_id}}"> <img class="item_img" src="{{concat 'base_url' '/static/assets/rs_items/icons/' fixed_file_name}}" /> </a></td>
+                <td>{{num_comma_format fixed_sale}}{{#if fixed_updated_time}}<a id="question" title="The last known result was updated {{time_passed fixed_updated_time}} ago.">?</a>{{/if}}</td>
+                <td>{{num_comma_format broken_buy_limit}}</td>
+                <td class="{{#ifCond profit '>' 0}}positive{{/ifCond}}{{#ifCond profit '<' 0}}negative{{/ifCond}}">{{#ifCond profit '>' 0}}+{{/ifCond}} {{num_comma_format profit}}</td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</script>
+{% endverbatim %}
+
+{% verbatim %}
+<script id="high_alch_template" type="text/x-handlebars-template">
+    <a href="{{concat 'base_url' '/grand_exchange/high_alchemy'}}"><h1>High Alch</h1></a>
+
+    <table id="table_container">
+        <thead>
+            <tr>
+                <th></th>
+                <th scope="col">Item</th>
+                <th scope="col">Avg. Buy Price</th>
+                <th scope="col">High Alch</th>
+                <th scope="col">GE Limit</th>
+                <th scope="col">Profit</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{#each this}}
+            <tr>
+                <td class="img_column"> <a href="{{concat 'base_url' '/grand_exchange/' item_data.id}}"> <img class="item_img" src="{{concat 'base_url' '/static/assets/rs_items/icons/' item_data.file_name}}" /> </a></td>
+                <td><a href="{{concat 'base_url' '/grand_exchange/' item_data.id}}"> {{item_data.name}} </a></td>
+                <td>{{num_comma_format buy_price}}</td>
+                <td>{{num_comma_format item_data.high_alch}}</td>
+                <td>{{num_comma_format item_data.limit}}</td>
+                <td class="{{#ifCond total_cost '>' 0}}positive{{/ifCond}}{{#ifCond total_cost '<' 0}}negative{{/ifCond}}">{{#ifCond total_cost '>' 0}}+{{/ifCond}} {{num_comma_format total_cost}}</td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</script>
+{% endverbatim %}
+
+{% verbatim %}
+<script id="item_template" type="text/x-handlebars-template">
+    <h2 id="ge_item_title">
+        <img id="osrs_item" src="{{concat 'base_url' '/static/assets/rs_items/icons/' item_data.file_name}}" /> {{item_data.name}}
+        <span id="margin_wrapper"></span>
+    </h2>
+    <div id="item_statistics_wrapper">
+        <div id="ge_subtitle">Item Statistics:</div>
+        <div id="ge_table_border_wrapper">
+            <div id="ge_table_wrapper">
+                <table id="ge_table_1">
+                    <tr>
+                        <th> <img id="ge_icon_img" src="{{concat 'base_url' '/static/assets/grand_exchange/ge-icon.png'}}" />GE Official Price:</th>
+                        <td id="official_ge_price">-</td>
+                    </tr>
+                    <tr>
+                        <th> <img id="buy_icon_img" src="{{concat 'base_url' '/static/assets/grand_exchange/buy-icon.png'}}" />Buy Approx. At:</th>
+                        <td id="sell_price">{{num_comma_format selling}}</td>
+                    </tr>
+                    <tr>
+                        <th> <img id="sell_icon_img" src="{{concat 'base_url' '/static/assets/grand_exchange/sell-icon.png'}}" />Sell Approx. At:</th>
+                        <td id="buy_price">{{num_comma_format buying}}</td>
+                    </tr>
+
+                    <tr>
+                        <th> <img id="coins_icon_img" src="{{concat 'base_url' '/static/assets/grand_exchange/small_coins-icon.png'}}" />Profit Margin:</th>
+                        <td id="profit_margin" class="{{#ifCond buying '>' selling}}positive{{/ifCond}}{{#ifCond buying '<' selling}}negative{{/ifCond}}">{{#ifCond buying '>' selling}}+{{/ifCond}} {{math buying '-' selling true}}</td>
+                    </tr>
+                </table>
+
+                <table id="ge_table_2">
+                    <tr>
+                        <th><img id="ge_limit_icon_img" src="{{concat 'base_url' '/static/assets/grand_exchange/ge_limit_2-icon.png'}}" />GE Limit:</th>
+                        <td id="ge_limit">{{num_comma_format item_data.limit}}</td>
+                    </tr>
+                    <tr>
+                        <th><img id="buy_quantity_icon_img" src="{{concat 'base_url' '/static/assets/grand_exchange/buy_quantity_2-icon.png'}}" />Buy Quantity:</th>
+                        <td id="buying_quantity">{{num_comma_format buyingQuantity}}</td>
+                    </tr>
+                    <tr>
+                        <th><img id="sale_quantity_icon_img" src="{{concat 'base_url' '/static/assets/grand_exchange/sale_quantity-icon.png'}}" />Sale Quantity:</th>
+                        <td id="selling_quantity">{{num_comma_format sellingQuantity}}</td>
+                    </tr>
+                    <tr>
+                        <th><img id="high_alch_icon_img" src="{{concat 'base_url' '/static/assets/grand_exchange/high_alchemy-icon.png'}}" />High Alch:</th>
+                        <td id="high_alch">{{num_comma_format item_data.high_alch}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</script>
+{% endverbatim %}

@@ -8,8 +8,7 @@
 
 body {
     font-family: 'Abel';
-    /*background-color: #BFBFBF;*/
-    background-color: #496C7D;
+    background-color: #36393E;
     margin: 0;
     height: 100%;
     min-height: 100vh;
@@ -17,9 +16,9 @@ body {
 
 #navigation_bar {
     display: flex;
-    background-color: #3A3939;
-    color: #F1EEE6;
-    border-bottom: solid 1px #404040;
+    background-color: #36393E;
+    color: rgba(255, 255, 255, 0.6);
+    border-bottom: solid 2px #303337;
 }
 
 #nav_links_container {
@@ -33,11 +32,14 @@ body {
 #nav_links_container a {
     padding: 0 7px;
     line-height: 63px;
+    color: #F1EEE6;
+    text-decoration: none;
 }
 
 #nav_links_container a.active {
-    background-color: #737D7C;
-    color: #17F5EB;
+    background-color: rgba(115,125,124,0.2);
+    color: rgba(23, 245, 235, 0.8);
+    text-decoration: none;
 }
 
 #nav_links_container a:hover {
@@ -49,6 +51,7 @@ body {
     padding: 9px 8px;
     cursor: pointer;
     margin: 0 22px;
+    color: rgba(255, 255, 255, 0.9)
 }
 
 #rs_logo {

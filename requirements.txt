@@ -1,2 +1,4 @@
 Django==1.10.5
 mysql-python
+requests
+grequests

@@ -1,31 +1,42 @@
-try{
-  Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
-        switch (operator) {
-            case '==':
-                return (v1 == v2) ? options.fn(this) : options.inverse(this);
-            case '===':
-                return (v1 === v2) ? options.fn(this) : options.inverse(this);
-            case '<':
-                return (v1 < v2) ? options.fn(this) : options.inverse(this);
-            case '<=':
-                return (v1 <= v2) ? options.fn(this) : options.inverse(this);
-            case '>':
-                return (v1 > v2) ? options.fn(this) : options.inverse(this);
-            case '>=':
-                return (v1 >= v2) ? options.fn(this) : options.inverse(this);
-            case '&&':
-                return (v1 && v2) ? options.fn(this) : options.inverse(this);
-            case '||':
-                return (v1 || v2) ? options.fn(this) : options.inverse(this);
-            case '!=':
-                return (v1 != v2) ? options.fn(this) : options.inverse(this);
-            default:
-                return options.inverse(this);
-        }
-    });
-}catch(err){
-    console.log("Error registering handlebars helper in helpers2.js");
-}
+Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
+    switch (operator) {
+        case '==':
+            return (v1 == v2) ? options.fn(this) : options.inverse(this);
+        case '===':
+            return (v1 === v2) ? options.fn(this) : options.inverse(this);
+        case '<':
+            return (v1 < v2) ? options.fn(this) : options.inverse(this);
+        case '<=':
+            return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+        case '>':
+            return (v1 > v2) ? options.fn(this) : options.inverse(this);
+        case '>=':
+            return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+        case '&&':
+            return (v1 && v2) ? options.fn(this) : options.inverse(this);
+        case '||':
+            return (v1 || v2) ? options.fn(this) : options.inverse(this);
+        case '!=':
+            return (v1 != v2) ? options.fn(this) : options.inverse(this);
+        default:
+            return options.inverse(this);
+    }
+});
+
+Handlebars.registerHelper("math", function(first_value, operator, second_value, format) {
+    first_value = parseFloat(first_value);
+    second_value = parseFloat(second_value);
+
+    var math_dict = {
+        "+": first_value + second_value,
+        "-": (first_value - second_value).toString().replace('-', '- '),
+        "*": first_value * second_value,
+        "/": first_value / second_value,
+        "%": first_value % second_value
+    };
+
+    return (format) ? number_comma_format(math_dict[operator]) : math_dict[operator]
+});
 
 Handlebars.registerHelper('concat', function() {
     var outStr = '';
@@ -47,6 +58,42 @@ Handlebars.registerHelper('replace', function(string, string_to_replace, string_
 Handlebars.registerHelper('ascii_to_char', function(ascii) {
     return String.fromCharCode(ascii);
 });
+
+Handlebars.registerHelper('num_comma_format', function(x) {
+    return number_comma_format(x);
+});
+
+Handlebars.registerHelper('time_passed', function(x) {
+    return time_passed(x);
+});
+
+Handlebars.registerHelper('access_dict', function(dict, key) {
+    return dict[key.toString()];
+});
+
+function time_passed(epoch_time) {
+    var d1 = new Date(parseInt(epoch_time));
+    var milliseconds = Math.abs(new Date() - d1);
+    var minutes = Math.floor(milliseconds / 60000);
+    var minute_string = '';
+
+    if(minutes > 60) {
+        var hours = Math.floor(minutes / 60);
+        minutes = minutes - (hours * 60);
+        var hour_string = hours != 1 ? 'hours' : 'hour';
+        minute_string = minutes != 1 ? 'minutes' : 'minute';
+        var timestamp_string = hours.toString() + ' ' + hour_string + ' and ' + minutes.toString() + ' ' + minute_string
+    } else {
+        minute_string = minutes != 1 ? 'minutes' : 'minute';
+        timestamp_string = minutes.toString() + ' ' + minute_string
+    }
+
+    return timestamp_string;
+}
+
+function number_comma_format(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
 function handlebars_helper(response, $template) {
     var html_template = Handlebars.compile($template.html());

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RSEfficiency: Grand Exchange</title>
+    <link rel='shortcut icon' type='image/x-icon' href="{% static 'assets/rsefficiency/rse16.ico' %}" />
+
+    <script>
+        var globals = {};
+        globals.base_url = '{{base_url}}';
+        globals.high_alch = {{high_alch|safe}};
+        globals.item_data = {{item_data|safe}};
+        globals.result_list = {{result_list|safe}};
+        globals.result_type = '{{result_type}}'
+    </script>
+
+    <link href="{% static 'css/general.css' %}" type="text/css" rel="stylesheet">
+    <link href="{% static 'css/grand_exchange.css' %}" type="text/css" rel="stylesheet">
+
+    <script src="{% static 'js/libs/jquery.js' %}"></script>
+    <script src="{% static 'js/libs/handlebars.js' %}"></script>
+    <script src="{% static 'js/libs/google_charts.js' %}"></script>
+
+    <script src="{% static 'js/helpers.js' %}"></script>
+    <script src="{% static 'js/general.js' %}"></script>
+    <script src="{% static 'js/grand_exchange.js' %}"></script>
+
+    {% include "static/partial/grand_exchange_partial.html" %}
+
+</head>
+<body>
+    {% include "static/partial/navigation_bar.html" %}
+        <div id="ge_wrapper">
+
+            <div id="directory">
+                <div></div>
+                <a class="clue_type" href="/grand_exchange/decant_potions">Decant Potions</a>
+                <div>|</div>
+                <a class="clue_type" href="/grand_exchange/clean_herbs">Clean Herbs</a>
+                <div>|</div>
+                <a class="clue_type" href="/grand_exchange/potion_making">Potion Making</a>
+                <div>|</div>
+                <a class="clue_type" href="/grand_exchange/unfinished_potions">Unfinished Potions</a>
+                <div>|</div>
+                <a class="clue_type" href="/grand_exchange/barrows_repair">Barrows Repair</a>
+                <div></div>
+            </div>
+
+            <div id="ge_search_popup">
+
+            </div>
+
+            <input id="ge_search" type="search" placeholder="Search for an item.." />
+
+            <div id="result_wrapper">
+                <div id="high_alch_table_wrapper"></div>
+                <div id="result_table_wrapper"></div>
+            </div>
+
+            <div id="osrs_item_wrapper">
+
+            </div>
+
+            <div id="price_chart_wrapper">
+                <div id="price_chart_title_container">
+                    <div id="price_chart_title">Price Graph</div>
+                    <div class="graph_button active" id="one_month_button" data-type="price">1 Month</div>
+                    <div class="graph_button" id="one_week_button" data-type="price">1 Week</div>
+                </div>
+                <div id="price_chart_container">
+
+                </div>
+            </div>
+
+            <div id="trade_chart_wrapper">
+                <div id="trade_chart_title_container">
+                    <div id="trade_chart_title">Trade Graph</div>
+                    <div class="graph_button active" id="one_month_button" data-type="trade">1 Month</div>
+                    <div class="graph_button" id="one_week_button" data-type="trade">1 Week</div>
+                </div>
+                <div id="trade_chart_container">
+
+                </div>
+            </div>
+        </div>
+</body>
+</html>
