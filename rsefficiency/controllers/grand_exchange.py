@@ -263,7 +263,7 @@ def decant_potions(request):
         data_list.append(item_data)
 
     data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
-    data = {'base_url': get_base_url(), 'item_data': {}, 'high_alch': {}, 'result_list': {'list': data_list}, 'result_type': 'decant_potions'}
+    data = {'base_url': get_base_url(), 'item_data': {}, 'high_alch': {}, 'result_list': json.dumps(data_list), 'result_type': 'decant_potions'}
     return render(request, 'grand_exchange.html', data)
 
 
@@ -326,7 +326,7 @@ def clean_herbs(request):
 
         data_list.append(item_data)
 
-    data = {'base_url': get_base_url(), 'item_data': {}, 'high_alch': {}, 'result_list': {'list': data_list}, 'result_type': 'clean_herbs'}
+    data = {'base_url': get_base_url(), 'item_data': {}, 'high_alch': {}, 'result_list': json.dumps(data_list), 'result_type': 'clean_herbs'}
     return render(request, 'grand_exchange.html', data)
 
 
@@ -412,7 +412,7 @@ def barrows_repair(request):
 
     data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
 
-    data = {'base_url': get_base_url(), 'item_data': {}, 'high_alch': {}, 'result_list': {'list': data_list}, 'result_type': 'barrows_repair'}
+    data = {'base_url': get_base_url(), 'item_data': {}, 'high_alch': {}, 'result_list': json.dumps(data_list), 'result_type': 'barrows_repair'}
     return render(request, 'grand_exchange.html', data)
 
 
@@ -534,7 +534,7 @@ def potion_making(request):
 
     data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
 
-    data = {'base_url': get_base_url(), 'item_data': {}, 'high_alch': {}, 'result_list': {'list': data_list}, 'result_type': 'potion_making'}
+    data = {'base_url': get_base_url(), 'item_data': {}, 'high_alch': {}, 'result_list': json.dumps(data_list), 'result_type': 'potion_making'}
     return render(request, 'grand_exchange.html', data)
 
 
@@ -604,7 +604,7 @@ def unfinished_potions(request):
 
     data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
 
-    data = {'base_url': get_base_url(), 'item_data': {}, 'high_alch': {}, 'result_list': {'list': data_list}, 'result_type': 'unfinished_potions'}
+    data = {'base_url': get_base_url(), 'item_data': {}, 'high_alch': {}, 'result_list': json.dumps(data_list), 'result_type': 'unfinished_potions'}
     return render(request, 'grand_exchange.html', data)
 
 

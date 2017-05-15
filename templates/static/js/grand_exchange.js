@@ -26,10 +26,10 @@ function init() {
         var $high_alch_table_wrapper = $('#high_alch_table_wrapper');
         $high_alch_table_wrapper.append(handlebars_helper(globals.high_alch, $high_alch_template));
     } else if(!$.isEmptyObject(globals.result_list)) {
-        console.log(JSON.stringify(globals.result_list['list']));
+        console.log(JSON.stringify(globals.result_list));
         var $result_template = $('#' + globals.result_type + '_template');
         var $result_table_wrapper= $('#result_table_wrapper');
-        $result_table_wrapper.append(handlebars_helper(globals.result_list['list'], $result_template));
+        $result_table_wrapper.append(handlebars_helper(globals.result_list, $result_template));
     }
 }
 
