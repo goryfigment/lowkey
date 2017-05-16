@@ -46,6 +46,10 @@ body {
     color: #ffffff;
 }
 
+#logo_link {
+    text-decoration: none;
+}
+
 #logo_container {
     font-size: 35px;
     padding: 9px 8px;

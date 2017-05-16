@@ -434,4 +434,21 @@ $(document).ready(function() {
             prepare_graph_data(globals.item_price_graph, false, graph_type);
         }
     });
+
+    $(document).on('click', '#smithing_button', function () {
+        var $smithing_button = $(this);
+        var $smithing_input = $smithing_button.siblings('#smithing_input');
+        var smithing_level = $smithing_input.val();
+
+        if(!$.isNumeric(smithing_level) || parseInt(smithing_level) < 0) {
+            smithing_level = '0'
+        } else if(parseInt(smithing_level) > 99) {
+            smithing_level = '99'
+        }
+
+        barrows_url = globals.base_url + '/grand_exchange/barrows_repair?smithing_level=' + smithing_level.toString();
+
+        window.location.replace(barrows_url);
+        window.location.href = barrows_url;
+    });
 });

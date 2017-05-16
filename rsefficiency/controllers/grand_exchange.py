@@ -10,11 +10,10 @@ from rsefficiency.modules.base import get_base_url, render_json, ge_price_update
 
 
 def grand_exchange(request):
-    frontpage_data = frontpage()
 
     data = {
         'base_url': get_base_url(),
-        'high_alch': frontpage_data['high_alch_list'],
+        'high_alch': {},
         'result_list': {},
         'item_data': {}
     }
@@ -316,7 +315,7 @@ def clean_herbs(request):
         item_data = {'clean_file_name': clean_item_json['file_name'], 'grimy_buy_limit': grimy_item_json['limit'],
             'grimy_file_name': grimy_item_json['file_name'], 'name': clean_item_json['name'],
             'grimy_id': grimy_id, 'clean_id': clean_id, 'grimy_cost': grimy_cost, 'clean_sale': clean_sale,
-            'profit': profit, 'requirement': requirements[i / 2]}
+            'profit': profit, 'requirement': requirements[i / 2], 'grimy_name': grimy_item_json['name']}
 
         if grimy_updated_time != '':
             item_data['grimy_updated_time'] = grimy_updated_time
@@ -351,13 +350,16 @@ def barrows_repair(request):
     helmet_repair = 60000
     body_repair = 90000
     leg_repair = 80000
+    smithing_level = 0
 
     if 'smithing_level' in request.GET:
         smithing_level = int(request.GET['smithing_level'])
-        weapon_repair = (1 - (smithing_level / 200)) * weapon_repair
-        helmet_repair = (1 - (smithing_level / 200)) * helmet_repair
-        body_repair = (1 - (smithing_level / 200)) * body_repair
-        leg_repair = (1 - (smithing_level / 200)) * leg_repair
+        if smithing_level > 0:
+            ratio = 1 - (smithing_level / 200.0)
+            weapon_repair = int(ratio * weapon_repair)
+            helmet_repair = int(ratio * helmet_repair)
+            body_repair = int(ratio * body_repair)
+            leg_repair = int(ratio * leg_repair)
 
     responses = grequests.map(grequests.get(u) for u in urls)
 
@@ -399,8 +401,9 @@ def barrows_repair(request):
 
         item_data = {'fixed_file_name': fixed_item_json['file_name'], 'broken_buy_limit': fixed_item_json['limit'],
             'broken_file_name': broken_item_json['file_name'], 'name': fixed_item_json['name'],
-            'fixed_id': fixed_item_id, 'broken_id': broken_item_id,
-            'broken_cost': broken_cost, 'fixed_sale': fixed_sale, 'profit': profit, 'repair': repair_cost}
+            'fixed_id': fixed_item_id, 'broken_id': broken_item_id, 'broken_name': broken_item_json['name'],
+            'broken_cost': broken_cost, 'fixed_sale': fixed_sale, 'profit': profit, 'repair': repair_cost,
+            'smithing_level': smithing_level}
 
         if broken_updated_time != '':
             item_data['broken_updated_time'] = broken_updated_time
@@ -485,6 +488,7 @@ def potion_making(request):
         potion_sale = response_dict[potion]['buying']
         ingredients = pot['ingredients']
         ingredient_list = []
+        potion_updated_time = ''
 
         total_cost = vial_of_water_cost
 
@@ -592,7 +596,7 @@ def unfinished_potions(request):
         item_data = {'herb_file_name': herb_item_json['file_name'], 'limit': herb_item_json['limit'],
             'potion_file_name': potion_item_json['file_name'], 'name': potion_item_json['name'],
             'herb_id': herb_id, 'potion_id': potion_id, 'herb_cost': herb_cost, 'potion_sale': potion_sale,
-            'profit': profit, 'vial_of_water_cost': vial_of_water_cost}
+            'profit': profit, 'vial_of_water_cost': vial_of_water_cost, 'herb_name':  herb_item_json['name']}
 
         if herb_updated_time != '':
             item_data['herb_updated_time'] = herb_updated_time
@@ -606,6 +610,228 @@ def unfinished_potions(request):
 
     data = {'base_url': get_base_url(), 'item_data': {}, 'high_alch': {}, 'result_list': json.dumps(data_list), 'result_type': 'unfinished_potions'}
     return render(request, 'grand_exchange.html', data)
+
+
+def plank_making(request):
+    try:
+        my_dir = os.path.dirname(__file__)
+        file_path = os.path.join(my_dir, 'static_data/rs_items.json')
+        item_json = json.load(open(file_path))
+    except:
+        data = {'success': False, 'error_id': 2, 'error_msg:': 'IO Error', 'directory': file_path}
+        return HttpResponse(json.dumps(data), 'application/json')
+
+    data_list = []
+    plank_making_list = ['1511', '960', '1521', '8778', '6333', '8780', '6332', '8782']
+    sawmill_cost_list = [100, 250, 500, 1500]
+    type_list = ['Regular', 'Oak', 'Teak', 'Mahogany']
+
+    urls = ['http://api.rsbuddy.com/grandExchange?a=guidePrice&i=' + i for i in plank_making_list]
+    responses = grequests.map(grequests.get(u) for u in urls)
+
+    for i in xrange(0, 8, 2):
+        plank = i + 1
+
+        log_item_json = item_json[plank_making_list[i]]
+        plank_item_json = item_json[plank_making_list[plank]]
+
+        sawmill_cost = sawmill_cost_list[i / 2]
+        plank_type = type_list[i / 2]
+        log_cost = responses[i].json()['selling']
+        plank_sale = responses[plank].json()['buying']
+        log_id = log_item_json['id']
+        plank_id = plank_item_json['id']
+        log_updated_time = ''
+        plank_updated_time = ''
+
+        if log_cost == 0:
+            updated_data = ge_price_updater(log_id, 'sellingPrice')
+            log_cost = updated_data[0]
+            log_updated_time = updated_data[1]
+
+        if plank_sale == 0:
+            updated_data = ge_price_updater(plank_id, 'buyingPrice')
+            plank_sale = updated_data[0]
+            plank_updated_time = updated_data[1]
+
+        total_cost = log_cost + sawmill_cost
+        profit = plank_sale - total_cost
+
+        item_data = {'log_file_name': log_item_json['file_name'], 'limit': log_item_json['limit'],
+            'plank_file_name': plank_item_json['file_name'], 'log_name': log_item_json['name'],
+            'log_id': log_id, 'plank_id': plank_id, 'log_cost': log_cost, 'plank_sale': plank_sale,
+            'profit': profit, 'sawmill_cost': sawmill_cost, 'total_cost': total_cost,
+            'plank_name': plank_item_json['name'], 'plank_type': plank_type}
+
+        if log_updated_time != '':
+            item_data['log_updated_time'] = log_updated_time
+
+        if plank_updated_time != '':
+            item_data['plank_updated_time'] = plank_updated_time
+
+        data_list.append(item_data)
+
+    data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
+
+    data = {'base_url': get_base_url(), 'item_data': {}, 'high_alch': {}, 'result_list': json.dumps(data_list), 'result_type': 'plank_making'}
+    return render(request, 'grand_exchange.html', data)
+
+
+def tan_leather(request):
+    try:
+        my_dir = os.path.dirname(__file__)
+        file_path = os.path.join(my_dir, 'static_data/rs_items.json')
+        item_json = json.load(open(file_path))
+    except:
+        data = {'success': False, 'error_id': 2, 'error_msg:': 'IO Error', 'directory': file_path}
+        return HttpResponse(json.dumps(data), 'application/json')
+
+    data_list = []
+    tanning_list = ['1739', '1741', '1739', '1743', '1753', '1745', '1751', '2505', '1749', '2507', '1747', '2509']
+    al_kharid_cost_list = [1, 3, 20, 20, 20, 20]
+    canifis_cost_list = [2, 5, 45, 45, 45, 45]
+
+    urls = ['http://api.rsbuddy.com/grandExchange?a=guidePrice&i=' + i for i in tanning_list]
+    responses = grequests.map(grequests.get(u) for u in urls)
+
+    for i in xrange(0, 12, 2):
+        leather = i + 1
+
+        hide_item_json = item_json[tanning_list[i]]
+        leather_item_json = item_json[tanning_list[leather]]
+
+        al_kharid_cost = al_kharid_cost_list[i / 2]
+        canifis_cost = canifis_cost_list[i / 2]
+        hide_cost = responses[i].json()['selling']
+        leather_sale = responses[leather].json()['buying']
+        hide_id = hide_item_json['id']
+        leather_id = leather_item_json['id']
+        hide_updated_time = ''
+        leather_updated_time = ''
+
+        if hide_cost == 0:
+            updated_data = ge_price_updater(hide_id, 'sellingPrice')
+            hide_cost = updated_data[0]
+            hide_updated_time = updated_data[1]
+
+        if leather_sale == 0:
+            updated_data = ge_price_updater(leather_id, 'buyingPrice')
+            leather_sale = updated_data[0]
+            leather_updated_time = updated_data[1]
+
+        total_cost = hide_cost + al_kharid_cost
+        profit = leather_sale - total_cost
+
+        item_data = {'hide_file_name': hide_item_json['file_name'], 'limit': hide_item_json['limit'],
+            'leather_file_name': leather_item_json['file_name'], 'hide_name': hide_item_json['name'],
+            'hide_id': hide_id, 'leather_id': leather_id, 'hide_cost': hide_cost, 'leather_sale': leather_sale,
+            'profit': profit, 'al_kharid_cost': al_kharid_cost, 'total_cost': total_cost,
+            'leather_name': leather_item_json['name'], 'canifis_cost': canifis_cost}
+
+        if hide_updated_time != '':
+            item_data['hide_updated_time'] = hide_updated_time
+
+        if leather_updated_time != '':
+            item_data['leather_updated_time'] = leather_updated_time
+
+        data_list.append(item_data)
+
+    data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
+
+    data = {'base_url': get_base_url(), 'item_data': {}, 'high_alch': {}, 'result_list': json.dumps(data_list), 'result_type': 'tan_leather'}
+    return render(request, 'grand_exchange.html', data)
+
+
+def enchant_bolts(request):
+    try:
+        my_dir = os.path.dirname(__file__)
+        file_path = os.path.join(my_dir, 'static_data/rs_items.json')
+        item_json = json.load(open(file_path))
+    except:
+        data = {'success': False, 'error_id': 2, 'error_msg:': 'IO Error', 'directory': file_path}
+        return HttpResponse(json.dumps(data), 'application/json')
+
+    data_list = []
+    enchant_list = ['564', '558', '561', '565', '563', '566', '560', '879', '9236', '9337', '9240', '880', '9238',
+                    '9338', '9241', '9336', '9239', '9339', '9242', '9340', '9243', '9341', '9244', '9342', '9245']
+
+    urls = ['http://api.rsbuddy.com/grandExchange?a=guidePrice&i=' + i for i in enchant_list]
+
+    responses = grequests.map(grequests.get(u) for u in urls)
+    data_list = []
+    response_dict = {}
+
+    for i, item in enumerate(enchant_list):
+        response_dict[item] = responses[i].json()
+
+    enchant_dict = [
+        {'bolt': '9236', 'required': ['879', '564'], 'staff': '1381', 'magic_level': 4},
+        {'bolt': '9240', 'required': ['9337', '558', '564'], 'staff': '1383', 'magic_level': 7},
+        {'bolt': '9238', 'required': ['880', '564'], 'staff': '1385', 'magic_level': 24},
+        {'bolt': '9241', 'required': ['9338', '561', '564'], 'staff': '1381', 'magic_level': 27},
+        {'bolt': '9239', 'required': ['9336', '564'], 'staff': '1387', 'magic_level': 29},
+        {'bolt': '9242', 'required': ['9339', '565', '564'], 'staff': '1387', 'magic_level': 49},
+        {'bolt': '9243', 'required': ['9340', '563', '564'], 'staff': '1385', 'multiple': [1, 2, 1], 'magic_level': 57},
+        {'bolt': '9244', 'required': ['9341', '566', '564'], 'staff': '1385', 'magic_level': 68},
+        {'bolt': '9245', 'required': ['9342', '560', '564'], 'staff': '1387', 'magic_level': 87},
+    ]
+
+    for enchant in enchant_dict:
+        bolt = enchant['bolt']
+        bolt_item_json = item_json[bolt]
+        bolt_sale = response_dict[bolt]['buying']
+        required = enchant['required']
+        required_list = []
+        bolt_updated_time = ''
+
+        total_cost = 0
+
+        for i, item in enumerate(required):
+            required_json = item_json[item]
+            buy_price = response_dict[item]['selling']
+            required_updated_time = ''
+
+            if buy_price == 0:
+                updated_data = ge_price_updater(item, 'sellingPrice')
+                buy_price = updated_data[0]
+                required_updated_time = updated_data[1]
+
+            required_dict = {'id': item, 'name': required_json['name'], 'limit': required_json['limit'],
+                               'file_name': required_json['file_name'], 'buy_price': buy_price}
+
+            if i == 0:
+                buy_price *= 10
+
+            if 'multiples' in enchant:
+                multiple = enchant['multiples'][i]
+                total_cost = total_cost + (buy_price*multiple)
+                if multiple > 1:
+                    required_dict['multiple'] = {}
+                    required_dict['multiple'][item] = multiple
+            else:
+                total_cost = total_cost + buy_price
+
+            if required_updated_time != '':
+                required_dict['required_updated_time'] = required_updated_time
+
+            required_list.append(required_dict)
+
+        if bolt_sale == 0:
+            updated_data = ge_price_updater(bolt, 'buyingPrice')
+            bolt_sale = updated_data[0]
+            bolt_updated_time = updated_data[1]
+
+        profit = (bolt_sale * 10) - total_cost
+
+        item_data = {'file_name': bolt_item_json['file_name'], 'limit': bolt_item_json['limit'],
+                     'name': bolt_item_json['name'], 'id': bolt, 'total_cost': total_cost, 'staff': enchant['staff'],
+                     'required_list': required_list, 'bolt_sale': bolt_sale, 'magic_level': enchant['magic_level'],
+                     'profit': profit}
+
+        if bolt_updated_time != '':
+            item_data['bolt_updated_time'] = bolt_updated_time
+
+        data_list.append(item_data)
 
 
 def item_id_search(request, item_id):

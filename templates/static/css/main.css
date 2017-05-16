@@ -20,7 +20,7 @@
     font-size: 38px;
     cursor: default;
     -webkit-text-stroke: 0.7px black;
-    color: black;
+    color: #AFD4D6;
     animation: fadein 2s;
 }
 
@@ -33,15 +33,15 @@
 }
 
 #update_title {
-    margin: 30px 0 15px;
+    margin: 25px 0;
     text-align: center;
     color: white;
     cursor: default;
-    background: rgba(35, 51, 60, 0.45);
+    background: rgba(41, 41, 41, 0.8);
     border-radius: 3px;
-    max-width: 584px;
     padding: 7px 10px;
     width: 100%;
+    max-width: 584px;
 }
 
 .post_update_container {

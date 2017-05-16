@@ -21,8 +21,10 @@ urlpatterns = [
     # url(r'^grand_exchange/high_alchemy/$',  csrf_exempt(grand_exchange.high_alchemy), name='high_alchemy'),
     url(r'^grand_exchange/decant_potions/$',  csrf_exempt(grand_exchange.decant_potions), name='decant_potions'),
     url(r'^grand_exchange/clean_herbs/$',  csrf_exempt(grand_exchange.clean_herbs), name='clean_herbs'),
-    url(r'^grand_exchange/potion_making/$',  csrf_exempt(grand_exchange.potion_making), name='barrows_repair'),
+    url(r'^grand_exchange/potion_making/$',  csrf_exempt(grand_exchange.potion_making), name='potion_making'),
     url(r'^grand_exchange/unfinished_potions/$',  csrf_exempt(grand_exchange.unfinished_potions), name='unfinished_potions'),
 
     url(r'^grand_exchange/barrows_repair/$',  csrf_exempt(grand_exchange.barrows_repair), name='barrows_repair'),
+    url(r'^grand_exchange/plank_making/$',  csrf_exempt(grand_exchange.plank_making), name='plank_making'),
+    url(r'^grand_exchange/tan_leather/$',  csrf_exempt(grand_exchange.tan_leather), name='tan_leather'),
 ]
