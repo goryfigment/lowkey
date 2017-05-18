@@ -26,7 +26,7 @@ function init() {
         var $high_alch_table_wrapper = $('#high_alch_table_wrapper');
         $high_alch_table_wrapper.append(handlebars_helper(globals.high_alch, $high_alch_template));
     } else if(!$.isEmptyObject(globals.result_list)) {
-        console.log(JSON.stringify(globals.result_list));
+        //console.log(JSON.stringify(globals.result_list));
         var $result_template = $('#' + globals.result_type + '_template');
         var $result_table_wrapper= $('#result_table_wrapper');
         $result_table_wrapper.append(handlebars_helper(globals.result_list, $result_template));
@@ -345,59 +345,65 @@ $(document).ready(function() {
         }
     }, '.ge_item');
 
-    $(document).on('keyup', '#ge_search', function (e) {
-        var $ge_search = $(this);
-        var $ge_search_popup = $ge_search.siblings('#ge_search_popup');
-        var $ge_items = $ge_search_popup.find('.ge_item');
-        var $active_ge_item = $ge_search_popup.find('.ge_item.selected');
-        var keycode = e.keyCode;
+    var timer = null;
+    $('#ge_search').keyup(function(e){
+        clearTimeout(timer);
+        timer = setTimeout(done_typing, 1000);
 
-        if($ge_search_popup.is(':visible') && (keycode == 38 || keycode == 40)) {
-            up_and_down_popups(keycode, $ge_search_popup, $ge_items, true);
-            return;
-        } else if(keycode == 13 && $active_ge_item.length) {
-            $active_ge_item.click();
-            return;
-        }
+        function done_typing() {
+            var $ge_search = $('#ge_search');
+            var $ge_search_popup = $ge_search.siblings('#ge_search_popup');
+            var $ge_items = $ge_search_popup.find('.ge_item');
+            var $active_ge_item = $ge_search_popup.find('.ge_item.selected');
+            var keycode = e.keyCode;
 
-        var search_value = $ge_search.val().toLowerCase().trim();
+            if($ge_search_popup.is(':visible') && (keycode == 38 || keycode == 40)) {
+                up_and_down_popups(keycode, $ge_search_popup, $ge_items, true);
+                return;
+            } else if(keycode == 13 && $active_ge_item.length) {
+                $active_ge_item.click();
+                return;
+            }
 
-        var post_data = {
-            search_value: search_value
-        };
+            var search_value = $ge_search.val().toLowerCase().trim();
 
-        if(search_value.length > 0) {
-            $.ajax({
-                url: globals.base_url + '/grand_exchange/item_search',
-                data: post_data,
-                dataType: 'json',
-                type: "GET",
-                success: function (response) {
-                    if (response['success']) {
-                        //console.log(JSON.stringify(response));
-                        var $ge_item_template = $('#ge_item_template');
-                        var ge_list = response['item_list'];
+            var post_data = {
+                search_value: search_value
+            };
 
-                        $ge_search_popup.empty();
+            if(search_value.length > 0) {
+                $.ajax({
+                    url: globals.base_url + '/grand_exchange/item_search',
+                    data: post_data,
+                    dataType: 'json',
+                    type: "GET",
+                    success: function (response) {
+                        if (response['success']) {
+                            //console.log(JSON.stringify(response));
+                            var $ge_item_template = $('#ge_item_template');
+                            var ge_list = response['item_list'];
 
-                        if(ge_list.length) {
-                            $ge_search_popup.addClass('active');
+                            $ge_search_popup.empty();
+
+                            if(ge_list.length) {
+                                $ge_search_popup.addClass('active');
+                            } else {
+                                $ge_search_popup.removeClass('active');
+                            }
+
+                            for (var i = 0; i < ge_list.length; i++) {
+                                item_data = ge_list[i];
+
+                                var $generated_html = handlebars_helper(item_data, $ge_item_template);
+                                $generated_html.data('item_data', item_data);
+                                $ge_search_popup.append($generated_html);
+                            }
                         } else {
-                            $ge_search_popup.removeClass('active');
+                            console.log(JSON.stringify(response));
                         }
-
-                        for (var i = 0; i < ge_list.length; i++) {
-                            item_data = ge_list[i];
-
-                            var $generated_html = handlebars_helper(item_data, $ge_item_template);
-                            $generated_html.data('item_data', item_data);
-                            $ge_search_popup.append($generated_html);
-                        }
-                    } else {
-                        console.log(JSON.stringify(response));
                     }
-                }
-            });
+                });
+            }
         }
     });
 

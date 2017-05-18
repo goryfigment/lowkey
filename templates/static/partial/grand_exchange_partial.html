@@ -273,6 +273,72 @@
 {% endverbatim %}
 
 {% verbatim %}
+<script id="enchant_bolts_template" type="text/x-handlebars-template">
+    <a href="{{concat 'base_url' '/grand_exchange/enchant_bolts'}}"><h1>Enchant Bolts</h1></a>
+
+    <table id="table_container">
+        <thead>
+            <tr>
+                <th scope="col">Magic Level</th>
+                <th scope="col">Bolt (e)</th>
+                <th scope="col">Enchanted Item</th>
+                <th scope="col">Staff</th>
+                <th scope="col">Required Items (Buy Price)</th>
+                <th scope="col">Total Cost</th>
+                <th scope="col">Sell Price</th>
+                <th scope="col">Profit</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{#each this}}
+            <tr>
+                <td>{{magic_level}}</td>
+                <td class="img_column"> <span class="multiple">10x</span> <a href="{{concat 'base_url' '/grand_exchange/' id}}"> <img class="item_img" title="10x {{name}}" src="{{concat 'base_url' '/static/assets/rs_items/icons/' file_name}}" /> </a></td>
+                <td>{{name}}</td>
+                <td class="img_column"> <a href="{{concat 'base_url' '/grand_exchange/' staff_id}}"> <img class="item_img" title="{{staff_name}}" src="{{concat 'base_url' '/static/assets/rs_items/icons/' staff_file_name}}" /> </a></td>
+                <td class="ingredient">{{#each required_list}}<span class="content"><span class="multiple">{{#if multiple}}{{access_dict multiple id}}x{{/if}}</span><a href="{{concat 'base_url' '/grand_exchange/' id}}"> <img class="ingredient_img" title="{{#if multiple}}{{access_dict multiple id}}x{{/if}} {{name}}" src="{{concat 'base_url' '/static/assets/rs_items/icons/' file_name}}" /> </a> ({{num_comma_format buy_price}} gp)</span>{{/each}}</td>
+                <td>{{num_comma_format total_cost}}</td>
+                <td>{{num_comma_format bolt_sale}}{{#if bolt_updated_time}}<a id="question" title="The last known result was updated {{time_passed bolt_updated_time}} ago.">?</a>{{/if}}</td>
+                <td class="{{#ifCond profit '>' 0}}positive{{/ifCond}}{{#ifCond profit '<' 0}}negative{{/ifCond}}">{{#ifCond profit '>' 0}}+{{/ifCond}} {{num_comma_format profit}}</td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</script>
+{% endverbatim %}
+
+{% verbatim %}
+<script id="item_sets_template" type="text/x-handlebars-template">
+    <a href="{{concat 'base_url' '/grand_exchange/item_sets'}}"><h1>Item Sets</h1></a>
+
+    <table class="item_set_table" id="table_container">
+        <thead>
+            <tr>
+                <th scope="col">Set</th>
+                <th scope="col">Item</th>
+                <th scope="col">Items (Buy Price)</th>
+                <th scope="col">Sell Price</th>
+                <th scope="col">Total Cost</th>
+                <th scope="col">Profit</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{#each this}}
+            <tr>
+                <td class="img_column"> <a href="{{concat 'base_url' '/grand_exchange/' id}}"> <img class="item_img" title="{{name}}" src="{{concat 'base_url' '/static/assets/rs_items/icons/' file_name}}" /> </a></td>
+                <td>{{name}}</td>
+                <td class="ingredient">{{#each item_list}}<a href="{{concat 'base_url' '/grand_exchange/' id}}"> <img class="ingredient_img" title="{{name}}" src="{{concat 'base_url' '/static/assets/rs_items/icons/' file_name}}" /> </a> ({{num_comma_format buy_price}} gp){{/each}}</td>
+                <td>{{num_comma_format set_sale}}{{#if set_updated_time}}<a id="question" title="The last known result was updated {{time_passed set_updated_time}} ago.">?</a>{{/if}}</td>
+                <td>{{num_comma_format total_cost}}</td>
+                <td class="{{#ifCond profit '>' 0}}positive{{/ifCond}}{{#ifCond profit '<' 0}}negative{{/ifCond}}">{{#ifCond profit '>' 0}}+{{/ifCond}} {{num_comma_format profit}}</td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</script>
+{% endverbatim %}
+
+{% verbatim %}
 <script id="item_template" type="text/x-handlebars-template">
     <h2 id="ge_item_title">
         <img id="osrs_item" src="{{concat 'base_url' '/static/assets/rs_items/icons/' item_data.file_name}}" /> {{item_data.name}}

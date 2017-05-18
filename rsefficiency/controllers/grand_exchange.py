@@ -13,7 +13,6 @@ def grand_exchange(request):
 
     data = {
         'base_url': get_base_url(),
-        'high_alch': {},
         'result_list': {},
         'item_data': {}
     }
@@ -262,7 +261,7 @@ def decant_potions(request):
         data_list.append(item_data)
 
     data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
-    data = {'base_url': get_base_url(), 'item_data': {}, 'high_alch': {}, 'result_list': json.dumps(data_list), 'result_type': 'decant_potions'}
+    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list), 'result_type': 'decant_potions'}
     return render(request, 'grand_exchange.html', data)
 
 
@@ -325,7 +324,7 @@ def clean_herbs(request):
 
         data_list.append(item_data)
 
-    data = {'base_url': get_base_url(), 'item_data': {}, 'high_alch': {}, 'result_list': json.dumps(data_list), 'result_type': 'clean_herbs'}
+    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list), 'result_type': 'clean_herbs'}
     return render(request, 'grand_exchange.html', data)
 
 
@@ -415,7 +414,7 @@ def barrows_repair(request):
 
     data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
 
-    data = {'base_url': get_base_url(), 'item_data': {}, 'high_alch': {}, 'result_list': json.dumps(data_list), 'result_type': 'barrows_repair'}
+    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list), 'result_type': 'barrows_repair'}
     return render(request, 'grand_exchange.html', data)
 
 
@@ -538,7 +537,7 @@ def potion_making(request):
 
     data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
 
-    data = {'base_url': get_base_url(), 'item_data': {}, 'high_alch': {}, 'result_list': json.dumps(data_list), 'result_type': 'potion_making'}
+    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list), 'result_type': 'potion_making'}
     return render(request, 'grand_exchange.html', data)
 
 
@@ -608,7 +607,7 @@ def unfinished_potions(request):
 
     data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
 
-    data = {'base_url': get_base_url(), 'item_data': {}, 'high_alch': {}, 'result_list': json.dumps(data_list), 'result_type': 'unfinished_potions'}
+    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list), 'result_type': 'unfinished_potions'}
     return render(request, 'grand_exchange.html', data)
 
 
@@ -673,7 +672,7 @@ def plank_making(request):
 
     data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
 
-    data = {'base_url': get_base_url(), 'item_data': {}, 'high_alch': {}, 'result_list': json.dumps(data_list), 'result_type': 'plank_making'}
+    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list), 'result_type': 'plank_making'}
     return render(request, 'grand_exchange.html', data)
 
 
@@ -738,7 +737,7 @@ def tan_leather(request):
 
     data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
 
-    data = {'base_url': get_base_url(), 'item_data': {}, 'high_alch': {}, 'result_list': json.dumps(data_list), 'result_type': 'tan_leather'}
+    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list), 'result_type': 'tan_leather'}
     return render(request, 'grand_exchange.html', data)
 
 
@@ -751,7 +750,6 @@ def enchant_bolts(request):
         data = {'success': False, 'error_id': 2, 'error_msg:': 'IO Error', 'directory': file_path}
         return HttpResponse(json.dumps(data), 'application/json')
 
-    data_list = []
     enchant_list = ['564', '558', '561', '565', '563', '566', '560', '879', '9236', '9337', '9240', '880', '9238',
                     '9338', '9241', '9336', '9239', '9339', '9242', '9340', '9243', '9341', '9244', '9342', '9245']
 
@@ -765,20 +763,22 @@ def enchant_bolts(request):
         response_dict[item] = responses[i].json()
 
     enchant_dict = [
-        {'bolt': '9236', 'required': ['879', '564'], 'staff': '1381', 'magic_level': 4},
-        {'bolt': '9240', 'required': ['9337', '558', '564'], 'staff': '1383', 'magic_level': 7},
-        {'bolt': '9238', 'required': ['880', '564'], 'staff': '1385', 'magic_level': 24},
-        {'bolt': '9241', 'required': ['9338', '561', '564'], 'staff': '1381', 'magic_level': 27},
-        {'bolt': '9239', 'required': ['9336', '564'], 'staff': '1387', 'magic_level': 29},
-        {'bolt': '9242', 'required': ['9339', '565', '564'], 'staff': '1387', 'magic_level': 49},
-        {'bolt': '9243', 'required': ['9340', '563', '564'], 'staff': '1385', 'multiple': [1, 2, 1], 'magic_level': 57},
-        {'bolt': '9244', 'required': ['9341', '566', '564'], 'staff': '1385', 'magic_level': 68},
-        {'bolt': '9245', 'required': ['9342', '560', '564'], 'staff': '1387', 'magic_level': 87},
+        {'bolt': '9236', 'required': ['879', '564'], 'staff': '1381', 'multiples': [10, 1], 'magic_level': 4},
+        {'bolt': '9240', 'required': ['9337', '558', '564'], 'multiples': [10, 1, 1], 'staff': '1383', 'magic_level': 7},
+        {'bolt': '9238', 'required': ['880', '564'], 'staff': '1385', 'multiples': [10, 1], 'magic_level': 24},
+        {'bolt': '9241', 'required': ['9338', '561', '564'], 'staff': '1381', 'multiples': [10, 1, 1], 'magic_level': 27},
+        {'bolt': '9239', 'required': ['9336', '564'], 'staff': '1387', 'multiples': [10, 1], 'magic_level': 29},
+        {'bolt': '9242', 'required': ['9339', '565', '564'], 'staff': '1387', 'multiples': [10, 1, 1], 'magic_level': 49},
+        {'bolt': '9243', 'required': ['9340', '563', '564'], 'staff': '1385', 'multiples': [10, 2, 1], 'magic_level': 57},
+        {'bolt': '9244', 'required': ['9341', '566', '564'], 'staff': '1385', 'multiples': [10, 1, 1], 'magic_level': 68},
+        {'bolt': '9245', 'required': ['9342', '560', '564'], 'staff': '1387', 'multiples': [10, 1, 1], 'magic_level': 87},
     ]
 
     for enchant in enchant_dict:
         bolt = enchant['bolt']
+        staff = enchant['staff']
         bolt_item_json = item_json[bolt]
+        staff_item_json = item_json[staff]
         bolt_sale = response_dict[bolt]['buying']
         required = enchant['required']
         required_list = []
@@ -798,9 +798,6 @@ def enchant_bolts(request):
 
             required_dict = {'id': item, 'name': required_json['name'], 'limit': required_json['limit'],
                                'file_name': required_json['file_name'], 'buy_price': buy_price}
-
-            if i == 0:
-                buy_price *= 10
 
             if 'multiples' in enchant:
                 multiple = enchant['multiples'][i]
@@ -824,14 +821,181 @@ def enchant_bolts(request):
         profit = (bolt_sale * 10) - total_cost
 
         item_data = {'file_name': bolt_item_json['file_name'], 'limit': bolt_item_json['limit'],
-                     'name': bolt_item_json['name'], 'id': bolt, 'total_cost': total_cost, 'staff': enchant['staff'],
+                     'name': bolt_item_json['name'], 'id': bolt, 'total_cost': total_cost, 'staff_id': staff,
                      'required_list': required_list, 'bolt_sale': bolt_sale, 'magic_level': enchant['magic_level'],
+                     'staff_file_name': staff_item_json['file_name'], 'staff_name': staff_item_json['name'],
                      'profit': profit}
 
         if bolt_updated_time != '':
             item_data['bolt_updated_time'] = bolt_updated_time
 
         data_list.append(item_data)
+
+    data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
+
+    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list), 'result_type': 'enchant_bolts'}
+    return render(request, 'grand_exchange.html', data)
+
+
+def item_sets(request):
+    try:
+        my_dir = os.path.dirname(__file__)
+        file_path = os.path.join(my_dir, 'static_data/rs_items.json')
+        item_json = json.load(open(file_path))
+    except:
+        data = {'success': False, 'error_id': 2, 'error_msg:': 'IO Error', 'directory': file_path}
+        return HttpResponse(json.dumps(data), 'application/json')
+
+    armour_list = ['12960', '1155', '1117', '1075', '1189', '12972', '1153', '1115', '1067', '1191', '12984', '1157', '1119', '1069', '1193', '12988', '1165', '1125', '1077', '1195', '13000', '1159', '1121', '1071', '1197', '13012', '1161', '1123', '1073', '1199', '13024', '1163', '1127', '1079', '1201', '12968', '12211', '12205', '12207', '12213', '12980', '12241', '12235', '12237', '12243', '20382', '20178', '20169', '20172', '20181', '12996', '2595', '2591', '2593', '2597', '13008', '12283', '12277', '12279', '12281', '13020', '2613', '2607', '2609', '2611', '13032', '2619', '2615', '2617', '2621', '13036', '3486', '3481', '3483', '3488', '12964', '12221', '12215', '12217', '12223', '12976', '12231', '12225', '12227', '12233', '20376', '20193', '20184', '20187', '20196', '12992', '2587', '2583', '2585', '2589', '13004', '12293', '12287', '12289', '12291', '13016', '2605', '2599', '2601', '2603', '13048', '2673', '2669', '2671', '2675', '13040', '2665', '2661', '2663', '2667', '13044', '2657', '2653', '2655', '2659', '13060', '12466', '12460', '12462', '12468', '13052', '12476', '12470', '12472', '12478', '13056', '12486', '12480', '12482', '12488', '12962', '1087', '12974', '1081', '12986', '1083', '12990', '1089', '13002', '1085', '13014', '1091', '13026', '1093', '12970', '12209', '12982', '12239', '20385', '20175', '12998', '3473', '13010', '12285', '13022', '3475', '13034', '3476', '12966', '12219', '12978', '12229', '20379', '20190', '12994', '3472', '13006', '12295', '13018', '3474', '13030', '2627', '2623', '3477', '2629', '13050', '3480', '13042', '3479', '13046', '3478', '13062', '12464', '13054', '12474', '13058', '12484', '12865', '1135', '1099', '1065', '12867', '2499', '2493', '2487', '12869', '2501', '2495', '2489', '12871', '2503', '2497', '2491', '13165', '10382', '10378', '10380', '10376', '13163', '10390', '10386', '10388', '10384', '13161', '10374', '10370', '10372', '10368', '13171', '12496', '12492', '12494', '12490', '13169', '12512', '12508', '12510', '12506', '13167', '12504', '12500', '12502', '12498', '12881', '4708', '4712', '4714', '4710', '12877', '4716', '4720', '4722', '4718', '12873', '4724', '4728', '4730', '4726', '12883', '4732', '4736', '4738', '4734', '12879', '4745', '4749', '4751', '4747', '12875', '4753', '4757', '4759', '4755', '13153', '3835', '3836', '3837', '3838', '13149', '3827', '3828', '3829', '3830', '13151', '3831', '3832', '3833', '3834', '13159', '12621', '12622', '12623', '12624', '13157', '12617', '12618', '12619', '12620', '13155', '12613', '12614', '12615', '12616', '12863', '6', '8', '10', '12', '13064', '2428', '113', '2432', '13066', '2436', '2440', '2442', '13173', '1038', '1040', '1042', '1046', '1044', '1048', '13175', '1057', '1053', '1055', '21049', '21018', '21021', '21024']
+
+    urls = ['http://api.rsbuddy.com/grandExchange?a=guidePrice&i=' + i for i in armour_list]
+
+    responses = grequests.map(grequests.get(u) for u in urls)
+    data_list = []
+    response_dict = {}
+
+    for i, item in enumerate(armour_list):
+        try:
+            response_dict[item] = responses[i].json()
+        except:
+            print item + ' has failed'
+            print responses[i]
+
+    armor_set_dict = [
+        {'items': ['1155', '1117', '1075', '1189'], 'set': '12960'},
+        {'items': ['1153', '1115', '1067', '1191'], 'set': '12972'},
+        {'items': ['1157', '1119', '1069', '1193'], 'set': '12984'},
+        {'items': ['1165', '1125', '1077', '1195'], 'set': '12988'},
+        {'items': ['1159', '1121', '1071', '1197'], 'set': '13000'},
+        {'items': ['1161', '1123', '1073', '1199'], 'set': '13012'},
+        {'items': ['1163', '1127', '1079', '1201'], 'set': '13024'},
+        {'items': ['12211', '12205', '12207', '12213'], 'set': '12968'},
+        {'items': ['12241', '12235', '12237', '12243'], 'set': '12980'},
+        {'items': ['20178', '20169', '20172', '20181'], 'set': '20382'},
+        {'items': ['2595', '2591', '2593', '2597'], 'set': '12996'},
+        {'items': ['12283', '12277', '12279', '12281'], 'set': '13008'},
+        {'items': ['2613', '2607', '2609', '2611'], 'set': '13020'},
+        {'items': ['2619', '2615', '2617', '2621'], 'set': '13032'},
+        {'items': ['3486', '3481', '3483', '3488'], 'set': '13036'},
+        {'items': ['12221', '12215', '12217', '12223'], 'set': '12964'},
+        {'items': ['12231', '12225', '12227', '12233'], 'set': '12976'},
+        {'items': ['20193', '20184', '20187', '20196'], 'set': '20376'},
+        {'items': ['2587', '2583', '2585', '2589'], 'set': '12992'},
+        {'items': ['12293', '12287', '12289', '12291'], 'set': '13004'},
+        {'items': ['2605', '2599', '2601', '2603'], 'set': '13016'},
+        {'items': ['2673', '2669', '2671', '2675'], 'set': '13048'},
+        {'items': ['2665', '2661', '2663', '2667'], 'set': '13040'},
+        {'items': ['2657', '2653', '2655', '2659'], 'set': '13044'},
+        {'items': ['12466', '12460', '12462', '12468'], 'set': '13060'},
+        {'items': ['12476', '12470', '12472', '12478'], 'set': '13052'},
+        {'items': ['12486', '12480', '12482', '12488'], 'set': '13056'},
+        {'items': ['1155', '1117', '1087', '1189'], 'set': '12962'},
+        {'items': ['1153', '1115', '1081', '1191'], 'set': '12974'},
+        {'items': ['1157', '1119', '1083', '1193'], 'set': '12986'},
+        {'items': ['1165', '1125', '1089', '1195'], 'set': '12990'},
+        {'items': ['1159', '1121', '1085', '1197'], 'set': '13002'},
+        {'items': ['1161', '1123', '1091', '1199'], 'set': '13014'},
+        {'items': ['1163', '1127', '1093', '1201'], 'set': '13026'},
+        {'items': ['12211', '12205', '12209', '12213'], 'set': '12970'},
+        {'items': ['12241', '12235', '12239', '12243'], 'set': '12982'},
+        {'items': ['20178', '20169', '20175', '20181'], 'set': '20385'},
+        {'items': ['2595', '2591', '3473', '2597'], 'set': '12998'},
+        {'items': ['12283', '12277', '12285', '12281'], 'set': '13010'},
+        {'items': ['2613', '2607', '3475', '2611'], 'set': '13022'},
+        {'items': ['2619', '2615', '3476', '2621'], 'set': '13034'},
+        {'items': ['12221', '12215', '12219', '12223'], 'set': '12966'},
+        {'items': ['12231', '12225', '12229', '12233'], 'set': '12978'},
+        {'items': ['20193', '20184', '20190', '20196'], 'set': '20379'},
+        {'items': ['2587', '2583', '3472', '2589'], 'set': '12994'},
+        {'items': ['12293', '12287', '12295', '12291'], 'set': '13006'},
+        {'items': ['2605', '2599', '3474', '2603'], 'set': '13018'},
+        {'items': ['2627', '2623', '3477', '2629'], 'set': '13030'},
+        {'items': ['2673', '2669', '3480', '2675'], 'set': '13050'},
+        {'items': ['2665', '2661', '3479', '2667'], 'set': '13042'},
+        {'items': ['2657', '2653', '3478', '2659'], 'set': '13046'},
+        {'items': ['12466', '12460', '12464', '12468'], 'set': '13062'},
+        {'items': ['12476', '12470', '12474', '12478'], 'set': '13054'},
+        {'items': ['12486', '12480', '12484', '12488'], 'set': '13058'},
+        {'items': ['1135', '1099', '1065'], 'set': '12865'},
+        {'items': ['2499', '2493', '2487'], 'set': '12867'},
+        {'items': ['2501', '2495', '2489'], 'set': '12869'},
+        {'items': ['2503', '2497', '2491'], 'set': '12871'},
+        {'items': ['10382', '10378', '10380', '10376'], 'set': '13165'},
+        {'items': ['10390', '10386', '10388', '10384'], 'set': '13163'},
+        {'items': ['10374', '10370', '10372', '10368'], 'set': '13161'},
+        {'items': ['12496', '12492', '12494', '12490'], 'set': '13171'},
+        {'items': ['12512', '12508', '12510', '12506'], 'set': '13169'},
+        {'items': ['12504', '12500', '12502', '12498'], 'set': '13167'},
+        {'items': ['4708', '4712', '4714', '4710'], 'set': '12881'},
+        {'items': ['4716', '4720', '4722', '4718'], 'set': '12877'},
+        {'items': ['4724', '4728', '4730', '4726'], 'set': '12873'},
+        {'items': ['4732', '4736', '4738', '4734'], 'set': '12883'},
+        {'items': ['4745', '4749', '4751', '4747'], 'set': '12879'},
+        {'items': ['4753', '4757', '4759', '4755'], 'set': '12875'},
+        {'items': ['3835', '3836', '3837', '3838'], 'set': '13153'},
+        {'items': ['3827', '3828', '3829', '3830'], 'set': '13149'},
+        {'items': ['3831', '3832', '3833', '3834'], 'set': '13151'},
+        {'items': ['12621', '12622', '12623', '12624'], 'set': '13159'},
+        {'items': ['12617', '12618', '12619', '12620'], 'set': '13157'},
+        {'items': ['12613', '12614', '12615', '12616'], 'set': '13155'},
+        {'items': ['6', '8', '10', '12'], 'set': '12863'},
+        {'items': ['2428', '113', '2432'], 'set': '13064'},
+        {'items': ['2436', '2440', '2442'], 'set': '13066'},
+        {'items': ['1038', '1040', '1042', '1046', '1044', '1048'], 'set': '13173'},
+        {'items': ['1057', '1053', '1055'], 'set': '13175'},
+        {'items': ['21018', '21021', '21024'], 'set': '21049'}
+    ]
+
+    for armor_set in armor_set_dict:
+        set_batch = armor_set['set']
+        set_json = item_json[set_batch]
+        set_sale = response_dict[set_batch]['buying']
+        items = armor_set['items']
+        item_list = []
+        set_updated_time = ''
+
+        total_cost = 0
+
+        for i, item in enumerate(items):
+            set_item_json = item_json[item]
+            buy_price = response_dict[item]['selling']
+            item_updated_time = ''
+
+            if buy_price == 0:
+                updated_data = ge_price_updater(item, 'sellingPrice')
+                buy_price = updated_data[0]
+                item_updated_time = updated_data[1]
+
+            item_dict = {'id': item, 'name': set_item_json['name'], 'limit': set_item_json['limit'],
+                         'file_name': set_item_json['file_name'], 'buy_price': buy_price}
+
+            total_cost = total_cost + buy_price
+
+            if item_updated_time != '':
+                item_dict['item_updated_time'] = item_updated_time
+
+            item_list.append(item_dict)
+
+        if set_sale == 0:
+            updated_data = ge_price_updater(set_batch, 'buyingPrice')
+            set_sale = updated_data[0]
+            set_updated_time = updated_data[1]
+
+        profit = set_sale - total_cost
+
+        item_data = {'file_name': set_json['file_name'], 'limit': set_json['limit'],
+                     'name': set_json['name'], 'id': set_batch, 'total_cost': total_cost,
+                     'item_list': item_list, 'set_sale': set_sale, 'profit': profit}
+
+        if set_updated_time != '':
+            item_data['set_updated_time'] = set_updated_time
+
+        data_list.append(item_data)
+
+    data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
+
+    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list), 'result_type': 'item_sets'}
+    return render(request, 'grand_exchange.html', data)
 
 
 def item_id_search(request, item_id):
@@ -843,6 +1007,6 @@ def item_id_search(request, item_id):
         data = {'success': False, 'error_id': 2, 'error_msg:': 'IO Error', 'directory': file_path}
         return HttpResponse(json.dumps(data), 'application/json')
 
-    data = {'base_url': get_base_url(), 'item_data': item_json[item_id], 'high_alch': {}, 'result_list': {}}
+    data = {'base_url': get_base_url(), 'item_data': item_json[item_id], 'result_list': {}}
     return render(request, 'grand_exchange.html', data)
 

@@ -51,7 +51,7 @@ body {
     min-width: 300px;
     background: white;
     position: absolute;
-    top: 109px;
+    top: 158px;
     right: 0;
     left: 0;
     margin: auto;
@@ -342,7 +342,7 @@ a {
     padding-bottom: 20px;
 }
 
-#directory {
+.directory {
     width: 100%;
     max-width: 756px;
     display: flex;
@@ -350,19 +350,19 @@ a {
     background: rgba(0, 0, 0, 0.35);
 }
 
-#directory a {
+.directory a {
     color: #FFBD04;
     text-decoration: none;
     cursor: pointer;
     padding: 4px;
 }
 
-#directory div {
+.directory div {
     color: #ffffff;
     padding: 4px;
 }
 
-#directory .empty {
+.directory .empty {
     color: rgba(0, 0, 0, 0);
     margin: -10px;
 }
@@ -376,14 +376,15 @@ a {
     text-align: center;
 }
 
-.ingredient .content {
+.content {
     padding: 0 10px;
 }
 
-.ingredient .multiple {
+.multiple {
     color: #CCFF00;
     margin-right: -5px;
     font-size: 19px;
+    vertical-align: top;
 }
 
 #smithing_title {
@@ -423,4 +424,17 @@ input[type="number"] {
     font-family: cursive;
     cursor: pointer;
     border-radius: 1px;
+}
+
+.item_set_table {
+    font-size: 13px;
+}
+
+#herblore {
+    max-width: 660px;
+}
+
+#general {
+    margin-bottom: 20px;
+    max-width: 720px;
 }

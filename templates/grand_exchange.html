@@ -12,7 +12,6 @@
     <script>
         var globals = {};
         globals.base_url = '{{base_url}}';
-        globals.high_alch = {{high_alch|safe}};
         globals.item_data = {{item_data|safe}};
         globals.result_list = {{result_list|safe}};
         globals.result_type = '{{result_type}}'
@@ -36,7 +35,21 @@
     {% include "static/partial/navigation_bar.html" %}
         <div id="ge_wrapper">
 
-            <div id="directory">
+            <div class="directory" id="general">
+                <div></div>
+                <a class="clue_type" href="/grand_exchange/barrows_repair">Barrows Repair</a>
+                <div>|</div>
+                <a class="clue_type" href="/grand_exchange/enchant_bolts">Enchant Bolts</a>
+                <div>|</div>
+                <a class="clue_type" href="/grand_exchange/item_sets">Item Sets</a>
+                <div>|</div>
+                <a class="clue_type" href="/grand_exchange/plank_making">Plank Making</a>
+                <div>|</div>
+                <a class="clue_type" href="/grand_exchange/tan_leather">Tan Leather</a>
+                <div></div>
+            </div>
+
+            <div class="directory" id="herblore">
                 <div></div>
                 <a class="clue_type" href="/grand_exchange/decant_potions">Decant Potions</a>
                 <div>|</div>
@@ -45,8 +58,6 @@
                 <a class="clue_type" href="/grand_exchange/potion_making">Potion Making</a>
                 <div>|</div>
                 <a class="clue_type" href="/grand_exchange/unfinished_potions">Unfinished Potions</a>
-                <div>|</div>
-                <a class="clue_type" href="/grand_exchange/barrows_repair">Barrows Repair</a>
                 <div></div>
             </div>
 

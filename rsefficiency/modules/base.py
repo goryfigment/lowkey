@@ -48,4 +48,8 @@ def ge_price_updater(item_id, key):
             updated_time = str(item['ts'])
             break
 
+    if updated_price == 0:
+        print item_id
+        print rsbuddy_json
+
     return [updated_price, updated_time]

@@ -26,5 +26,7 @@ urlpatterns = [
 
     url(r'^grand_exchange/barrows_repair/$',  csrf_exempt(grand_exchange.barrows_repair), name='barrows_repair'),
     url(r'^grand_exchange/plank_making/$',  csrf_exempt(grand_exchange.plank_making), name='plank_making'),
+    url(r'^grand_exchange/enchant_bolts/$',  csrf_exempt(grand_exchange.enchant_bolts), name='enchant_bolts'),
     url(r'^grand_exchange/tan_leather/$',  csrf_exempt(grand_exchange.tan_leather), name='tan_leather'),
+    url(r'^grand_exchange/item_sets/$',  csrf_exempt(grand_exchange.item_sets), name='item_sets'),
 ]
