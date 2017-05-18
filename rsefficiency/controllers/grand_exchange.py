@@ -1007,6 +1007,6 @@ def item_id_search(request, item_id):
         data = {'success': False, 'error_id': 2, 'error_msg:': 'IO Error', 'directory': file_path}
         return HttpResponse(json.dumps(data), 'application/json')
 
-    data = {'base_url': get_base_url(), 'item_data': item_json[item_id], 'result_list': {}}
+    data = {'base_url': get_base_url(), 'item_data': json.dumps(item_json[item_id]), 'result_list': {}}
     return render(request, 'grand_exchange.html', data)
 
