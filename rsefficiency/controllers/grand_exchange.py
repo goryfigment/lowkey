@@ -13,17 +13,17 @@ from rsefficiency.modules.ge_list import *
 def grand_exchange(request):
     item_json = rs_item_json()
     item_log = item_log_json()
-    random_int = randint(2, 2)
+    random_int = randint(3, 7)
     random_list = []
     list_title = ''
 
-    if random_int == 1:
-        random_list = easy_clue_list
-        list_title = 'Easy Clue Rewards'
-    elif random_int == 2:
-        random_list = medium_clue_list
-        list_title = 'Medium Clue Rewards'
-    elif random_int == 3:
+    # if random_int == 1:
+    #     random_list = easy_clue_list
+    #     list_title = 'Easy Clue Rewards'
+    # elif random_int == 2:
+    #     random_list = medium_clue_list
+    #     list_title = 'Medium Clue Rewards'
+    if random_int == 3:
         random_list = hard_clue_list
         list_title = 'Hard Clue Rewards'
     elif random_int == 4:
