@@ -2,21 +2,96 @@ from django.shortcuts import render
 import json
 import math
 import requests
-import os
 import re
 import grequests
+from random import randint
 from django.http import HttpResponse
-from rsefficiency.modules.base import get_base_url, render_json, ge_price_updater
+from rsefficiency.modules.base import get_base_url, render_json, ge_price_updater, rs_item_json, item_log_json, update_item_log, write_item_log, access_item_log
+from rsefficiency.modules.ge_list import *
 
 
 def grand_exchange(request):
+    item_json = rs_item_json()
+    item_log = item_log_json()
+    random_int = randint(2, 2)
+    random_list = []
+    list_title = ''
 
-    data = {
-        'base_url': get_base_url(),
-        'result_list': {},
-        'item_data': {}
-    }
+    if random_int == 1:
+        random_list = easy_clue_list
+        list_title = 'Easy Clue Rewards'
+    elif random_int == 2:
+        random_list = medium_clue_list
+        list_title = 'Medium Clue Rewards'
+    elif random_int == 3:
+        random_list = hard_clue_list
+        list_title = 'Hard Clue Rewards'
+    elif random_int == 4:
+        random_list = elite_clue_list
+        list_title = 'Elite Clue Rewards'
+    elif random_int == 5:
+        random_list = master_clue_list
+        list_title = 'Master Clue Rewards'
+    elif random_int == 6:
+        random_list = raid_reward_list
+        list_title = 'Raid Unique Rewards'
+    elif random_int == 7:
+        random_list = gwd_drops
+        list_title = 'GWD Unique Drops'
 
+    urls = ['http://api.rsbuddy.com/grandExchange?a=guidePrice&i=' + i for i in random_list]
+    data_list = []
+    responses = grequests.map(grequests.get(u) for u in urls)
+
+    for i, item in enumerate(random_list):
+        random_item_json = item_json[item]
+        buy_updated_time = 0
+        sell_updated_time = 0
+
+        try:
+            response = responses[i].json()
+            buying = response['buying']
+            selling = response['selling']
+            buy_quantity = response['buyingQuantity']
+            sell_quantity = response['sellingQuantity']
+        except:
+            item_log_data = access_item_log(item, 'both')
+            buying = item_log_data['buying']
+            selling = item_log_data['buying']
+            buy_quantity = 0
+            sell_quantity = 0
+            buy_updated_time = item_log_data['buy_price_ts']
+            sell_updated_time = item_log_data['sell_price_ts']
+
+        if buying == 0:
+            updated_data = ge_price_updater(item_log, item, 'buyingPrice', False)
+            buying = updated_data[0]
+            buy_updated_time = updated_data[1]
+
+        if selling == 0:
+            updated_data = ge_price_updater(item_log, item, 'sellingPrice', False)
+            selling = updated_data[0]
+            sell_updated_time = updated_data[1]
+
+        profit = buying - selling
+
+        item_data = {'name': random_item_json['name'], 'buying': buying, 'selling': selling, 'id': item,
+            'limit': random_item_json['limit'], 'file_name': random_item_json['file_name'], 'buy_quantity': buy_quantity,
+            'sell_quantity': sell_quantity, 'profit': profit, 'title': list_title}
+
+        if buy_updated_time != 0:
+            item_data['buy_updated_time'] = buy_updated_time
+
+        if sell_updated_time != 0:
+            item_data['sell_updated_time'] = sell_updated_time
+
+        update_item_log(item_log, item, buying, selling, buy_updated_time, sell_updated_time)
+
+        data_list.append(item_data)
+
+    write_item_log(item_log)
+    data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
+    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list), 'result_type': 'frontpage'}
     return render(request, 'grand_exchange.html', data)
 
 
@@ -28,15 +103,9 @@ def item_string_search(request):
     search_value = request.GET['search_value']
     data_list = []
 
-    try:
-        my_dir = os.path.dirname(__file__)
-        file_path = os.path.join(my_dir, 'static_data/rs_items.json')
-        item_data = json.load(open(file_path))
-    except:
-        data = {'success': False, 'error_id': 2, 'error_msg:': 'IO Error', 'directory': file_path}
-        return HttpResponse(json.dumps(data), 'application/json')
+    item_json = rs_item_json()
 
-    for key, item in item_data.iteritems():
+    for key, item in item_json.iteritems():
         item_name = item['name'].lower()
 
         item_search_string = re.sub(r'[^\w]', '', item_name)
@@ -87,11 +156,14 @@ def item_price_data(request):
         return HttpResponse(json.dumps(data), 'application/json')
 
     item_id = str(request.GET['item_id'])
+    start_time = str(request.GET['start_time'])
 
     urls = [
         'http://services.runescape.com/m=itemdb_oldschool/api/graph/' + item_id + '.json',
-        'http://api.rsbuddy.com/grandExchange?a=guidePrice&i=' + item_id
+        'http://api.rsbuddy.com/grandExchange?a=guidePrice&i=' + item_id + '&start=' + start_time
     ]
+
+    print 'http://api.rsbuddy.com/grandExchange?a=guidePrice&i=' + item_id + '&start=' + start_time
 
     responses = grequests.map(grequests.get(u) for u in urls)
 
@@ -102,76 +174,93 @@ def item_price_data(request):
                         'current_price': osrs_price_graph[osrs_price_array[-1]], 'previous_price': osrs_price_graph[osrs_price_array[-2]]})
 
 
-def frontpage():
-    rsbuddy_json = requests.get('https://rsbuddy.com/exchange/summary.json', verify=False).json()
+def item_id_search(request, item_id):
+    item_json = rs_item_json()
 
-    try:
-        my_dir = os.path.dirname(__file__)
-        file_path = os.path.join(my_dir, 'static_data/rs_items.json')
-        item_json = json.load(open(file_path))
-    except:
-        data = {'success': False, 'error_id': 2, 'error_msg:': 'IO Error', 'directory': file_path}
+    data = {'base_url': get_base_url(), 'item_data': json.dumps(item_json[item_id]), 'result_list': {}}
+    return render(request, 'grand_exchange.html', data)
+
+
+def item_price(request):
+    if 'item_id' not in request.GET:
+        data = {'success': False, 'error_id': 1, 'error_msg:': 'Data not set', 'data': request.GET}
         return HttpResponse(json.dumps(data), 'application/json')
 
-    nature_rune_buy_avg = rsbuddy_json['561']['buy_average']
+    item_id = str(request.GET['item_id'])
 
-    high_alch_list = []
-    margins_list = []
+    item_log = item_log_json()
+    updated_buy_price = 0
+    updated_sell_price = 0
 
-    for key, item in item_json.iteritems():
-        rsbuddy_json_item = rsbuddy_json[key]
-        item_buy_avg = rsbuddy_json_item['buy_average']
-        item_sell_avg = rsbuddy_json_item['sell_average']
+    urls = [
+        'http://services.runescape.com/m=itemdb_oldschool/api/graph/' + item_id + '.json',
+        'http://api.rsbuddy.com/grandExchange?a=guidePrice&i=' + item_id
+    ]
 
-        if item_buy_avg == 0:
-            continue
+    responses = grequests.map(grequests.get(u) for u in urls)
 
-        total_cost = item['high_alch'] - (item_buy_avg + nature_rune_buy_avg)
+    try:
+        rsbuddy_price = responses[1].json()
+        buying = rsbuddy_price['buying']
+        selling = rsbuddy_price['selling']
+        buy_quantity = rsbuddy_price['buyingQuantity']
+        sell_quantity = rsbuddy_price['sellingQuantity']
 
-        if total_cost < -250:
-            continue
+        if buying == 0:
+            updated_data = ge_price_updater(item_log, item_id, 'buyingPrice', False)
+            buying = updated_data[0]
+            updated_buy_price = updated_data[1]
 
-        high_alch_list.append({'item_data': item, 'total_cost': total_cost, 'buy_price': item_buy_avg})
+        if selling == 0:
+            updated_data = ge_price_updater(item_log, item_id, 'sellingPrice', False)
+            selling = updated_data[0]
+            updated_sell_price = updated_data[1]
 
-        if item_buy_avg == 0 and item_sell_avg == 0:
-            continue
+    except:
+        item_log_item = item_log[item_id]
+        buy_quantity = 0
+        sell_quantity = 0
 
-        margin = item_buy_avg - item_sell_avg
+        if item_log_item['success']:
+            buying = item_log_item['buying']
+            selling = item_log_item['selling']
+            updated_buy_price = item_log_item['buy_price_ts']
+            updated_sell_price = item_log_item['sell_price_ts']
+        else:
+            buying = 0
+            selling = 0
 
-        margins_list.append({'item_data': item, 'total_cost': margin, 'buy_price': item_buy_avg, 'sell_price': item_sell_avg})
+    osrs_price_graph = responses[0].json()['daily']
+    osrs_price_array = sorted(osrs_price_graph)
 
-    high_alch_list = sorted(high_alch_list, key=lambda k: k['total_cost'], reverse=True)
-    margins_list = sorted(margins_list, key=lambda k: k['total_cost'], reverse=True)
+    current_price = osrs_price_graph[osrs_price_array[-1]]
+    previous_price = osrs_price_graph[osrs_price_array[-2]]
 
-    data = {
-        'high_alch_list': high_alch_list[:10],
-        'margins_list': margins_list[:10]
-    }
+    margin = current_price - previous_price
+    margin_ratio = round(100.0 * margin/current_price, 1)
+    profit_margin = buying - selling
 
-    return data
+    item_data = {'selling': selling, 'buying': buying, 'buy_quantity': buy_quantity, 'sell_quantity': sell_quantity,
+                 'current_price': current_price, 'previous_price': previous_price, 'margin': margin,
+                 'margin_ratio': margin_ratio, 'profit_margin': profit_margin}
+
+    if updated_buy_price != 0:
+        item_data['updated_buy_price'] = updated_buy_price
+
+    if updated_sell_price != 0:
+        item_data['updated_sell_price'] = updated_sell_price
+
+    update_item_log(item_log, item_id, buying, selling, updated_buy_price, updated_sell_price)
+    write_item_log(item_log)
+
+    return render_json(item_data)
 
 
 def decant_potions(request):
-    try:
-        my_dir = os.path.dirname(__file__)
-        file_path = os.path.join(my_dir, 'static_data/rs_items.json')
-        item_json = json.load(open(file_path))
-    except:
-        data = {'success': False, 'error_id': 2, 'error_msg:': 'IO Error', 'directory': file_path}
-        return HttpResponse(json.dumps(data), 'application/json')
+    item_json = rs_item_json()
+    item_log = item_log_json()
 
-    potion_list = ['3038', '3036', '3034', '3032', '12911', '12909', '12907', '12905', '12919', '12917', '12915',
-                   '12913', '5949', '5947', '5945', '5943', '5958', '5956', '5954', '5952', '2458', '2456', '2454',
-                   '2452', '179', '177', '175', '2446', '125', '123', '121', '2428', '9745', '9743', '9741', '9739',
-                   '6476', '6474', '6472', '6470', '137', '135', '133', '2432', '3014', '3012', '3010', '3008', '11957',
-                   '11955', '11953', '11951', '155', '153', '151', '2438', '7666', '7664', '7662', '7660', '4423',
-                   '4421', '4419', '4417', '10004', '10002', '10000', '9998', '3046', '3044', '3042', '3040', '3428',
-                   '3426', '3424', '3422', '143', '141', '139', '2434', '173', '171', '169', '2444', '4848', '4846',
-                   '4844', '4842', '131', '129', '127', '2430', '3436', '3434', '3432', '3430', '10931', '10929',
-                   '10927', '10925', '6691', '6689', '6687', '6685', '3414', '3412', '3410', '3408', '12631', '12629',
-                   '12627', '12625', '119', '117', '115', '113', '149', '147', '145', '2436', '12701', '12699', '12697',
-                   '12695', '167', '165', '163', '2442', '3022', '3020', '3018', '3016', '3030', '3028', '3026', '3024',
-                   '161', '159', '157', '2440', '185', '183', '181', '2448', '193', '191', '189', '2450']
+    potion_list = decant_list
 
     urls = ['http://api.rsbuddy.com/grandExchange?a=guidePrice&i=' + i for i in potion_list]
 
@@ -184,43 +273,68 @@ def decant_potions(request):
         three_dose = i + 2
         four_dose = i + 3
 
-        one_dose_price = responses[i].json()['selling']
-        two_dose_price = responses[two_dose].json()['selling']
-        three_dose_price = responses[three_dose].json()['selling']
-        four_dose_price = responses[four_dose].json()['buying']
+        one_dose_updated_time = 0
+        two_dose_updated_time = 0
+        three_dose_updated_time = 0
+        four_dose_updated_time = 0
 
-        one_dose_item_json = item_json[potion_list[i]]
-        two_dose_item_json = item_json[potion_list[two_dose]]
-        three_dose_item_json = item_json[potion_list[three_dose]]
-        four_dose_item_json = item_json[potion_list[four_dose]]
+        one_dose_id = potion_list[i]
+        two_dose_id = potion_list[two_dose]
+        three_dose_id = potion_list[three_dose]
+        four_dose_id = potion_list[four_dose]
 
-        one_dose_id = one_dose_item_json['id']
-        two_dose_id = two_dose_item_json['id']
-        three_dose_id = three_dose_item_json['id']
-        four_dose_id = four_dose_item_json['id']
+        one_dose_response = responses[i]
+        two_dose_response = responses[two_dose]
+        three_dose_response = responses[three_dose]
+        four_dose_response = responses[four_dose]
 
-        one_dose_updated_time = ''
-        two_dose_updated_time = ''
-        three_dose_updated_time = ''
-        four_dose_updated_time = ''
+        try:
+            one_dose_price = one_dose_response.json()['selling']
+        except:
+            item_log_data = access_item_log(one_dose_id, 'sell')
+            one_dose_price = item_log_data['sell']
+            one_dose_updated_time = item_log_data['sell_price_ts']
+
+        try:
+            two_dose_price = two_dose_response.json()['selling']
+        except:
+            item_log_data = access_item_log(two_dose_id, 'sell')
+            two_dose_price = item_log_data['sell']
+            two_dose_updated_time = item_log_data['sell_price_ts']
+
+        try:
+            three_dose_price = three_dose_response.json()['selling']
+        except:
+            item_log_data = access_item_log(three_dose_id, 'sell')
+            three_dose_price = item_log_data['sell']
+            three_dose_updated_time = item_log_data['sell_price_ts']
+
+        try:
+            four_dose_price = four_dose_response.json()['buying']
+        except:
+            item_log_data = access_item_log(four_dose_id, 'buy')
+            four_dose_price = item_log_data['buy']
+            four_dose_updated_time = item_log_data['buy_price_ts']
+
+        four_dose_item_json = item_json[four_dose_id]
 
         if one_dose_price == 0:
-            updated_data = ge_price_updater(one_dose_id, 'sellingPrice')
+            updated_data = ge_price_updater(item_log, one_dose_id, 'sellingPrice', False)
             one_dose_price = updated_data[0]
             one_dose_updated_time = updated_data[1]
 
         if two_dose_price == 0:
-            updated_data = ge_price_updater(two_dose_id, 'sellingPrice')
+            updated_data = ge_price_updater(item_log, two_dose_id, 'sellingPrice', False)
             two_dose_price = updated_data[0]
             two_dose_updated_time = updated_data[1]
 
         if three_dose_price == 0:
-            updated_data = ge_price_updater(three_dose_id, 'sellingPrice')
+            updated_data = ge_price_updater(item_log, three_dose_id, 'sellingPrice', False)
             three_dose_price = updated_data[0]
             three_dose_updated_time = updated_data[1]
 
         if four_dose_price == 0:
-            updated_data = ge_price_updater(four_dose_id, 'buyingPrice')
+            updated_data = ge_price_updater(item_log, four_dose_id, 'buyingPrice', False)
             four_dose_price = updated_data[0]
             four_dose_updated_time = updated_data[1]
 
@@ -240,43 +354,42 @@ def decant_potions(request):
         cheapest_cost = 4*minimum_price
         profit = four_dose_price - cheapest_cost
 
-        item_data = {'name': one_dose_item_json['name'].replace('(1)', ''), 'cheapest_cost': cheapest_cost,
+        item_data = {'name': four_dose_item_json['name'].replace('(4)', ''), 'cheapest_cost': cheapest_cost,
             'limit': four_dose_item_json['limit'], 'file_name': four_dose_item_json['file_name'],
             'potion_id': four_dose_item_json['id'], 'one_dose_cost': one_dose_price, 'two_dose_cost': two_dose_price,
             'three_dose_cost': three_dose_price, 'four_dose_cost': four_dose_price, 'profit': profit,
             'cheapest_dose': cheapest_dose}
 
-        if one_dose_updated_time != '':
+        if one_dose_updated_time != 0:
             item_data['one_dose_updated_time'] = one_dose_updated_time
 
-        if two_dose_updated_time != '':
+        if two_dose_updated_time != 0:
             item_data['two_dose_updated_time'] = two_dose_updated_time
 
-        if three_dose_updated_time != '':
+        if three_dose_updated_time != 0:
             item_data['three_dose_updated_time'] = three_dose_updated_time
 
-        if four_dose_updated_time != '':
+        if four_dose_updated_time != 0:
             item_data['four_dose_updated_time'] = four_dose_updated_time
+
+        update_item_log(item_log, one_dose_id, 0, one_dose_price, 0, one_dose_updated_time)
+        update_item_log(item_log, two_dose_id, 0, two_dose_price, 0, two_dose_updated_time)
+        update_item_log(item_log, three_dose_id, 0, three_dose_price, 0, three_dose_updated_time)
+        update_item_log(item_log, four_dose_id, four_dose_price, 0, four_dose_updated_time, 0)
 
         data_list.append(item_data)
 
+    write_item_log(item_log)
     data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
     data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list), 'result_type': 'decant_potions'}
     return render(request, 'grand_exchange.html', data)
 
 
 def clean_herbs(request):
-    try:
-        my_dir = os.path.dirname(__file__)
-        file_path = os.path.join(my_dir, 'static_data/rs_items.json')
-        item_json = json.load(open(file_path))
-    except:
-        data = {'success': False, 'error_id': 2, 'error_msg:': 'IO Error', 'directory': file_path}
-        return HttpResponse(json.dumps(data), 'application/json')
+    item_json = rs_item_json()
+    item_log = item_log_json()
 
-    herblore_list = ['199', '249', '201', '251', '203', '253', '205', '255', '207', '257', '3049', '2998', '209', '259',
-                     '211', '261', '213', '263', '3051', '3000', '215', '265', '2485', '2481', '217', '267', '219',
-                     '269']
+    herblore_list = clean_herb_list
 
     requirements = [3, 5, 11, 20, 25, 30, 40, 48, 54, 59, 65, 67, 70, 75]
 
@@ -291,21 +404,34 @@ def clean_herbs(request):
 
         grimy_item_json = item_json[herblore_list[i]]
         clean_item_json = item_json[herblore_list[clean]]
+        grimy_response = responses[i]
+        clean_response = responses[clean]
+        grimy_id = herblore_list[i]
+        clean_id = herblore_list[clean]
+        grimy_updated_time = 0
+        clean_updated_time = 0
 
-        grimy_cost = responses[i].json()['selling']
-        clean_sale = responses[clean].json()['buying']
-        grimy_id = grimy_item_json['id']
-        clean_id = clean_item_json['id']
-        grimy_updated_time = ''
-        clean_updated_time = ''
+        try:
+            grimy_cost = grimy_response.json()['selling']
+        except:
+            item_log_data = access_item_log(grimy_id, 'sell')
+            grimy_cost = item_log_data['sell']
+            grimy_updated_time = item_log_data['sell_price_ts']
+
+        try:
+            clean_sale = clean_response.json()['buying']
+        except:
+            item_log_data = access_item_log(clean_id, 'buy')
+            clean_sale = item_log_data['buy']
+            clean_updated_time = item_log_data['buy_price_ts']
 
         if grimy_cost == 0:
-            updated_data = ge_price_updater(grimy_id, 'sellingPrice')
+            updated_data = ge_price_updater(item_log, grimy_id, 'sellingPrice', False)
             grimy_cost = updated_data[0]
             grimy_updated_time = updated_data[1]
 
         if clean_sale == 0:
-            updated_data = ge_price_updater(clean_id, 'buyingPrice')
+            updated_data = ge_price_updater(item_log, clean_id, 'buyingPrice', False)
             clean_sale = updated_data[0]
             clean_updated_time = updated_data[1]
 
@@ -316,32 +442,27 @@ def clean_herbs(request):
             'grimy_id': grimy_id, 'clean_id': clean_id, 'grimy_cost': grimy_cost, 'clean_sale': clean_sale,
             'profit': profit, 'requirement': requirements[i / 2], 'grimy_name': grimy_item_json['name']}
 
-        if grimy_updated_time != '':
+        if grimy_updated_time != 0:
             item_data['grimy_updated_time'] = grimy_updated_time
 
-        if clean_updated_time != '':
+        if clean_updated_time != 0:
             item_data['clean_updated_time'] = clean_updated_time
 
         data_list.append(item_data)
 
+        update_item_log(item_log, grimy_id, 0, grimy_cost, 0, grimy_updated_time)
+        update_item_log(item_log, clean_id, clean_sale, 0, clean_updated_time, 0)
+
+    write_item_log(item_log)
     data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list), 'result_type': 'clean_herbs'}
     return render(request, 'grand_exchange.html', data)
 
 
 def barrows_repair(request):
-    try:
-        my_dir = os.path.dirname(__file__)
-        file_path = os.path.join(my_dir, 'static_data/rs_items.json')
-        item_json = json.load(open(file_path))
-    except:
-        data = {'success': False, 'error_id': 2, 'error_msg:': 'IO Error', 'directory': file_path}
-        return HttpResponse(json.dumps(data), 'application/json')
+    item_json = rs_item_json()
+    item_log = item_log_json()
 
-    barrows_list = ['4718', '4890', '4716', '4884', '4720', '4896', '4722', '4902',
-                    '4710', '4866', '4708', '4860', '4712', '4872', '4714', '4878',
-                    '4726', '4914', '4724', '4908', '4728', '4920', '4730', '4926',
-                    '4734', '4938', '4732', '4932', '4736', '4944', '4738', '4950',
-                    '4755', '4986', '4753', '4980', '4757', '4992', '4759', '4998']
+    barrows_list = barrows_repair_list
 
     urls = ['http://api.rsbuddy.com/grandExchange?a=guidePrice&i=' + i for i in barrows_list]
 
@@ -369,13 +490,27 @@ def barrows_repair(request):
 
         fixed_item_json = item_json[barrows_list[i]]
         broken_item_json = item_json[barrows_list[broken]]
-        fixed_item_id = fixed_item_json['id']
-        broken_item_id = broken_item_json['id']
-        broken_updated_time = ''
-        fixed_updated_time = ''
+        fixed_item_id = barrows_list[i]
+        broken_item_id = barrows_list[broken]
+        broken_updated_time = 0
+        fixed_updated_time = 0
 
-        broken_cost = responses[broken].json()['selling']
-        fixed_sale = responses[i].json()['buying']
+        broken_response = responses[broken]
+        fixed_response = responses[i]
+
+        try:
+            broken_cost = broken_response.json()['selling']
+        except:
+            item_log_data = access_item_log(broken_item_id, 'sell')
+            broken_cost = item_log_data['sell']
+            broken_updated_time = item_log_data['sell_price_ts']
+
+        try:
+            fixed_sale = fixed_response.json()['buying']
+        except:
+            item_log_data = access_item_log(fixed_item_id, 'buy')
+            fixed_sale = item_log_data['buy']
+            fixed_updated_time = item_log_data['buy_price_ts']
 
         if broken % 8 == 1:
             repair_cost = weapon_repair
@@ -387,12 +522,12 @@ def barrows_repair(request):
             repair_cost = leg_repair
 
         if broken_cost == 0:
-            updated_data = ge_price_updater(broken_item_id, 'sellingPrice')
+            updated_data = ge_price_updater(item_log, broken_item_id, 'sellingPrice', False)
             broken_cost = updated_data[0]
             broken_updated_time = updated_data[1]
 
         if fixed_sale == 0:
-            updated_data = ge_price_updater(fixed_item_id, 'buyingPrice')
+            updated_data = ge_price_updater(item_log, fixed_item_id, 'buyingPrice', False)
             broken_cost = updated_data[0]
             broken_updated_time = updated_data[1]
 
@@ -404,30 +539,28 @@ def barrows_repair(request):
             'broken_cost': broken_cost, 'fixed_sale': fixed_sale, 'profit': profit, 'repair': repair_cost,
             'smithing_level': smithing_level}
 
-        if broken_updated_time != '':
+        if broken_updated_time != 0:
             item_data['broken_updated_time'] = broken_updated_time
 
-        if fixed_updated_time != '':
+        if fixed_updated_time != 0:
             item_data['fixed_updated_time'] = fixed_updated_time
+
+        update_item_log(item_log, broken_item_id, 0, broken_cost, 0, broken_updated_time)
+        update_item_log(item_log, fixed_item_id, fixed_sale, 0, fixed_updated_time, 0)
 
         data_list.append(item_data)
 
+    write_item_log(item_log)
     data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
-
     data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list), 'result_type': 'barrows_repair'}
     return render(request, 'grand_exchange.html', data)
 
 
 def potion_making(request):
-    try:
-        my_dir = os.path.dirname(__file__)
-        file_path = os.path.join(my_dir, 'static_data/rs_items.json')
-        item_json = json.load(open(file_path))
-    except:
-        data = {'success': False, 'error_id': 2, 'error_msg:': 'IO Error', 'directory': file_path}
-        return HttpResponse(json.dumps(data), 'application/json')
+    item_json = rs_item_json()
+    item_log = item_log_json()
 
-    item_list = ['227', '2998', '2152', '3034', '5954', '12934', '12907', '269', '12915', '5935', '6049', '5945', '259', '6051', '2481', '241', '2454', '251', '235', '175', '249', '221', '121', '255', '9736', '9741', '257', '239', '133', '1975', '3010', '11994', '11953', '261', '231', '151', '223', '1550', '7650', '7662', '4419', '10111', '10000', '3138', '3042', '139', '267', '245', '169', '127', '6693', '6687', '253', '592', '3410', '3018', '12640', '12627', '225', '115', '145', '157', '163', '12697', '265', '2970', '3000', '3026', '263', '181', '247', '189']
+    item_list = potion_making_list
 
     urls = ['http://api.rsbuddy.com/grandExchange?a=guidePrice&i=' + i for i in item_list]
 
@@ -436,68 +569,53 @@ def potion_making(request):
     response_dict = {}
 
     for i, item in enumerate(item_list):
-        response_dict[item] = responses[i].json()
+        response = responses[i]
+        try:
+            json_response = response.json()
+            update_item_log(item_log, item, json_response['buying'], json_response['selling'], 0, 0)
+            response_dict[item] = json_response
+        except:
+            json_response = access_item_log(item, 'both')
+            update_item_log(item_log, item, json_response['buying'], json_response['selling'], json_response['buy_price_ts'], json_response['sell_price_ts'])
+            response_dict[item] = json_response
 
-    potion_dict = [
-        {'potion': '3034', 'ingredients': ['2998', '2152']},
-        {'potion': '12907', 'ingredients': ['5954', '12934'], 'multiples': [1, 15]},
-        {'potion': '12915', 'ingredients': ['269', '12907']},
-        {'potion': '5945', 'ingredients': ['2998', '5935', '6049']},
-        {'potion': '5954', 'ingredients': ['259', '5935', '6051']},
-        {'potion': '2454', 'ingredients': ['2481', '241']},
-        {'potion': '175', 'ingredients': ['251', '235']},
-        {'potion': '121', 'ingredients': ['249', '221']},
-        {'potion': '9741', 'ingredients': ['255', '9736']},
-        {'potion': '133', 'ingredients': ['257', '239']},
-        {'potion': '3010', 'ingredients': ['255', '1975']},
-        {'potion': '11953', 'ingredients': ['2454', '11994'], 'multiples': [1, 3]},
-        {'potion': '151', 'ingredients': ['261', '231']},
-        {'potion': '7662', 'ingredients': ['255', '223', '1550', '7650']},
-        {'potion': '4419', 'ingredients': ['249', '255', '251'], 'multiples': [2, 1, 1]},
-        {'potion': '10000', 'ingredients': ['261', '10111']},
-        {'potion': '3042', 'ingredients': ['2481', '3138']},
-        {'potion': '139', 'ingredients': ['257', '231']},
-        {'potion': '169', 'ingredients': ['267', '245']},
-        {'potion': '127', 'ingredients': ['255', '223']},
-        {'potion': '6687', 'ingredients': ['2998', '6693']},
-        {'potion': '3410', 'ingredients': ['253', '592']},
-        {'potion': '12627', 'ingredients': ['3018', '12640'], 'multiples': [1, 3]},
-        {'potion': '115', 'ingredients': ['253', '225']},
-        {'potion': '145', 'ingredients': ['259', '221']},
-        {'potion': '12697', 'ingredients': ['269', '145', '157', '163']},
-        {'potion': '163', 'ingredients': ['265', '239']},
-        {'potion': '3018', 'ingredients': ['261', '2970']},
-        {'potion': '3026', 'ingredients': ['3000', '223']},
-        {'potion': '157', 'ingredients': ['263', '225']},
-        {'potion': '181', 'ingredients': ['259', '235']},
-        {'potion': '189', 'ingredients': ['269', '247']}
-    ]
+    potion_dict = potion_making_dict
 
     vial_of_water_cost = response_dict['227']['selling']
-    vial_of_water_updated_time = ''
+    vial_of_water_updated_time = 0
 
     if vial_of_water_cost == 0:
-        updated_data = ge_price_updater(227, 'sellingPrice')
+        updated_data = ge_price_updater(item_log, 227, 'sellingPrice', False)
         vial_of_water_cost = updated_data[0]
         vial_of_water_updated_time = updated_data[1]
 
     for pot in potion_dict:
         potion = pot['potion']
         potion_item_json = item_json[potion]
-        potion_sale = response_dict[potion]['buying']
+        potion_response = response_dict[potion]
+        potion_sale = potion_response['buying']
         ingredients = pot['ingredients']
         ingredient_list = []
-        potion_updated_time = ''
+
+        if 'buy_price_ts' in potion_response:
+            potion_updated_time = potion_response['buy_price_ts']
+        else:
+            potion_updated_time = 0
 
         total_cost = vial_of_water_cost
 
         for i, ingredient in enumerate(ingredients):
             ingredient_json = item_json[ingredient]
-            buy_price = response_dict[ingredient]['selling']
-            ingredient_updated_time = ''
+            ingredient_response = response_dict[ingredient]
+            buy_price = ingredient_response['selling']
+
+            if 'sell_price_ts' in ingredient_response:
+                ingredient_updated_time = ingredient_response['sell_price_ts']
+            else:
+                ingredient_updated_time = 0
 
             if buy_price == 0:
-                updated_data = ge_price_updater(ingredient, 'sellingPrice')
+                updated_data = ge_price_updater(item_log, ingredient, 'sellingPrice', False)
                 buy_price = updated_data[0]
                 ingredient_updated_time = updated_data[1]
 
@@ -513,13 +631,15 @@ def potion_making(request):
             else:
                 total_cost = total_cost + buy_price
 
-            if ingredient_updated_time != '':
+            if ingredient_updated_time != 0:
                 ingredient_dict['ingredient_updated_time'] = ingredient_updated_time
+
+            update_item_log(item_log, ingredient, 0, buy_price, 0, ingredient_updated_time)
 
             ingredient_list.append(ingredient_dict)
 
         if potion_sale == 0:
-            updated_data = ge_price_updater(potion, 'buyingPrice')
+            updated_data = ge_price_updater(item_log, potion, 'buyingPrice', False)
             potion_sale = updated_data[0]
             potion_updated_time = updated_data[1]
 
@@ -530,28 +650,23 @@ def potion_making(request):
                      'ingredient_list': ingredient_list, 'vial_of_water_cost': vial_of_water_cost,
                      'potion_sale': potion_sale, 'profit': profit}
 
-        if potion_updated_time != '':
+        if potion_updated_time != 0:
             item_data['potion_updated_time'] = potion_updated_time
 
+        update_item_log(item_log, potion, potion_sale, 0, potion_updated_time, 0)
         data_list.append(item_data)
 
+    write_item_log(item_log)
     data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
-
     data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list), 'result_type': 'potion_making'}
     return render(request, 'grand_exchange.html', data)
 
 
 def unfinished_potions(request):
-    try:
-        my_dir = os.path.dirname(__file__)
-        file_path = os.path.join(my_dir, 'static_data/rs_items.json')
-        item_json = json.load(open(file_path))
-    except:
-        data = {'success': False, 'error_id': 2, 'error_msg:': 'IO Error', 'directory': file_path}
-        return HttpResponse(json.dumps(data), 'application/json')
+    item_json = rs_item_json()
+    item_log = item_log_json()
 
-    potion_list = ['227', '249', '91', '251', '93', '253', '95', '255', '97', '257', '99', '2998', '3002', '259', '101',
-                   '261', '103', '263', '105', '3000', '3004', '265', '107', '2481', '2483', '267', '109', '269', '111']
+    potion_list = unfinished_potion_list
 
     urls = ['http://api.rsbuddy.com/grandExchange?a=guidePrice&i=' + i for i in potion_list]
 
@@ -560,10 +675,10 @@ def unfinished_potions(request):
     responses = grequests.map(grequests.get(u) for u in urls)
 
     vial_of_water_cost = responses[0].json()['selling']
-    vial_of_water_updated_time = ''
+    vial_of_water_updated_time = 0
 
     if vial_of_water_cost == 0:
-        updated_data = ge_price_updater(227, 'sellingPrice')
+        updated_data = ge_price_updater(item_log, 227, 'sellingPrice', False)
         vial_of_water_cost = updated_data[0]
         vial_of_water_updated_time = updated_data[1]
 
@@ -572,21 +687,35 @@ def unfinished_potions(request):
 
         herb_item_json = item_json[potion_list[i]]
         potion_item_json = item_json[potion_list[potion]]
+        herb_response = responses[i]
+        potion_response = responses[potion]
 
-        herb_cost = responses[i].json()['selling']
-        potion_sale = responses[potion].json()['buying']
-        herb_id = herb_item_json['id']
-        potion_id = potion_item_json['id']
-        herb_updated_time = ''
-        potion_updated_time = ''
+        herb_id = potion_list[i]
+        potion_id = potion_list[potion]
+        herb_updated_time = 0
+        potion_updated_time = 0
+
+        try:
+            herb_cost = herb_response.json()['selling']
+        except:
+            item_log_data = access_item_log(herb_id, 'sell')
+            herb_cost = item_log_data['sell']
+            herb_updated_time = item_log_data['sell_price_ts']
+
+        try:
+            potion_sale = potion_response.json()['buying']
+        except:
+            item_log_data = access_item_log(potion_id, 'buy')
+            potion_sale = item_log_data['buy']
+            potion_updated_time = item_log_data['buy_price_ts']
 
         if herb_cost == 0:
-            updated_data = ge_price_updater(herb_id, 'sellingPrice')
+            updated_data = ge_price_updater(item_log, herb_id, 'sellingPrice', False)
             herb_cost = updated_data[0]
             herb_updated_time = updated_data[1]
 
         if potion_sale == 0:
-            updated_data = ge_price_updater(potion_id, 'buyingPrice')
+            updated_data = ge_price_updater(item_log, potion_id, 'buyingPrice', False)
             potion_sale = updated_data[0]
             potion_updated_time = updated_data[1]
 
@@ -597,28 +726,26 @@ def unfinished_potions(request):
             'herb_id': herb_id, 'potion_id': potion_id, 'herb_cost': herb_cost, 'potion_sale': potion_sale,
             'profit': profit, 'vial_of_water_cost': vial_of_water_cost, 'herb_name':  herb_item_json['name']}
 
-        if herb_updated_time != '':
+        if herb_updated_time != 0:
             item_data['herb_updated_time'] = herb_updated_time
 
-        if potion_updated_time != '':
+        if potion_updated_time != 0:
             item_data['potion_updated_time'] = potion_updated_time
+
+        update_item_log(item_log, herb_id, 0, herb_cost, 0, herb_updated_time)
+        update_item_log(item_log, potion_id, potion_sale, 0, potion_updated_time, 0)
 
         data_list.append(item_data)
 
+    write_item_log(item_log)
     data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
-
     data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list), 'result_type': 'unfinished_potions'}
     return render(request, 'grand_exchange.html', data)
 
 
 def plank_making(request):
-    try:
-        my_dir = os.path.dirname(__file__)
-        file_path = os.path.join(my_dir, 'static_data/rs_items.json')
-        item_json = json.load(open(file_path))
-    except:
-        data = {'success': False, 'error_id': 2, 'error_msg:': 'IO Error', 'directory': file_path}
-        return HttpResponse(json.dumps(data), 'application/json')
+    item_json = rs_item_json()
+    item_log = item_log_json()
 
     data_list = []
     plank_making_list = ['1511', '960', '1521', '8778', '6333', '8780', '6332', '8782']
@@ -636,20 +763,34 @@ def plank_making(request):
 
         sawmill_cost = sawmill_cost_list[i / 2]
         plank_type = type_list[i / 2]
-        log_cost = responses[i].json()['selling']
-        plank_sale = responses[plank].json()['buying']
-        log_id = log_item_json['id']
-        plank_id = plank_item_json['id']
-        log_updated_time = ''
-        plank_updated_time = ''
+        log_id = plank_making_list[i]
+        plank_id = plank_making_list[plank]
+        log_updated_time = 0
+        plank_updated_time = 0
+        log_response = responses[i]
+        plank_response = responses[plank]
+
+        try:
+            log_cost = log_response.json()['selling']
+        except:
+            item_log_data = access_item_log(log_id, 'sell')
+            log_cost = item_log_data['sell']
+            log_updated_time = item_log_data['sell_price_ts']
+
+        try:
+            plank_sale = plank_response.json()['buying']
+        except:
+            item_log_data = access_item_log(plank_id, 'buy')
+            plank_sale = item_log_data['buy']
+            plank_updated_time = item_log_data['buy_price_ts']
 
         if log_cost == 0:
-            updated_data = ge_price_updater(log_id, 'sellingPrice')
+            updated_data = ge_price_updater(item_log, log_id, 'sellingPrice', False)
             log_cost = updated_data[0]
             log_updated_time = updated_data[1]
 
         if plank_sale == 0:
-            updated_data = ge_price_updater(plank_id, 'buyingPrice')
+            updated_data = ge_price_updater(item_log, plank_id, 'buyingPrice', False)
             plank_sale = updated_data[0]
             plank_updated_time = updated_data[1]
 
@@ -662,28 +803,26 @@ def plank_making(request):
             'profit': profit, 'sawmill_cost': sawmill_cost, 'total_cost': total_cost,
             'plank_name': plank_item_json['name'], 'plank_type': plank_type}
 
-        if log_updated_time != '':
+        if log_updated_time != 0:
             item_data['log_updated_time'] = log_updated_time
 
-        if plank_updated_time != '':
+        if plank_updated_time != 0:
             item_data['plank_updated_time'] = plank_updated_time
+
+        update_item_log(item_log, log_id, 0, log_cost, 0, log_updated_time)
+        update_item_log(item_log, plank_id, plank_sale, 0, plank_updated_time, 0)
 
         data_list.append(item_data)
 
+    write_item_log(item_log)
     data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
-
     data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list), 'result_type': 'plank_making'}
     return render(request, 'grand_exchange.html', data)
 
 
 def tan_leather(request):
-    try:
-        my_dir = os.path.dirname(__file__)
-        file_path = os.path.join(my_dir, 'static_data/rs_items.json')
-        item_json = json.load(open(file_path))
-    except:
-        data = {'success': False, 'error_id': 2, 'error_msg:': 'IO Error', 'directory': file_path}
-        return HttpResponse(json.dumps(data), 'application/json')
+    item_json = rs_item_json()
+    item_log = item_log_json()
 
     data_list = []
     tanning_list = ['1739', '1741', '1739', '1743', '1753', '1745', '1751', '2505', '1749', '2507', '1747', '2509']
@@ -701,20 +840,34 @@ def tan_leather(request):
 
         al_kharid_cost = al_kharid_cost_list[i / 2]
         canifis_cost = canifis_cost_list[i / 2]
-        hide_cost = responses[i].json()['selling']
-        leather_sale = responses[leather].json()['buying']
-        hide_id = hide_item_json['id']
-        leather_id = leather_item_json['id']
-        hide_updated_time = ''
-        leather_updated_time = ''
+        hide_response = responses[i]
+        leather_response = responses[leather]
+        hide_id = tanning_list[i]
+        leather_id = tanning_list[leather]
+        hide_updated_time = 0
+        leather_updated_time = 0
+
+        try:
+            hide_cost = hide_response.json()['selling']
+        except:
+            item_log_data = access_item_log(hide_id, 'sell')
+            hide_cost = item_log_data['sell']
+            hide_updated_time = item_log_data['sell_price_ts']
+
+        try:
+            leather_sale = leather_response.json()['buying']
+        except:
+            item_log_data = access_item_log(leather_id, 'buy')
+            leather_sale = item_log_data['buy']
+            leather_updated_time = item_log_data['buy_price_ts']
 
         if hide_cost == 0:
-            updated_data = ge_price_updater(hide_id, 'sellingPrice')
+            updated_data = ge_price_updater(item_log, hide_id, 'sellingPrice', False)
             hide_cost = updated_data[0]
             hide_updated_time = updated_data[1]
 
         if leather_sale == 0:
-            updated_data = ge_price_updater(leather_id, 'buyingPrice')
+            updated_data = ge_price_updater(item_log, leather_id, 'buyingPrice', False)
             leather_sale = updated_data[0]
             leather_updated_time = updated_data[1]
 
@@ -727,31 +880,28 @@ def tan_leather(request):
             'profit': profit, 'al_kharid_cost': al_kharid_cost, 'total_cost': total_cost,
             'leather_name': leather_item_json['name'], 'canifis_cost': canifis_cost}
 
-        if hide_updated_time != '':
+        if hide_updated_time != 0:
             item_data['hide_updated_time'] = hide_updated_time
 
-        if leather_updated_time != '':
+        if leather_updated_time != 0:
             item_data['leather_updated_time'] = leather_updated_time
+
+        update_item_log(item_log, hide_id, 0, hide_cost, 0, hide_updated_time)
+        update_item_log(item_log, leather_id, leather_sale, 0, leather_updated_time, 0)
 
         data_list.append(item_data)
 
+    write_item_log(item_log)
     data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
-
     data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list), 'result_type': 'tan_leather'}
     return render(request, 'grand_exchange.html', data)
 
 
 def enchant_bolts(request):
-    try:
-        my_dir = os.path.dirname(__file__)
-        file_path = os.path.join(my_dir, 'static_data/rs_items.json')
-        item_json = json.load(open(file_path))
-    except:
-        data = {'success': False, 'error_id': 2, 'error_msg:': 'IO Error', 'directory': file_path}
-        return HttpResponse(json.dumps(data), 'application/json')
+    item_json = rs_item_json()
+    item_log = item_log_json()
 
-    enchant_list = ['564', '558', '561', '565', '563', '566', '560', '879', '9236', '9337', '9240', '880', '9238',
-                    '9338', '9241', '9336', '9239', '9339', '9242', '9340', '9243', '9341', '9244', '9342', '9245']
+    enchant_list = enchanted_list
 
     urls = ['http://api.rsbuddy.com/grandExchange?a=guidePrice&i=' + i for i in enchant_list]
 
@@ -760,39 +910,47 @@ def enchant_bolts(request):
     response_dict = {}
 
     for i, item in enumerate(enchant_list):
-        response_dict[item] = responses[i].json()
+        response = responses[i]
+        try:
+            json_response = response.json()
+            update_item_log(item_log, item, json_response['buying'], json_response['selling'], 0, 0)
+            response_dict[item] = json_response
+        except:
+            json_response = access_item_log(item, 'both')
+            update_item_log(item_log, item, json_response['buying'], json_response['selling'], json_response['buy_price_ts'], json_response['sell_price_ts'])
+            response_dict[item] = json_response
 
-    enchant_dict = [
-        {'bolt': '9236', 'required': ['879', '564'], 'staff': '1381', 'multiples': [10, 1], 'magic_level': 4},
-        {'bolt': '9240', 'required': ['9337', '558', '564'], 'multiples': [10, 1, 1], 'staff': '1383', 'magic_level': 7},
-        {'bolt': '9238', 'required': ['880', '564'], 'staff': '1385', 'multiples': [10, 1], 'magic_level': 24},
-        {'bolt': '9241', 'required': ['9338', '561', '564'], 'staff': '1381', 'multiples': [10, 1, 1], 'magic_level': 27},
-        {'bolt': '9239', 'required': ['9336', '564'], 'staff': '1387', 'multiples': [10, 1], 'magic_level': 29},
-        {'bolt': '9242', 'required': ['9339', '565', '564'], 'staff': '1387', 'multiples': [10, 1, 1], 'magic_level': 49},
-        {'bolt': '9243', 'required': ['9340', '563', '564'], 'staff': '1385', 'multiples': [10, 2, 1], 'magic_level': 57},
-        {'bolt': '9244', 'required': ['9341', '566', '564'], 'staff': '1385', 'multiples': [10, 1, 1], 'magic_level': 68},
-        {'bolt': '9245', 'required': ['9342', '560', '564'], 'staff': '1387', 'multiples': [10, 1, 1], 'magic_level': 87},
-    ]
+    enchant_dict = enchanted_dict
 
     for enchant in enchant_dict:
         bolt = enchant['bolt']
         staff = enchant['staff']
         bolt_item_json = item_json[bolt]
         staff_item_json = item_json[staff]
-        bolt_sale = response_dict[bolt]['buying']
+        bolt_response = response_dict[bolt]
+        bolt_sale = bolt_response['buying']
         required = enchant['required']
         required_list = []
-        bolt_updated_time = ''
+
+        if 'buy_price_ts' in bolt_response:
+            bolt_updated_time = bolt_response['buy_price_ts']
+        else:
+            bolt_updated_time = 0
 
         total_cost = 0
 
         for i, item in enumerate(required):
             required_json = item_json[item]
-            buy_price = response_dict[item]['selling']
-            required_updated_time = ''
+            required_response = response_dict[item]
+            buy_price = required_response['selling']
+
+            if 'sell_price_ts' in required_response:
+                required_updated_time = required_response['sell_price_ts']
+            else:
+                required_updated_time = 0
 
             if buy_price == 0:
-                updated_data = ge_price_updater(item, 'sellingPrice')
+                updated_data = ge_price_updater(item_log, item, 'sellingPrice', False)
                 buy_price = updated_data[0]
                 required_updated_time = updated_data[1]
 
@@ -808,13 +966,13 @@ def enchant_bolts(request):
             else:
                 total_cost = total_cost + buy_price
 
-            if required_updated_time != '':
+            if required_updated_time != 0:
                 required_dict['required_updated_time'] = required_updated_time
 
             required_list.append(required_dict)
 
         if bolt_sale == 0:
-            updated_data = ge_price_updater(bolt, 'buyingPrice')
+            updated_data = ge_price_updater(item_log, bolt, 'buyingPrice', False)
             bolt_sale = updated_data[0]
             bolt_updated_time = updated_data[1]
 
@@ -826,27 +984,22 @@ def enchant_bolts(request):
                      'staff_file_name': staff_item_json['file_name'], 'staff_name': staff_item_json['name'],
                      'profit': profit}
 
-        if bolt_updated_time != '':
+        if bolt_updated_time != 0:
             item_data['bolt_updated_time'] = bolt_updated_time
 
         data_list.append(item_data)
 
+    write_item_log(item_log)
     data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
-
     data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list), 'result_type': 'enchant_bolts'}
     return render(request, 'grand_exchange.html', data)
 
 
 def item_sets(request):
-    try:
-        my_dir = os.path.dirname(__file__)
-        file_path = os.path.join(my_dir, 'static_data/rs_items.json')
-        item_json = json.load(open(file_path))
-    except:
-        data = {'success': False, 'error_id': 2, 'error_msg:': 'IO Error', 'directory': file_path}
-        return HttpResponse(json.dumps(data), 'application/json')
+    item_json = rs_item_json()
+    item_log = item_log_json()
 
-    armour_list = ['12960', '1155', '1117', '1075', '1189', '12972', '1153', '1115', '1067', '1191', '12984', '1157', '1119', '1069', '1193', '12988', '1165', '1125', '1077', '1195', '13000', '1159', '1121', '1071', '1197', '13012', '1161', '1123', '1073', '1199', '13024', '1163', '1127', '1079', '1201', '12968', '12211', '12205', '12207', '12213', '12980', '12241', '12235', '12237', '12243', '20382', '20178', '20169', '20172', '20181', '12996', '2595', '2591', '2593', '2597', '13008', '12283', '12277', '12279', '12281', '13020', '2613', '2607', '2609', '2611', '13032', '2619', '2615', '2617', '2621', '13036', '3486', '3481', '3483', '3488', '12964', '12221', '12215', '12217', '12223', '12976', '12231', '12225', '12227', '12233', '20376', '20193', '20184', '20187', '20196', '12992', '2587', '2583', '2585', '2589', '13004', '12293', '12287', '12289', '12291', '13016', '2605', '2599', '2601', '2603', '13048', '2673', '2669', '2671', '2675', '13040', '2665', '2661', '2663', '2667', '13044', '2657', '2653', '2655', '2659', '13060', '12466', '12460', '12462', '12468', '13052', '12476', '12470', '12472', '12478', '13056', '12486', '12480', '12482', '12488', '12962', '1087', '12974', '1081', '12986', '1083', '12990', '1089', '13002', '1085', '13014', '1091', '13026', '1093', '12970', '12209', '12982', '12239', '20385', '20175', '12998', '3473', '13010', '12285', '13022', '3475', '13034', '3476', '12966', '12219', '12978', '12229', '20379', '20190', '12994', '3472', '13006', '12295', '13018', '3474', '13030', '2627', '2623', '3477', '2629', '13050', '3480', '13042', '3479', '13046', '3478', '13062', '12464', '13054', '12474', '13058', '12484', '12865', '1135', '1099', '1065', '12867', '2499', '2493', '2487', '12869', '2501', '2495', '2489', '12871', '2503', '2497', '2491', '13165', '10382', '10378', '10380', '10376', '13163', '10390', '10386', '10388', '10384', '13161', '10374', '10370', '10372', '10368', '13171', '12496', '12492', '12494', '12490', '13169', '12512', '12508', '12510', '12506', '13167', '12504', '12500', '12502', '12498', '12881', '4708', '4712', '4714', '4710', '12877', '4716', '4720', '4722', '4718', '12873', '4724', '4728', '4730', '4726', '12883', '4732', '4736', '4738', '4734', '12879', '4745', '4749', '4751', '4747', '12875', '4753', '4757', '4759', '4755', '13153', '3835', '3836', '3837', '3838', '13149', '3827', '3828', '3829', '3830', '13151', '3831', '3832', '3833', '3834', '13159', '12621', '12622', '12623', '12624', '13157', '12617', '12618', '12619', '12620', '13155', '12613', '12614', '12615', '12616', '12863', '6', '8', '10', '12', '13064', '2428', '113', '2432', '13066', '2436', '2440', '2442', '13173', '1038', '1040', '1042', '1046', '1044', '1048', '13175', '1057', '1053', '1055', '21049', '21018', '21021', '21024']
+    armour_list = item_set_list
 
     urls = ['http://api.rsbuddy.com/grandExchange?a=guidePrice&i=' + i for i in armour_list]
 
@@ -855,114 +1008,45 @@ def item_sets(request):
     response_dict = {}
 
     for i, item in enumerate(armour_list):
+        response = responses[i]
         try:
-            response_dict[item] = responses[i].json()
+            json_response = response.json()
+            update_item_log(item_log, item, json_response['buying'], json_response['selling'], 0, 0)
+            response_dict[item] = json_response
         except:
-            print item + ' has failed'
-            print responses[i]
+            json_response = access_item_log(item, 'both')
+            update_item_log(item_log, item, json_response['buying'], json_response['selling'], json_response['buy_price_ts'], json_response['sell_price_ts'])
+            response_dict[item] = json_response
 
-    armor_set_dict = [
-        {'items': ['1155', '1117', '1075', '1189'], 'set': '12960'},
-        {'items': ['1153', '1115', '1067', '1191'], 'set': '12972'},
-        {'items': ['1157', '1119', '1069', '1193'], 'set': '12984'},
-        {'items': ['1165', '1125', '1077', '1195'], 'set': '12988'},
-        {'items': ['1159', '1121', '1071', '1197'], 'set': '13000'},
-        {'items': ['1161', '1123', '1073', '1199'], 'set': '13012'},
-        {'items': ['1163', '1127', '1079', '1201'], 'set': '13024'},
-        {'items': ['12211', '12205', '12207', '12213'], 'set': '12968'},
-        {'items': ['12241', '12235', '12237', '12243'], 'set': '12980'},
-        {'items': ['20178', '20169', '20172', '20181'], 'set': '20382'},
-        {'items': ['2595', '2591', '2593', '2597'], 'set': '12996'},
-        {'items': ['12283', '12277', '12279', '12281'], 'set': '13008'},
-        {'items': ['2613', '2607', '2609', '2611'], 'set': '13020'},
-        {'items': ['2619', '2615', '2617', '2621'], 'set': '13032'},
-        {'items': ['3486', '3481', '3483', '3488'], 'set': '13036'},
-        {'items': ['12221', '12215', '12217', '12223'], 'set': '12964'},
-        {'items': ['12231', '12225', '12227', '12233'], 'set': '12976'},
-        {'items': ['20193', '20184', '20187', '20196'], 'set': '20376'},
-        {'items': ['2587', '2583', '2585', '2589'], 'set': '12992'},
-        {'items': ['12293', '12287', '12289', '12291'], 'set': '13004'},
-        {'items': ['2605', '2599', '2601', '2603'], 'set': '13016'},
-        {'items': ['2673', '2669', '2671', '2675'], 'set': '13048'},
-        {'items': ['2665', '2661', '2663', '2667'], 'set': '13040'},
-        {'items': ['2657', '2653', '2655', '2659'], 'set': '13044'},
-        {'items': ['12466', '12460', '12462', '12468'], 'set': '13060'},
-        {'items': ['12476', '12470', '12472', '12478'], 'set': '13052'},
-        {'items': ['12486', '12480', '12482', '12488'], 'set': '13056'},
-        {'items': ['1155', '1117', '1087', '1189'], 'set': '12962'},
-        {'items': ['1153', '1115', '1081', '1191'], 'set': '12974'},
-        {'items': ['1157', '1119', '1083', '1193'], 'set': '12986'},
-        {'items': ['1165', '1125', '1089', '1195'], 'set': '12990'},
-        {'items': ['1159', '1121', '1085', '1197'], 'set': '13002'},
-        {'items': ['1161', '1123', '1091', '1199'], 'set': '13014'},
-        {'items': ['1163', '1127', '1093', '1201'], 'set': '13026'},
-        {'items': ['12211', '12205', '12209', '12213'], 'set': '12970'},
-        {'items': ['12241', '12235', '12239', '12243'], 'set': '12982'},
-        {'items': ['20178', '20169', '20175', '20181'], 'set': '20385'},
-        {'items': ['2595', '2591', '3473', '2597'], 'set': '12998'},
-        {'items': ['12283', '12277', '12285', '12281'], 'set': '13010'},
-        {'items': ['2613', '2607', '3475', '2611'], 'set': '13022'},
-        {'items': ['2619', '2615', '3476', '2621'], 'set': '13034'},
-        {'items': ['12221', '12215', '12219', '12223'], 'set': '12966'},
-        {'items': ['12231', '12225', '12229', '12233'], 'set': '12978'},
-        {'items': ['20193', '20184', '20190', '20196'], 'set': '20379'},
-        {'items': ['2587', '2583', '3472', '2589'], 'set': '12994'},
-        {'items': ['12293', '12287', '12295', '12291'], 'set': '13006'},
-        {'items': ['2605', '2599', '3474', '2603'], 'set': '13018'},
-        {'items': ['2627', '2623', '3477', '2629'], 'set': '13030'},
-        {'items': ['2673', '2669', '3480', '2675'], 'set': '13050'},
-        {'items': ['2665', '2661', '3479', '2667'], 'set': '13042'},
-        {'items': ['2657', '2653', '3478', '2659'], 'set': '13046'},
-        {'items': ['12466', '12460', '12464', '12468'], 'set': '13062'},
-        {'items': ['12476', '12470', '12474', '12478'], 'set': '13054'},
-        {'items': ['12486', '12480', '12484', '12488'], 'set': '13058'},
-        {'items': ['1135', '1099', '1065'], 'set': '12865'},
-        {'items': ['2499', '2493', '2487'], 'set': '12867'},
-        {'items': ['2501', '2495', '2489'], 'set': '12869'},
-        {'items': ['2503', '2497', '2491'], 'set': '12871'},
-        {'items': ['10382', '10378', '10380', '10376'], 'set': '13165'},
-        {'items': ['10390', '10386', '10388', '10384'], 'set': '13163'},
-        {'items': ['10374', '10370', '10372', '10368'], 'set': '13161'},
-        {'items': ['12496', '12492', '12494', '12490'], 'set': '13171'},
-        {'items': ['12512', '12508', '12510', '12506'], 'set': '13169'},
-        {'items': ['12504', '12500', '12502', '12498'], 'set': '13167'},
-        {'items': ['4708', '4712', '4714', '4710'], 'set': '12881'},
-        {'items': ['4716', '4720', '4722', '4718'], 'set': '12877'},
-        {'items': ['4724', '4728', '4730', '4726'], 'set': '12873'},
-        {'items': ['4732', '4736', '4738', '4734'], 'set': '12883'},
-        {'items': ['4745', '4749', '4751', '4747'], 'set': '12879'},
-        {'items': ['4753', '4757', '4759', '4755'], 'set': '12875'},
-        {'items': ['3835', '3836', '3837', '3838'], 'set': '13153'},
-        {'items': ['3827', '3828', '3829', '3830'], 'set': '13149'},
-        {'items': ['3831', '3832', '3833', '3834'], 'set': '13151'},
-        {'items': ['12621', '12622', '12623', '12624'], 'set': '13159'},
-        {'items': ['12617', '12618', '12619', '12620'], 'set': '13157'},
-        {'items': ['12613', '12614', '12615', '12616'], 'set': '13155'},
-        {'items': ['6', '8', '10', '12'], 'set': '12863'},
-        {'items': ['2428', '113', '2432'], 'set': '13064'},
-        {'items': ['2436', '2440', '2442'], 'set': '13066'},
-        {'items': ['1038', '1040', '1042', '1046', '1044', '1048'], 'set': '13173'},
-        {'items': ['1057', '1053', '1055'], 'set': '13175'},
-        {'items': ['21018', '21021', '21024'], 'set': '21049'}
-    ]
+    armor_set_dict = item_set_dict
 
     for armor_set in armor_set_dict:
         set_batch = armor_set['set']
         set_json = item_json[set_batch]
+        set_response = response_dict[set_batch]
         set_sale = response_dict[set_batch]['buying']
         items = armor_set['items']
         item_list = []
-        set_updated_time = ''
+
+        if 'buy_price_ts' in set_response:
+            set_updated_time = set_response['buy_price_ts']
+        else:
+            set_updated_time = 0
 
         total_cost = 0
 
         for i, item in enumerate(items):
             set_item_json = item_json[item]
-            buy_price = response_dict[item]['selling']
-            item_updated_time = ''
+            set_item_response = response_dict[item]
+            buy_price = set_item_response['selling']
+
+            if 'sell_price_ts' in set_item_response:
+                item_updated_time = set_item_response['sell_price_ts']
+            else:
+                item_updated_time = 0
 
             if buy_price == 0:
-                updated_data = ge_price_updater(item, 'sellingPrice')
+                updated_data = ge_price_updater(item_log, item, 'sellingPrice', False)
                 buy_price = updated_data[0]
                 item_updated_time = updated_data[1]
 
@@ -971,13 +1055,13 @@ def item_sets(request):
 
             total_cost = total_cost + buy_price
 
-            if item_updated_time != '':
+            if item_updated_time != 0:
                 item_dict['item_updated_time'] = item_updated_time
 
             item_list.append(item_dict)
 
         if set_sale == 0:
-            updated_data = ge_price_updater(set_batch, 'buyingPrice')
+            updated_data = ge_price_updater(item_log, set_batch, 'buyingPrice', False)
             set_sale = updated_data[0]
             set_updated_time = updated_data[1]
 
@@ -987,26 +1071,151 @@ def item_sets(request):
                      'name': set_json['name'], 'id': set_batch, 'total_cost': total_cost,
                      'item_list': item_list, 'set_sale': set_sale, 'profit': profit}
 
-        if set_updated_time != '':
+        if set_updated_time != 0:
             item_data['set_updated_time'] = set_updated_time
 
         data_list.append(item_data)
 
+    write_item_log(item_log)
     data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
-
     data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list), 'result_type': 'item_sets'}
     return render(request, 'grand_exchange.html', data)
 
 
-def item_id_search(request, item_id):
-    try:
-        my_dir = os.path.dirname(__file__)
-        file_path = os.path.join(my_dir, 'static_data/rs_items.json')
-        item_json = json.load(open(file_path))
-    except:
-        data = {'success': False, 'error_id': 2, 'error_msg:': 'IO Error', 'directory': file_path}
-        return HttpResponse(json.dumps(data), 'application/json')
+def magic_tablets(request):
+    item_json = rs_item_json()
+    item_log = item_log_json()
 
-    data = {'base_url': get_base_url(), 'item_data': json.dumps(item_json[item_id]), 'result_list': {}}
+    item_list = magic_tablet_list
+
+    urls = ['http://api.rsbuddy.com/grandExchange?a=guidePrice&i=' + i for i in item_list]
+
+    responses = grequests.map(grequests.get(u) for u in urls)
+    data_list = []
+    response_dict = {}
+
+    for i, item in enumerate(item_list):
+        response = responses[i]
+        try:
+            json_response = response.json()
+            update_item_log(item_log, item, json_response['buying'], json_response['selling'], 0, 0)
+            response_dict[item] = json_response
+        except:
+            json_response = access_item_log(item, 'both')
+            update_item_log(item_log, item, json_response['buying'], json_response['selling'], json_response['buy_price_ts'], json_response['sell_price_ts'])
+            response_dict[item] = json_response
+
+    tablet_dict = [
+        {'magic_level': 25, 'items': ['563'], 'tablet': '8007', 'staff': '11998'}, #Varrock teleport: Law rune, 3 Air runes, Fire rune, Soft clay
+        {'magic_level': 31, 'items': ['563'], 'tablet': '8008', 'staff': '20736'}, #Lumbridge teleport: Law rune, 3 Air runes, Earth rune, Soft clay
+        {'magic_level': 37, 'items': ['563'], 'tablet': '8009', 'staff': '20730'}, #Falador teleport: Law rune, 3 Air runes, Water rune, Soft clay
+        {'magic_level': 40, 'items': ['563'], 'tablet': '8013', 'staff': '20736'}, #Teleport to house: Law rune, Air rune, Earth rune, soft clay
+        {'magic_level': 45, 'items': ['563'], 'tablet': '8010', 'staff': '1381'}, #Camelot teleport: Law rune, 5 Air runes, Soft clay
+        {'magic_level': 51, 'items': ['563'], 'tablet': '8011', 'staff': '1383', 'multiple': [2]}, #Ardougne teleport: 2 Law rune, 2 Water runes, Soft clay
+        {'magic_level': 58, 'items': ['563'], 'tablet': '8012', 'staff': '1385', 'multiple': [2]}, #Watchtower teleport: 2 Law runes, 2 Earth runes, Soft clay
+
+        {'magic_level': 7, 'items': ['564'], 'tablet': '8016', 'staff': '1383'}, #Enchant sapphire: 1 cosmic rune, 1 water rune, 1 soft clay
+        {'magic_level': 27, 'items': ['564'], 'tablet': '8017', 'staff': '1381'}, #Enchant emerald: 1 cosmic rune, 3 air runes, 1 soft clay
+        {'magic_level': 49, 'items': ['564'], 'tablet': '8018', 'staff': '1387'}, #Enchant ruby: 1 cosmic rune, 5 fire runes, 1 soft clay
+        {'magic_level': 57, 'items': ['564'], 'tablet': '8019', 'staff': '1385'}, #Enchant diamond: 1 cosmic rune, 10 earth runes, 1 soft clay
+        {'magic_level': 68, 'items': ['564'], 'tablet': '8020', 'staff': '6562'}, #Enchant dragonstone: 1 cosmic rune, 15 earth runes, 15 water runes, 1 soft clay
+        {'magic_level': 87, 'items': ['564'], 'tablet': '8021', 'staff': '3053'}, #Enchant onyx: 1 cosmic rune, 20 earth runes, 20 fire runes, and 1 soft clay
+
+        {'magic_level': 6, 'items': ['563'], 'tablet': '19613', 'staff': '1385'}, #Lumbridge graveyard teleport: 1 Law rune, 2 earth runes, Dark essence block
+        {'magic_level': 17, 'items': ['563'], 'tablet': '19615', 'staff': '6562'}, #Draynor manor teleport: 1 law rune, 1 earth rune, 1 water rune, Dark essence block
+        {'magic_level': 28, 'items': ['563', '558'], 'tablet': '19617', 'multiple': [1, 2]}, #Mind altar teleport: 1 law rune, 2 mind runes, Dark essence block
+        {'magic_level': 40, 'items': ['563', '566'], 'tablet': '19619', 'multiple': [1, 2]}, #Salve graveyard teleport: 1 law rune, 2 soul runes, Dark essence block
+        {'magic_level': 48, 'items': ['563', '566'], 'tablet': '19621', 'staff': '1385'}, #Fenkenstrain's castle teleport: 1 law rune, 1 earth rune, 1 soul rune, Dark essence block
+        {'magic_level': 61, 'items': ['563', '566'], 'tablet': '19623', 'multiple': [2, 2]}, #West ardougne teleport: 2 law runes, 2 soul runes, Dark essence block
+        {'magic_level': 65, 'items': ['563', '566', '561'], 'tablet': '19625'}, #Harmony island teleport: 1 law rune, 1 soul rune, 1 nature rune, Dark essence block
+        {'magic_level': 71, 'items': ['563', '566', '565'], 'tablet': '19627'}, #Cemetery teleport: 1 law rune, 1 soul rune, 1 blood rune, Dark essence block
+        {'magic_level': 83, 'items': ['563', '566', '565'], 'tablet': '19629', 'multiple': [2, 2, 1]}, #Barrows teleport: 2 law runes, 2 soul runes, 1 blood rune, Dark essence block
+        {'magic_level': 90, 'items': ['563', '566', '565'], 'tablet': '19631', 'multiple': [2, 2, 2]} #Ape atoll teleport: 2 law runes, 2 soul runes, 2 blood runes, Dark essence block
+    ]
+
+    soft_clay_cost = response_dict['1761']['selling']
+    soft_clay_updated_time = 0
+
+    if soft_clay_cost == 0:
+        updated_data = ge_price_updater(1761, 'sellingPrice', False)
+        soft_clay_cost = updated_data[0]
+        soft_clay_updated_time = updated_data[1]
+
+    for tab in tablet_dict:
+        tablet = tab['tablet']
+        tablet_item_json = item_json[tablet]
+        tablet_response = response_dict[tablet]
+        tablet_sale = tablet_response['buying']
+        items = tab['items']
+        item_list = []
+
+        if 'buy_price_ts' in tablet_response:
+            tablet_updated_time = tablet_response['buy_price_ts']
+        else:
+            tablet_updated_time = 0
+
+        total_cost = soft_clay_cost
+
+        for i, item in enumerate(items):
+            req_item_json = item_json[item]
+            req_item_response = response_dict[item]
+            buy_price = req_item_response['selling']
+
+            if 'sell_price_ts' in tablet_response:
+                item_updated_time = tablet_response['sell_price_ts']
+            else:
+                item_updated_time = 0
+
+            if buy_price == 0:
+                updated_data = ge_price_updater(item_log, item, 'sellingPrice', False)
+                buy_price = updated_data[0]
+                item_updated_time = updated_data[1]
+
+            item_dict = {'id': item, 'file_name': req_item_json['file_name'], 'name': req_item_json['name'],
+                        'limit': req_item_json['limit'], 'buy_price': buy_price}
+
+            if 'multiple' in tab:
+                multiple = tab['multiple'][i]
+                total_cost = total_cost + (buy_price*multiple)
+                if multiple > 1:
+                    item_dict['multiple'] = {}
+                    item_dict['multiple'][item] = multiple
+            else:
+                total_cost = total_cost + buy_price
+
+            if item_updated_time != 0:
+                item_dict['item_updated_time'] = item_updated_time
+
+            item_list.append(item_dict)
+
+        if tablet_sale == 0:
+            updated_data = ge_price_updater(item_log, tablet, 'buyingPrice', False)
+            tablet_sale = updated_data[0]
+            tablet_updated_time = updated_data[1]
+
+        profit = tablet_sale - total_cost
+
+        item_data = {'file_name': tablet_item_json['file_name'], 'limit': tablet_item_json['limit'],
+                     'name': tablet_item_json['name'], 'id': tablet, 'total_cost': total_cost,
+                     'item_list': item_list, 'soft_clay_cost': soft_clay_cost, 'tablet_sale': tablet_sale,
+                     'profit': profit, 'magic_level': tab['magic_level']}
+
+        if 'staff' in tab:
+            staff = tab['staff']
+            staff_item_json = item_json[staff]
+
+            item_data['staff_id'] = staff
+            item_data['staff_name'] = staff_item_json['name']
+            item_data['staff_file_name'] = staff_item_json['file_name']
+
+        if tablet_updated_time != 0:
+            item_data['tablet_updated_time'] = tablet_updated_time
+
+        data_list.append(item_data)
+
+    write_item_log(item_log)
+    data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
+    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list), 'result_type': 'magic_tablets'}
     return render(request, 'grand_exchange.html', data)
+
 

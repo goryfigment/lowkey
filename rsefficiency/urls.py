@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^treasure_trails/([a-z]+)/$',  csrf_exempt(treasure_trails.clue_type_search), name='clue_type_search'),
 
     url(r'^grand_exchange/$', grand_exchange.grand_exchange, name='grand_exchange'),
+    url(r'^grand_exchange/item_price/$',  csrf_exempt(grand_exchange.item_price), name='item_price'),
     url(r'^grand_exchange/item_search/$',  csrf_exempt(grand_exchange.item_string_search), name='item_string_search'),
     url(r'^grand_exchange/(\d+)/$', csrf_exempt(grand_exchange.item_id_search), name='item_id_search'),
     url(r'^item_price_graph/$', grand_exchange.item_price_graph, name='item_price_graph'),
@@ -29,4 +30,5 @@ urlpatterns = [
     url(r'^grand_exchange/enchant_bolts/$',  csrf_exempt(grand_exchange.enchant_bolts), name='enchant_bolts'),
     url(r'^grand_exchange/tan_leather/$',  csrf_exempt(grand_exchange.tan_leather), name='tan_leather'),
     url(r'^grand_exchange/item_sets/$',  csrf_exempt(grand_exchange.item_sets), name='item_sets'),
+    url(r'^grand_exchange/magic_tablets/$',  csrf_exempt(grand_exchange.magic_tablets), name='magic_tablets'),
 ]

@@ -65,3 +65,28 @@ body {
 .active {
     display: block !important;
 }
+
+#footer {
+    background: #2C2E33;
+    color: #D4D4D4;
+    display: flex;
+    padding: 20px;
+    font-size: 14px;
+    text-align: center;
+    line-height: 23px;
+}
+
+#footer .subsection {
+    padding: 5px;
+    width: 33%;
+}
+
+#footer a {
+    color: #05D2FF;
+}
+
+#footer #email {
+    font-size: 18px;
+    line-height: 35px;
+    color: #E6E6E6;
+}

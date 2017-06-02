@@ -28,8 +28,8 @@ function init() {
     } else if(!$.isEmptyObject(globals.result_list)) {
         //console.log(JSON.stringify(globals.result_list));
         var $result_template = $('#' + globals.result_type + '_template');
-        var $result_table_wrapper= $('#result_table_wrapper');
-        $result_table_wrapper.append(handlebars_helper(globals.result_list, $result_template));
+        var $result_wrapper = $('#result_wrapper');
+        $result_wrapper.append(handlebars_helper(globals.result_list, $result_template));
     }
 }
 
@@ -51,7 +51,7 @@ function number_type(number) {
 }
 
 function get_item_data(item_data) {
-    $.when(osbuddy_price_data(item_data['id'])).done(function(response) {
+    $.when(item_price(item_data['id'])).done(function(response) {
         //console.log(JSON.stringify(response));
         var $osrs_item_wrapper = $('#osrs_item_wrapper');
         var $item_template = $('#item_template');
@@ -74,10 +74,10 @@ function get_price_data(item_id) {
     });
 }
 
-function osbuddy_price_data(item_id) {
+function item_price(item_id) {
     return $.ajax ({
-        url: 'https://api.rsbuddy.com/grandExchange',
-        data: {a: 'guidePrice', i: item_id},
+        url: globals.base_url + '/grand_exchange/item_price',
+        data: {item_id: item_id},
         dataType: 'json',
         type: "GET"
     });
@@ -99,55 +99,6 @@ function get_price_graph(item_id, start_time) {
                 console.log(JSON.stringify(response));
                 //console.log('https://api.rsbuddy.com/grandExchange?a=graph&g=1440&i=' + item_id + '&start=' + start_time)
                 globals.item_price_graph = response;
-
-                var $ge_table_wrapper = $('#ge_table_wrapper');
-                var $official_ge_price = $ge_table_wrapper.find('#official_ge_price');
-
-                var $margin_wrapper = $('#margin_wrapper');
-                var $margin_ratio_template = $('#margin_ratio_template');
-                var margin_ratio = response['margin_ratio'];
-                var margin_data = {updated_margin: margin_ratio, value: number_type(margin_ratio)};
-
-                $margin_wrapper.html(handlebars_helper(margin_data, $margin_ratio_template));
-                $official_ge_price.text(number_comma_format(response['current_price']));
-
-                var osbuddy_price_history = response['osbuddy_price_history'];
-                var $buy_price = $ge_table_wrapper.find('#buy_price');
-                var $sell_price = $ge_table_wrapper.find('#sell_price');
-                var buy_price = $buy_price.text().replace(',', '');
-                var sell_price = $sell_price.text().replace(',', '');
-
-                if(buy_price == '0' || sell_price == '0') {
-                    var $update_price_template = $('#update_price_template');
-                    var $update_margin_template = $('#update_margin_template');
-                    for (var i = osbuddy_price_history.length - 1; i >= 0; i--) {
-                        var item = osbuddy_price_history[i];
-                        if(buy_price == '0' && item['buyingPrice'] !== undefined) {
-                            buy_price = item['buyingPrice'];
-                            var buy_data = {updated_price: number_comma_format(buy_price), timestamp: time_passed(item['ts'])};
-                            $buy_price.html(handlebars_helper(buy_data, $update_price_template));
-                        }
-
-                        if(sell_price == '0' && item['sellingPrice'] !== undefined) {
-                            sell_price = item['sellingPrice'];
-                            var sell_data = {updated_price: number_comma_format(sell_price), timestamp: time_passed(item['ts'])};
-                            $sell_price.html(handlebars_helper(sell_data, $update_price_template));
-                        }
-
-                        if (buy_price != '0' && sell_price != '0') {
-                            buy_price = parseInt(buy_price);
-                            sell_price = parseInt(sell_price);
-                            var $profit_margin = $('#profit_margin');
-                            var updated_margin = buy_price - sell_price;
-                            var value = number_type(updated_margin);
-                            updated_margin = number_comma_format(updated_margin).replace('-', '- ');
-
-                            $profit_margin.html(handlebars_helper({value: value, updated_margin: updated_margin}, $update_margin_template));
-                            break;
-                        }
-                    }
-                }
-
                 prepare_graph_data(response);
             } else {
                 console.log(JSON.stringify(response));
@@ -413,9 +364,11 @@ $(document).ready(function() {
 
         var $ge_search_popup = $ge_item.closest('#ge_search_popup');
         var $ge_search = $ge_search_popup.siblings('#ge_search');
+        var $result_wrapper = $ge_search_popup.siblings('#result_wrapper');
 
         $ge_search_popup.removeClass('active');
         $ge_search.val(item_data['name']);
+        $result_wrapper.empty();
 
         get_item_data(item_data);
 
@@ -452,7 +405,7 @@ $(document).ready(function() {
             smithing_level = '99'
         }
 
-        barrows_url = globals.base_url + '/grand_exchange/barrows_repair?smithing_level=' + smithing_level.toString();
+        var barrows_url = globals.base_url + '/grand_exchange/barrows_repair?smithing_level=' + smithing_level.toString();
 
         window.location.replace(barrows_url);
         window.location.href = barrows_url;

@@ -32,16 +32,21 @@
     position: relative;
 }
 
-#update_title {
+.title {
     margin: 25px 0;
     text-align: center;
     color: white;
-    cursor: default;
     background: rgba(41, 41, 41, 0.8);
     border-radius: 3px;
     padding: 7px 10px;
     width: 100%;
     max-width: 584px;
+    cursor: pointer;
+}
+
+.title:hover {
+    background: rgb(197, 197, 197);
+    color: #0E0E0E;
 }
 
 .post_update_container {
@@ -71,4 +76,9 @@
     line-height: 26px;
     margin: 5px 28px;
     font-size: 13px;
+}
+
+#footer {
+    position: absolute;
+    bottom: 0;
 }
