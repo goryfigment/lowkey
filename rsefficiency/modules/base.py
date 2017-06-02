@@ -125,12 +125,11 @@ def ge_price_updater(item_log, item_id, key, start_date):
 
     if updated_price == 0:
         if key == 'sellingPrice':
-            item_log_data = access_item_log(item_id, 'sell')
+            item_log_data = access_item_log(item_id, 'both')
             updated_price = item_log_data['selling']
             updated_time = item_log_data['sell_price_ts']
         else:
-            item_log_data = access_item_log(item_id, 'buy')
-            print item_log_data
+            item_log_data = access_item_log(item_id, 'both')
             updated_price = item_log_data['buying']
             updated_time = item_log_data['buy_price_ts']
 
