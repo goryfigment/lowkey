@@ -55,9 +55,9 @@ def grand_exchange(request):
             buy_quantity = response['buyingQuantity']
             sell_quantity = response['sellingQuantity']
         except:
-            item_log_data = access_item_log(item, 'both')
+            item_log_data = access_item_log(item)
             buying = item_log_data['buying']
-            selling = item_log_data['buying']
+            selling = item_log_data['selling']
             buy_quantity = 0
             sell_quantity = 0
             buy_updated_time = item_log_data['buy_price_ts']
@@ -291,29 +291,29 @@ def decant_potions(request):
         try:
             one_dose_price = one_dose_response.json()['selling']
         except:
-            item_log_data = access_item_log(one_dose_id, 'sell')
-            one_dose_price = item_log_data['sell']
+            item_log_data = access_item_log(one_dose_id)
+            one_dose_price = item_log_data['selling']
             one_dose_updated_time = item_log_data['sell_price_ts']
 
         try:
             two_dose_price = two_dose_response.json()['selling']
         except:
-            item_log_data = access_item_log(two_dose_id, 'sell')
-            two_dose_price = item_log_data['sell']
+            item_log_data = access_item_log(two_dose_id)
+            two_dose_price = item_log_data['selling']
             two_dose_updated_time = item_log_data['sell_price_ts']
 
         try:
             three_dose_price = three_dose_response.json()['selling']
         except:
-            item_log_data = access_item_log(three_dose_id, 'sell')
-            three_dose_price = item_log_data['sell']
+            item_log_data = access_item_log(three_dose_id)
+            three_dose_price = item_log_data['selling']
             three_dose_updated_time = item_log_data['sell_price_ts']
 
         try:
             four_dose_price = four_dose_response.json()['buying']
         except:
-            item_log_data = access_item_log(four_dose_id, 'buy')
-            four_dose_price = item_log_data['buy']
+            item_log_data = access_item_log(four_dose_id)
+            four_dose_price = item_log_data['buying']
             four_dose_updated_time = item_log_data['buy_price_ts']
 
         four_dose_item_json = item_json[four_dose_id]
@@ -414,15 +414,15 @@ def clean_herbs(request):
         try:
             grimy_cost = grimy_response.json()['selling']
         except:
-            item_log_data = access_item_log(grimy_id, 'sell')
-            grimy_cost = item_log_data['sell']
+            item_log_data = access_item_log(grimy_id)
+            grimy_cost = item_log_data['selling']
             grimy_updated_time = item_log_data['sell_price_ts']
 
         try:
             clean_sale = clean_response.json()['buying']
         except:
-            item_log_data = access_item_log(clean_id, 'buy')
-            clean_sale = item_log_data['buy']
+            item_log_data = access_item_log(clean_id)
+            clean_sale = item_log_data['buying']
             clean_updated_time = item_log_data['buy_price_ts']
 
         if grimy_cost == 0:
@@ -501,15 +501,15 @@ def barrows_repair(request):
         try:
             broken_cost = broken_response.json()['selling']
         except:
-            item_log_data = access_item_log(broken_item_id, 'sell')
-            broken_cost = item_log_data['sell']
+            item_log_data = access_item_log(broken_item_id)
+            broken_cost = item_log_data['selling']
             broken_updated_time = item_log_data['sell_price_ts']
 
         try:
             fixed_sale = fixed_response.json()['buying']
         except:
-            item_log_data = access_item_log(fixed_item_id, 'buy')
-            fixed_sale = item_log_data['buy']
+            item_log_data = access_item_log(fixed_item_id)
+            fixed_sale = item_log_data['buying']
             fixed_updated_time = item_log_data['buy_price_ts']
 
         if broken % 8 == 1:
@@ -575,7 +575,7 @@ def potion_making(request):
             update_item_log(item_log, item, json_response['buying'], json_response['selling'], 0, 0)
             response_dict[item] = json_response
         except:
-            json_response = access_item_log(item, 'both')
+            json_response = access_item_log(item)
             update_item_log(item_log, item, json_response['buying'], json_response['selling'], json_response['buy_price_ts'], json_response['sell_price_ts'])
             response_dict[item] = json_response
 
@@ -698,15 +698,15 @@ def unfinished_potions(request):
         try:
             herb_cost = herb_response.json()['selling']
         except:
-            item_log_data = access_item_log(herb_id, 'sell')
-            herb_cost = item_log_data['sell']
+            item_log_data = access_item_log(herb_id)
+            herb_cost = item_log_data['selling']
             herb_updated_time = item_log_data['sell_price_ts']
 
         try:
             potion_sale = potion_response.json()['buying']
         except:
-            item_log_data = access_item_log(potion_id, 'buy')
-            potion_sale = item_log_data['buy']
+            item_log_data = access_item_log(potion_id)
+            potion_sale = item_log_data['buying']
             potion_updated_time = item_log_data['buy_price_ts']
 
         if herb_cost == 0:
@@ -773,15 +773,15 @@ def plank_making(request):
         try:
             log_cost = log_response.json()['selling']
         except:
-            item_log_data = access_item_log(log_id, 'sell')
-            log_cost = item_log_data['sell']
+            item_log_data = access_item_log(log_id)
+            log_cost = item_log_data['selling']
             log_updated_time = item_log_data['sell_price_ts']
 
         try:
             plank_sale = plank_response.json()['buying']
         except:
-            item_log_data = access_item_log(plank_id, 'buy')
-            plank_sale = item_log_data['buy']
+            item_log_data = access_item_log(plank_id)
+            plank_sale = item_log_data['buying']
             plank_updated_time = item_log_data['buy_price_ts']
 
         if log_cost == 0:
@@ -850,15 +850,15 @@ def tan_leather(request):
         try:
             hide_cost = hide_response.json()['selling']
         except:
-            item_log_data = access_item_log(hide_id, 'sell')
-            hide_cost = item_log_data['sell']
+            item_log_data = access_item_log(hide_id)
+            hide_cost = item_log_data['selling']
             hide_updated_time = item_log_data['sell_price_ts']
 
         try:
             leather_sale = leather_response.json()['buying']
         except:
-            item_log_data = access_item_log(leather_id, 'buy')
-            leather_sale = item_log_data['buy']
+            item_log_data = access_item_log(leather_id)
+            leather_sale = item_log_data['buying']
             leather_updated_time = item_log_data['buy_price_ts']
 
         if hide_cost == 0:
@@ -916,7 +916,7 @@ def enchant_bolts(request):
             update_item_log(item_log, item, json_response['buying'], json_response['selling'], 0, 0)
             response_dict[item] = json_response
         except:
-            json_response = access_item_log(item, 'both')
+            json_response = access_item_log(item)
             update_item_log(item_log, item, json_response['buying'], json_response['selling'], json_response['buy_price_ts'], json_response['sell_price_ts'])
             response_dict[item] = json_response
 
@@ -1014,7 +1014,7 @@ def item_sets(request):
             update_item_log(item_log, item, json_response['buying'], json_response['selling'], 0, 0)
             response_dict[item] = json_response
         except:
-            json_response = access_item_log(item, 'both')
+            json_response = access_item_log(item)
             update_item_log(item_log, item, json_response['buying'], json_response['selling'], json_response['buy_price_ts'], json_response['sell_price_ts'])
             response_dict[item] = json_response
 
@@ -1101,7 +1101,7 @@ def magic_tablets(request):
             update_item_log(item_log, item, json_response['buying'], json_response['selling'], 0, 0)
             response_dict[item] = json_response
         except:
-            json_response = access_item_log(item, 'both')
+            json_response = access_item_log(item)
             update_item_log(item_log, item, json_response['buying'], json_response['selling'], json_response['buy_price_ts'], json_response['sell_price_ts'])
             response_dict[item] = json_response
 

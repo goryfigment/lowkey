@@ -88,12 +88,10 @@ def update_item_log(item_log, item_id, buying, selling, buy_price_ts, sell_price
     item_log[item_id] = item
 
 
-def access_item_log(item_id, key):
+def access_item_log(item_id):
     item = item_log_json()[item_id]
-    if key == 'both' and item['success']:
+    if item['success']:
         return {'selling': item['selling'], 'sell_price_ts': item['sell_price_ts'], 'buying': item['buying'], 'buy_price_ts': item['sell_price_ts']}
-    elif item['success']:
-        return {key: item[key + 'ing'], (key + '_price_ts'): item[key + '_price_ts']}
     else:
         return {'selling': 0, 'sell_price_ts': 0, 'buying': 0, 'buy_price_ts': 0}
 
@@ -125,11 +123,11 @@ def ge_price_updater(item_log, item_id, key, start_date):
 
     if updated_price == 0:
         if key == 'sellingPrice':
-            item_log_data = access_item_log(item_id, 'both')
+            item_log_data = access_item_log(item_id)
             updated_price = item_log_data['selling']
             updated_time = item_log_data['sell_price_ts']
         else:
-            item_log_data = access_item_log(item_id, 'both')
+            item_log_data = access_item_log(item_id)
             updated_price = item_log_data['buying']
             updated_time = item_log_data['buy_price_ts']
 
