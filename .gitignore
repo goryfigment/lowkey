@@ -101,4 +101,4 @@ ENV/
 database.py
 settings_secret.py
 treasure_trails_format.json
-
+item_log.json
