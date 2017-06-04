@@ -1,11 +1,14 @@
 from django.conf.urls import url
 from django.contrib import admin
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import TemplateView
 from rsefficiency.controllers import site, treasure_trails, grand_exchange
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', site.main, name='site'),
+    url(r'^robots\.txt$', TemplateView.as_view(template_name="robots.txt", content_type='text/plain')),
+    url(r'^sitemap\.xml$', TemplateView.as_view(template_name='sitemap.xml', content_type='text/xml')),
 
     url(r'^treasure-trails/$', treasure_trails.treasure_trails, name='treasure_trails'),
     url(r'^treasure-trails/(\d+)/$', csrf_exempt(treasure_trails.clue_id_search), name='clue_id_search'),
