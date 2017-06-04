@@ -320,9 +320,10 @@ span.positive {
     white-space: nowrap;
 }
 
-h1 {
+h2 {
     text-align: center;
     font-family: cursive;
+    font-size: 2em;
 }
 
 a {

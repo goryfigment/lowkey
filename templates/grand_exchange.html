@@ -5,7 +5,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>RsEfficiency: Grand Exchange</title>
+    <title>{% if title %}{{title}}{% else %}RsEfficiency: Grand Exchange{% endif %}</title>
     <link rel='shortcut icon' type='image/x-icon' href="{% static 'assets/rsefficiency/rse16.ico' %}" />
     <base href='{{base_url}}' />
 

@@ -46,6 +46,13 @@ body {
     color: #ffffff;
 }
 
+#h1_logo {
+    margin: 0;
+    font-weight: 500;
+    font-size: 29px;
+    font-family: cursive;
+}
+
 #logo_link {
     text-decoration: none;
 }
@@ -56,6 +63,12 @@ body {
     cursor: pointer;
     margin: 0 22px;
     color: rgba(255, 255, 255, 0.9)
+}
+
+.h3_links {
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0;
 }
 
 #rs_logo {

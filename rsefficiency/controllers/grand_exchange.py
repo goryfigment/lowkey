@@ -1,7 +1,6 @@
 from django.shortcuts import render
 import json
 import math
-import requests
 import re
 import grequests
 from random import randint
@@ -13,7 +12,7 @@ from rsefficiency.modules.ge_list import *
 def grand_exchange(request):
     item_json = rs_item_json()
     item_log = item_log_json()
-    random_int = randint(3, 7)
+    random_int = randint(6, 7)
     random_list = []
     list_title = ''
 
@@ -23,16 +22,16 @@ def grand_exchange(request):
     # elif random_int == 2:
     #     random_list = medium_clue_list
     #     list_title = 'Medium Clue Rewards'
-    if random_int == 3:
-        random_list = hard_clue_list
-        list_title = 'Hard Clue Rewards'
-    elif random_int == 4:
-        random_list = elite_clue_list
-        list_title = 'Elite Clue Rewards'
-    elif random_int == 5:
-        random_list = master_clue_list
-        list_title = 'Master Clue Rewards'
-    elif random_int == 6:
+    # if random_int == 3:
+    #     random_list = hard_clue_list
+    #     list_title = 'Hard Clue Rewards'
+    # elif random_int == 4:
+    #     random_list = elite_clue_list
+    #     list_title = 'Elite Clue Rewards'
+    # elif random_int == 5:
+    #     random_list = master_clue_list
+    #     list_title = 'Master Clue Rewards'
+    if random_int == 6:
         random_list = raid_reward_list
         list_title = 'Raid Unique Rewards'
     elif random_int == 7:
@@ -178,7 +177,8 @@ def item_price_data(request):
 def item_id_search(request, item_id):
     item_json = rs_item_json()[item_id]
 
-    data = {'base_url': get_base_url(), 'item_data': json.dumps(item_json), 'result_list': {}, 'keyword': item_json['name']}
+    data = {'base_url': get_base_url(), 'item_data': json.dumps(item_json), 'result_list': {},
+            'keyword': item_json['name'], 'title': item_json['name']}
     return render(request, 'grand_exchange.html', data)
 
 
@@ -382,7 +382,8 @@ def decant_potions(request):
 
     write_item_log(item_log)
     data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
-    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list), 'result_type': 'decant_potions'}
+    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list),
+            'result_type': 'decant_potions', 'title': 'Decant Potions'}
     return render(request, 'grand_exchange.html', data)
 
 
@@ -455,7 +456,8 @@ def clean_herbs(request):
         update_item_log(item_log, clean_id, clean_sale, 0, clean_updated_time, 0)
 
     write_item_log(item_log)
-    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list), 'result_type': 'clean_herbs'}
+    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list),
+            'result_type': 'clean_herbs', 'title': 'Clean Herbs'}
     return render(request, 'grand_exchange.html', data)
 
 
@@ -553,7 +555,8 @@ def barrows_repair(request):
 
     write_item_log(item_log)
     data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
-    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list), 'result_type': 'barrows_repair'}
+    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list),
+            'result_type': 'barrows_repair', 'title': 'Barrows Repair'}
     return render(request, 'grand_exchange.html', data)
 
 
@@ -659,7 +662,8 @@ def potion_making(request):
 
     write_item_log(item_log)
     data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
-    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list), 'result_type': 'potion_making'}
+    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list),
+            'result_type': 'potion_making', 'title': 'Potion Making'}
     return render(request, 'grand_exchange.html', data)
 
 
@@ -740,7 +744,8 @@ def unfinished_potions(request):
 
     write_item_log(item_log)
     data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
-    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list), 'result_type': 'unfinished_potions'}
+    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list),
+            'result_type': 'unfinished_potions', 'title': 'Unfinished Potions'}
     return render(request, 'grand_exchange.html', data)
 
 
@@ -817,7 +822,8 @@ def plank_making(request):
 
     write_item_log(item_log)
     data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
-    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list), 'result_type': 'plank_making'}
+    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list),
+            'result_type': 'plank_making', 'title': 'Plank Making'}
     return render(request, 'grand_exchange.html', data)
 
 
@@ -894,7 +900,8 @@ def tan_leather(request):
 
     write_item_log(item_log)
     data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
-    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list), 'result_type': 'tan_leather'}
+    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list),
+            'result_type': 'tan_leather', 'title': 'Tan Leather'}
     return render(request, 'grand_exchange.html', data)
 
 
@@ -992,7 +999,8 @@ def enchant_bolts(request):
 
     write_item_log(item_log)
     data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
-    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list), 'result_type': 'enchant_bolts'}
+    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list),
+            'result_type': 'enchant_bolts', 'title': 'Enchant Bolts'}
     return render(request, 'grand_exchange.html', data)
 
 
@@ -1079,7 +1087,8 @@ def item_sets(request):
 
     write_item_log(item_log)
     data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
-    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list), 'result_type': 'item_sets'}
+    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list),
+            'result_type': 'item_sets', 'title': 'Item Sets'}
     return render(request, 'grand_exchange.html', data)
 
 
@@ -1216,7 +1225,8 @@ def magic_tablets(request):
 
     write_item_log(item_log)
     data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
-    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list), 'result_type': 'magic_tablets'}
+    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list),
+            'result_type': 'magic_tablets', 'title': 'Magic Tablets'}
     return render(request, 'grand_exchange.html', data)
 
 

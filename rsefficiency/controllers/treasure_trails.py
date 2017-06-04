@@ -125,6 +125,7 @@ def clue_id_search(request, clue_id):
         if clue['requirements'] != 'Nothing':
             clue['requirements'] = clue['requirements'].split(',')
 
-    data = {'success': True, 'base_url': get_base_url(), 'clue': json.dumps(clue), 'keyword': clue['clue']}
+    data = {'success': True, 'base_url': get_base_url(), 'clue': json.dumps(clue), 'keyword': clue['clue'],
+            'title': clue['clue']}
 
     return render(request, 'treasure_trails.html', data)

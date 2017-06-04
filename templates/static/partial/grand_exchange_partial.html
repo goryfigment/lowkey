@@ -7,7 +7,7 @@
 {% verbatim %}
 <script id="item_template" type="text/x-handlebars-template">
     <h2 id="ge_item_title">
-        <img id="osrs_item" src="{{concat 'base_url' '/static/assets/rs_items/icons/' item_data.file_name}}" /> {{item_data.name}}
+        <img title="{{item_data.name}}" id="osrs_item" src="{{concat 'base_url' '/static/assets/rs_items/icons/' item_data.file_name}}" /> {{item_data.name}}
         <span class="{{#ifCond margin_ratio '==' 0}}neutral{{/ifCond}}{{#ifCond margin_ratio '>' 0}}positive{{/ifCond}}{{#ifCond margin_ratio '<' 0}}negative{{/ifCond}}" id="margin_wrapper">({{#ifCond value '==' 'positive'}}+{{/ifCond}}{{margin_ratio}}%)</span>
     </h2>
     <div id="item_statistics_wrapper">
@@ -16,39 +16,39 @@
             <div id="ge_table_wrapper">
                 <table id="ge_table_1">
                     <tr>
-                        <th> <img id="ge_icon_img" src="{{concat 'base_url' '/static/assets/grand_exchange/ge-icon.png'}}" />GE Official Price:</th>
+                        <th> <img title="GE Official Price" id="ge_icon_img" src="{{concat 'base_url' '/static/assets/grand_exchange/ge-icon.png'}}" />GE Official Price:</th>
                         <td id="official_ge_price">{{num_comma_format current_price}}</td>
                     </tr>
                     <tr>
-                        <th> <img id="buy_icon_img" src="{{concat 'base_url' '/static/assets/grand_exchange/buy-icon.png'}}" />Buy Approx. At:</th>
+                        <th> <img title="Buy At" id="buy_icon_img" src="{{concat 'base_url' '/static/assets/grand_exchange/buy-icon.png'}}" />Buy Approx. At:</th>
                         <td id="sell_price">{{num_comma_format selling}}{{#if updated_sell_price}}<a id="question" title="The last known result was updated {{time_passed updated_sell_price}} ago.">?</a>{{/if}}</td>
                     </tr>
                     <tr>
-                        <th> <img id="sell_icon_img" src="{{concat 'base_url' '/static/assets/grand_exchange/sell-icon.png'}}" />Sell Approx. At:</th>
+                        <th> <img title="Sell At" id="sell_icon_img" src="{{concat 'base_url' '/static/assets/grand_exchange/sell-icon.png'}}" />Sell Approx. At:</th>
                         <td id="buy_price">{{num_comma_format buying}}{{#if updated_buy_price}}<a id="question" title="The last known result was updated {{time_passed updated_buy_price}} ago.">?</a>{{/if}}</td>
                     </tr>
 
                     <tr>
-                        <th> <img id="coins_icon_img" src="{{concat 'base_url' '/static/assets/grand_exchange/small_coins-icon.png'}}" />Profit Margin:</th>
+                        <th> <img title="Profit" id="coins_icon_img" src="{{concat 'base_url' '/static/assets/grand_exchange/small_coins-icon.png'}}" />Profit Margin:</th>
                         <td id="profit_margin" class="{{#ifCond profit_margin '>' 0}}positive{{/ifCond}}{{#ifCond profit_margin '<' 0}}negative{{/ifCond}}">{{#ifCond buying '>' selling}}+{{/ifCond}} {{num_comma_format profit_margin}}</td>
                     </tr>
                 </table>
 
                 <table id="ge_table_2">
                     <tr>
-                        <th><img id="ge_limit_icon_img" src="{{concat 'base_url' '/static/assets/grand_exchange/ge_limit_2-icon.png'}}" />GE Limit:</th>
+                        <th><img title="GE Limit" id="ge_limit_icon_img" src="{{concat 'base_url' '/static/assets/grand_exchange/ge_limit_2-icon.png'}}" />GE Limit:</th>
                         <td id="ge_limit">{{num_comma_format item_data.limit}}</td>
                     </tr>
                     <tr>
-                        <th><img id="buy_quantity_icon_img" src="{{concat 'base_url' '/static/assets/grand_exchange/buy_quantity_2-icon.png'}}" />Buy Quantity:</th>
+                        <th><img title="Buy Quantity" id="buy_quantity_icon_img" src="{{concat 'base_url' '/static/assets/grand_exchange/buy_quantity_2-icon.png'}}" />Buy Quantity:</th>
                         <td id="buying_quantity">{{num_comma_format buy_quantity}}</td>
                     </tr>
                     <tr>
-                        <th><img id="sale_quantity_icon_img" src="{{concat 'base_url' '/static/assets/grand_exchange/sale_quantity-icon.png'}}" />Sale Quantity:</th>
+                        <th><img title="Sell Quantity" id="sale_quantity_icon_img" src="{{concat 'base_url' '/static/assets/grand_exchange/sale_quantity-icon.png'}}" />Sale Quantity:</th>
                         <td id="selling_quantity">{{num_comma_format sell_quantity}}</td>
                     </tr>
                     <tr>
-                        <th><img id="high_alch_icon_img" src="{{concat 'base_url' '/static/assets/grand_exchange/high_alchemy-icon.png'}}" />High Alch:</th>
+                        <th><img title="High Alch Price" id="high_alch_icon_img" src="{{concat 'base_url' '/static/assets/grand_exchange/high_alchemy-icon.png'}}" />High Alch:</th>
                         <td id="high_alch">{{num_comma_format item_data.high_alch}}</td>
                     </tr>
                 </table>
@@ -60,7 +60,7 @@
 
 {% verbatim %}
 <script id="decant_potions_template" type="text/x-handlebars-template">
-    <a href="{{concat 'base_url' '/grand-exchange/decant-potions'}}"><h1>Decant Potions</h1></a>
+    <a href="{{concat 'base_url' '/grand-exchange/decant-potions'}}"><h2>Decant Potions</h2></a>
 
     <table id="table_container">
         <thead>
@@ -99,7 +99,7 @@
 
 {% verbatim %}
 <script id="clean_herbs_template" type="text/x-handlebars-template">
-    <a href="{{concat 'base_url' '/grand-exchange/clean-herbs'}}"><h1>Clean Herbs</h1></a>
+    <a href="{{concat 'base_url' '/grand-exchange/clean-herbs'}}"><h2>Clean Herbs</h2></a>
 
     <table id="table_container">
         <thead>
@@ -134,7 +134,7 @@
 
 {% verbatim %}
 <script id="unfinished_potions_template" type="text/x-handlebars-template">
-    <a href="{{concat 'base_url' '/grand-exchange/unfinished-potions'}}"><h1>Unfinished Potions</h1></a>
+    <a href="{{concat 'base_url' '/grand-exchange/unfinished-potions'}}"><h2>Unfinished Potions</h2></a>
     <a id="substitute_cost" href="{{concat 'base_url' '/grand-exchange/227'}}"><img class="item_img" title="Vial of water" src="{{concat 'base_url' '/static/assets/rs_items/icons/vial-of-water.png'}}" /> Vial of Water Cost: {{this.0.vial_of_water_cost}}</a>
 
     <table id="table_container">
@@ -168,7 +168,7 @@
 
 {% verbatim %}
 <script id="potion_making_template" type="text/x-handlebars-template">
-    <a href="{{concat 'base_url' '/grand-exchange/potion-making'}}"><h1>Potion Making</h1></a>
+    <a href="{{concat 'base_url' '/grand-exchange/potion-making'}}"><h2>Potion Making</h2></a>
     <a id="substitute_cost" href="{{concat 'base_url' '/grand-exchange/227'}}"><img class="item_img" title="Vial of water" src="{{concat 'base_url' '/static/assets/rs_items/icons/vial-of-water.png'}}" /> Vial of Water Cost: {{this.0.vial_of_water_cost}}</a>
 
     <table id="table_container">
@@ -200,7 +200,7 @@
 
 {% verbatim %}
 <script id="barrows_repair_template" type="text/x-handlebars-template">
-    <a href="{{concat 'base_url' '/grand-exchange/barrows-repair'}}"><h1>Barrows Repair</h1></a>
+    <a href="{{concat 'base_url' '/grand-exchange/barrows-repair'}}"><h2>Barrows Repair</h2></a>
     <h2 id="smithing_title">Smithing Level <input id="smithing_input" value="{{this.0.smithing_level}}" type="number" min="0" max="99" size="1" /> <button id="smithing_button">Calculate</button></h2>
 
     <table id="table_container">
@@ -236,7 +236,7 @@
 
 {% verbatim %}
 <script id="plank_making_template" type="text/x-handlebars-template">
-    <a href="{{concat 'base_url' '/grand-exchange/plank-making'}}"><h1>Plank Making</h1></a>
+    <a href="{{concat 'base_url' '/grand-exchange/plank-making'}}"><h2>Plank Making</h2></a>
 
     <table id="table_container">
         <thead>
@@ -273,7 +273,7 @@
 
 {% verbatim %}
 <script id="tan_leather_template" type="text/x-handlebars-template">
-    <a href="{{concat 'base_url' '/grand-exchange/tan-leather'}}"><h1>Tan Leather</h1></a>
+    <a href="{{concat 'base_url' '/grand-exchange/tan-leather'}}"><h2>Tan Leather</h2></a>
 
     <table id="table_container">
         <thead>
@@ -310,7 +310,7 @@
 
 {% verbatim %}
 <script id="enchant_bolts_template" type="text/x-handlebars-template">
-    <a href="{{concat 'base_url' '/grand-exchange/enchant-bolts'}}"><h1>Enchant Bolts</h1></a>
+    <a href="{{concat 'base_url' '/grand-exchange/enchant-bolts'}}"><h2>Enchant Bolts</h2></a>
 
     <table id="table_container">
         <thead>
@@ -345,7 +345,7 @@
 
 {% verbatim %}
 <script id="item_sets_template" type="text/x-handlebars-template">
-    <a href="{{concat 'base_url' '/grand-exchange/item-sets'}}"><h1>Item Sets</h1></a>
+    <a href="{{concat 'base_url' '/grand-exchange/item-sets'}}"><h2>Item Sets</h2></a>
 
     <table class="item_set_table" id="table_container">
         <thead>
@@ -376,7 +376,7 @@
 
 {% verbatim %}
 <script id="magic_tablets_template" type="text/x-handlebars-template">
-    <a href="{{concat 'base_url' '/grand-exchange/magic-tablets'}}"><h1>Magic Tablets</h1></a>
+    <a href="{{concat 'base_url' '/grand-exchange/magic-tablets'}}"><h2>Magic Tablets</h2></a>
     <a id="substitute_cost" href="{{concat 'base_url' '/grand-exchange/1761'}}"><img class="item_img" title="Soft clay" src="{{concat 'base_url' '/static/assets/rs_items/icons/soft-clay.png'}}" /> Soft Clay Cost: {{this.0.soft_clay_cost}}</a>
 
     <table id="table_container">
@@ -412,7 +412,7 @@
 
 {% verbatim %}
 <script id="frontpage_template" type="text/x-handlebars-template">
-    <a href="{{concat 'base_url' '/grand-exchange'}}"><h1>{{this.0.title}}</h1></a>
+    <a href="{{concat 'base_url' '/grand-exchange'}}"><h2>{{this.0.title}}</h2></a>
 
     <table id="table_container">
         <thead>

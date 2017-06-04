@@ -7,7 +7,7 @@
 {% verbatim %}
 <script id="clue_template" type="text/x-handlebars-template">
 
-    <h1 id="clue_title">{{ clue }}</h1>
+    <h2 id="clue_title">{{ clue }}</h2>
 
     <div id="clue_info_container">
         <table class="clue_table" summary="Clue Information">
@@ -54,7 +54,7 @@
     </div>
 
     {{#if spot_title_1}}
-    <h1 id="clue_title">{{ spot_title_1 }}</h1>
+    <h2 id="clue_title">{{ spot_title_1 }}</h2>
     {{/if}}
 
     <div id="coordinate_clue">
@@ -79,7 +79,7 @@
     </div>
 
     {{#if spot_title_2}}
-    <h1 id="clue_title">{{ spot_title_2 }}</h1>
+    <h2 id="clue_title">{{ spot_title_2 }}</h2>
 
     <div id="coordinate_clue">
         <div id="clue_spot_wrapper">
@@ -104,7 +104,7 @@
     {{/if}}
 
     {{#if spot_title_3}}
-    <h1 id="clue_title">{{ spot_title_3 }}</h1>
+    <h2 id="clue_title">{{ spot_title_3 }}</h2>
 
     <div id="coordinate_clue">
         <div id="clue_spot_wrapper">
@@ -134,7 +134,7 @@
 {% verbatim %}
 <script id="clue_index_template" type="text/x-handlebars-template">
     {{#each clues}}
-        <h1 id="clue_title">
+        <h2 id="clue_title">
             {{#ifCond ../type '==' 'Coordinate'}}
                 {{../type}}s starting with '{{@key}} Degree{{#ifCond @key '!=' '1'}}s{{else}}{{/ifCond}}'
             {{/ifCond}}
@@ -153,7 +153,7 @@
             {{#ifCond ../type '==' 'Map'}}
                 {{this.0.difficulty}} {{../type}} Clues
             {{/ifCond}}
-        </h1>
+        </h2>
         <table class="index clue_table" summary="Clue Information">
             <thead>
                 <tr>
