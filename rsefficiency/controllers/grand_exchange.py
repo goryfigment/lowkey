@@ -91,7 +91,8 @@ def grand_exchange(request):
 
     write_item_log(item_log)
     data_list = sorted(data_list, key=lambda k: k['profit'], reverse=True)
-    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list), 'result_type': 'frontpage'}
+    data = {'base_url': get_base_url(), 'item_data': {}, 'result_list': json.dumps(data_list),
+            'result_type': 'frontpage'}
     return render(request, 'grand_exchange.html', data)
 
 
@@ -175,9 +176,9 @@ def item_price_data(request):
 
 
 def item_id_search(request, item_id):
-    item_json = rs_item_json()
+    item_json = rs_item_json()[item_id]
 
-    data = {'base_url': get_base_url(), 'item_data': json.dumps(item_json[item_id]), 'result_list': {}}
+    data = {'base_url': get_base_url(), 'item_data': json.dumps(item_json), 'result_list': {}, 'keyword': item_json['name']}
     return render(request, 'grand_exchange.html', data)
 
 

@@ -76,7 +76,7 @@ function get_price_data(item_id) {
 
 function item_price(item_id) {
     return $.ajax ({
-        url: globals.base_url + '/grand_exchange/item_price',
+        url: globals.base_url + '/grand-exchange/item_price',
         data: {item_id: item_id},
         dataType: 'json',
         type: "GET"
@@ -324,7 +324,7 @@ $(document).ready(function() {
 
             if(search_value.length > 0) {
                 $.ajax({
-                    url: globals.base_url + '/grand_exchange/item_search',
+                    url: globals.base_url + '/grand-exchange/item_search',
                     data: post_data,
                     dataType: 'json',
                     type: "GET",
@@ -372,7 +372,7 @@ $(document).ready(function() {
 
         get_item_data(item_data);
 
-        var url = globals.base_url + '/grand_exchange/' + parseInt(item_data['id']);
+        var url = globals.base_url + '/grand-exchange/' + parseInt(item_data['id']);
         window.history.pushState(item_data, item_data['name'], url);
     });
 
@@ -405,7 +405,7 @@ $(document).ready(function() {
             smithing_level = '99'
         }
 
-        var barrows_url = globals.base_url + '/grand_exchange/barrows_repair?smithing_level=' + smithing_level.toString();
+        var barrows_url = globals.base_url + '/grand-exchange/barrows-repair?smithing_level=' + smithing_level.toString();
 
         window.location.replace(barrows_url);
         window.location.href = barrows_url;
