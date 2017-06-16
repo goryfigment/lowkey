@@ -164,7 +164,7 @@ $(document).ready(function() {
 
         $clue_result_container.append($generated_html);
         localStorage.setItem("clue_data", JSON.stringify(clue_data));
-        var url = globals.base_url + '/treasure_trails/' + parseInt(clue_data['id']);
+        var url = globals.base_url + '/treasure-trails/' + parseInt(clue_data['id']);
         window.history.pushState(clue_data, clue_data['clue'], url);
     });
 

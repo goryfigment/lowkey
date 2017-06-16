@@ -208,3 +208,8 @@
     width: 200px;
     height: auto;
 }
+
+#emote_icon {
+    vertical-align: middle;
+    padding-right: 5px;
+}

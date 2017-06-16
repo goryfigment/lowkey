@@ -9,50 +9,6 @@
 
     <h2 id="clue_title">{{ clue }}</h2>
 
-    <div id="clue_info_container">
-        <table class="clue_table" summary="Clue Information">
-            <thead>
-                <tr>
-                {{#ifCond type '==' 'map'}}
-                    <th scope="col">Clue</th>
-                {{/ifCond}}
-                    <th scope="col">Difficulty</th>
-                    <th scope="col">Requirements</th>
-                    <th scope="col">Challenge Answer</th>
-                </tr>
-            </thead>
-            {{#ifCond description '!=' ''}}
-            <tfoot>
-                <tr>
-                    <td colspan={{#ifCond type '==' 'map'}}4{{else}}3{{/ifCond}}>{{ description }}</td>
-                </tr>
-            </tfoot>
-            {{/ifCond}}
-            <tbody>
-                <tr>
-                {{#ifCond type '==' 'map'}}
-                    <td><img id="map_clue" src="{{concat 'base_url' '/static/assets/treasure_trail/map_clues/' keywords '.png'}}" /></td>
-                {{/ifCond}}
-                    <td>{{ difficulty }}</td>
-                    <td>
-                        {{#ifCond type '==' 'emote'}}
-                            {{#ifCond requirements '!=' 'Nothing'}}
-                                {{#each requirements}}
-                                <img id="osrs_item" title={{this}} src="{{concat 'base_url' '/static/assets/rs_items/icons/' this '.png'}}" />
-                                {{/each}}
-                            {{else}}
-                                {{ requirements }}
-                            {{/ifCond}}
-                        {{else}}
-                            {{ requirements }}
-                        {{/ifCond}}
-                    </td>
-                    <td>{{ challenge }}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
     {{#if spot_title_1}}
     <h2 id="clue_title">{{ spot_title_1 }}</h2>
     {{/if}}
@@ -128,6 +84,60 @@
     </div>
     {{/if}}
 
+    <div id="clue_info_container">
+        <table class="clue_table" summary="Clue Information">
+            <thead>
+                <tr>
+                {{#ifCond type '==' 'map'}}
+                    <th scope="col">Clue</th>
+                {{/ifCond}}
+                    <th scope="col">Difficulty</th>
+                    <th scope="col">Requirements</th>
+                    <th scope="col">Challenge Answer</th>
+                </tr>
+            </thead>
+            {{#ifCond description '!=' ''}}
+            <tfoot>
+                <tr>
+                    <td colspan="{{#ifCond type '==' 'map'}}4{{else}}3{{/ifCond}}">{{ description }}</td>
+                </tr>
+            </tfoot>
+            {{/ifCond}}
+            <tbody>
+                <tr>
+                {{#ifCond type '==' 'map'}}
+                    <td><img id="map_clue" src="{{concat 'base_url' '/static/assets/treasure_trail/map_clues/' keywords '.png'}}" /></td>
+                {{/ifCond}}
+                    <td>{{ difficulty }}</td>
+                    <td>
+                        {{#ifCond type '==' 'emote'}}
+                            {{#ifCond requirements '!=' 'Nothing'}}
+                                {{#each requirements}}
+                                <img id="osrs_item" title={{this}} src="{{concat 'base_url' '/static/assets/rs_items/icons/' this '.png'}}" />
+                                {{/each}}
+                            {{else}}
+                                {{ requirements }}
+                            {{/ifCond}}
+                        {{else}}
+                            {{ requirements }}
+                        {{/ifCond}}
+                    </td>
+                    <td>
+                        {{#if (is_substring ' Puzzle' challenge)}}
+                            <img id="clue_puzzle" title={{challenge}} src="{{concat 'base_url' '/static/assets/treasure_trail/clue_puzzle/' (replace challenge ' ' '-') '.png'}}" />
+                        {{else}}
+                            {{#ifCond type '==' 'emote'}}
+                                <span><img id="emote_icon" title={{challenge}} src="{{concat 'base_url' '/static/assets/treasure_trail/emote_icon/' (replace challenge ' ' '-') '.png'}}" /> {{ challenge }}</span>
+                            {{else}}
+                                {{ challenge }}
+                            {{/ifCond}}
+                        {{/if}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
 </script>
 {% endverbatim %}
 
@@ -148,7 +158,8 @@
                 {{../type}}s starting with '{{ascii_to_char @key}}'
             {{/ifCond}}
             {{#ifCond ../type '==' 'Emote'}}
-                {{this.0.challenge}} {{../type}} Clues
+                <span><img id="emote_icon" title={{this.0.challenge}} src="{{concat 'base_url' '/static/assets/treasure_trail/emote_icon/' (replace this.0.challenge ' ' '-') '.png'}}" />
+                {{this.0.challenge}} {{../type}} Clues</span>
             {{/ifCond}}
             {{#ifCond ../type '==' 'Map'}}
                 {{this.0.difficulty}} {{../type}} Clues
@@ -170,7 +181,7 @@
                 <tbody>
                     <tr>
                         <td>
-                            <a href={{concat '/treasure-trails/' id}}>
+                            <a href="{{concat '/treasure-trails/' id}}">
                                 {{#ifCond type '==' 'coordinate'}}
                                     {{{replace clue ',' ',<br />'}}}
                                 {{/ifCond}}

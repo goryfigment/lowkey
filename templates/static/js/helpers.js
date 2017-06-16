@@ -71,6 +71,14 @@ Handlebars.registerHelper('access_dict', function(dict, key) {
     return dict[key.toString()];
 });
 
+Handlebars.registerHelper('is_substring', function(substring, string) {
+    if ((string.toString()).indexOf(substring) != -1) {
+        return true;
+    } else {
+        return false;
+    }
+});
+
 function time_passed(epoch_time) {
     var d1 = new Date(parseInt(epoch_time));
     var milliseconds = Math.abs(new Date() - d1);
