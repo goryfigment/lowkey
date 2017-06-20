@@ -33,11 +33,14 @@ def clue_string_search(request):
 
     for clue in clue_data:
         riddle = clue['clue'].lower()
+        keyword = str(clue['keywords']).lower()
 
         riddle_search_string = re.sub(r'[^\w]', '', riddle)
         value_search_string = re.sub(r'[^\w]', '', search_value)
 
-        if riddle_search_string.startswith(value_search_string):
+        coordinate_bool = clue['type'] == "coordinate" and keyword.startswith(value_search_string)
+
+        if riddle_search_string.startswith(value_search_string) or coordinate_bool:
             data_list.append(clue)
 
     return render_json({'success': True, 'clue_list': data_list})
