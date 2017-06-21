@@ -7,6 +7,7 @@ from rsefficiency.controllers import site, treasure_trails, grand_exchange
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', site.main, name='site'),
+    url(r'^donate/$', site.donate, name='donate'),
     url(r'^robots\.txt$', TemplateView.as_view(template_name="robots.txt", content_type='text/plain')),
     url(r'^sitemap\.xml$', TemplateView.as_view(template_name='sitemap.xml', content_type='text/xml')),
     url(r'^BingSiteAuth\.xml$', TemplateView.as_view(template_name='BingSiteAuth.xml', content_type='text/xml')),

@@ -1,0 +1,48 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RsEfficiency</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content='Utilize 2007 Runescape tools such as Treasure Trail to get your clue rewards and the Exchange feature to discover profitable items. Much more to come!'>
+    <meta name="keywords" content="rsefficiency,runescape,07,2007,fansite,old,school,osrs,guides,skill,minigame,money making,grand exchange,ge">
+    <link rel='shortcut icon' type='image/x-icon' href="{% static 'assets/rsefficiency/rse16.ico' %}" />
+    <base href='{{base_url}}' />
+
+    <script>
+        var globals = {};
+        globals.base_url = '{{base_url}}';
+    </script>
+
+    <link href="{% static 'css/general.css' %}" type="text/css" rel="stylesheet">
+    <link href="{% static 'css/main.css' %}" type="text/css" rel="stylesheet">
+
+    <script src="{% static 'js/libs/jquery.js' %}"></script>
+    <script src="{% static 'js/general.js' %}"></script>
+</head>
+<body>
+
+    {% include "static/partial/navigation_bar.html" %}
+
+    <div id="update_wrapper">
+        <div id="update_logo_container">
+            <span id="rs_logo">RS</span><span id="efficiency_log">Efficiency</span>
+        </div>
+
+        <p id="donate_description">Thank you for taking an interest in donating to RsEfficiency. We rely on our users to support our growing website. This not only helps us cover the costs of running the site but allows us continually update the site with countless features and deliver a top notch ecperience for you all. RsEfficiency is, all will always be, a free site. But, if you like what we do and want to show your appreciation, please consider supporting the site with a donation. Thanks!</p>
+
+        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+            <input type="hidden" name="cmd" value="_s-xclick">
+            <input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----">
+            <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+            <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+        </form>
+
+    </div>
+
+    {% include "static/partial/footer.html" %}
+
+</body>
+
+</html>

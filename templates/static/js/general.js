@@ -12,4 +12,11 @@ $(document).ready(function() {
         window.location.replace(treasure_trails_url);
         window.location.href = treasure_trails_url;
     });
+
+    $(document).on('click', '#donate', function () {
+        var donate_url = globals.base_url + '/donate';
+
+        window.location.replace(donate_url);
+        window.location.href = donate_url;
+    });
 });

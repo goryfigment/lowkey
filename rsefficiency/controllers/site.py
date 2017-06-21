@@ -8,3 +8,11 @@ def main(request):
     }
 
     return render(request, 'main.html', data)
+
+
+def donate(request):
+    data = {
+        'base_url': get_base_url()
+    }
+
+    return render(request, 'donate.html', data)
