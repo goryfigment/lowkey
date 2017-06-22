@@ -13,6 +13,7 @@
     padding: 0 0 10px;
     cursor: default;
     -webkit-text-stroke: 0.1px black;
+    color: #ffffff;
 }
 
 #motto_container {

@@ -1,0 +1,29 @@
+#donate_description {
+    background-color: #1F2739;
+    color: #FFFFFF;
+    border: solid #757575;
+    padding: 1px 10px 12px 10px;
+    font-weight: 500;
+    width: 736px;
+    text-align: center;
+}
+
+#donation_button {
+    padding: 9px;
+    background: #292929;
+    border: #DEDEDE solid;
+}
+
+.wall_of_fame_title {
+    padding: 25px 0 7px 0 !important;
+}
+
+#wall_of_fame {
+    background-color: #1F2739;
+    color: #FFFFFF;
+    border: solid #757575;
+    padding: 17px;
+    font-weight: 500;
+    width: 736px;
+    text-align: center;
+}
