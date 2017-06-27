@@ -1,0 +1,96 @@
+{% verbatim %}
+<script id="main_template" type="text/x-handlebars-template">
+    <div id="calculator_title">Calculators</div>
+    <h1 class="calculator" id="combat_calculator"><img id="attack_image" src="{{concat 'base_url' '/static/assets/calculator/attack.png'}}"/> Combat Calculator</h1>
+</script>
+{% endverbatim %}
+
+{% verbatim %}
+<script id="combat_calculator_template" type="text/x-handlebars-template">
+    <div id="calculator_title">Combat Calculator</div>
+
+    <div id="highscore_wrapper">
+        <label id="highscore_label" for="highscore_username">Username</label>
+        <input id="highscore_username" type="text" placeholder="Username" />
+        <input id="highscore_submit" type="submit" />
+    </div>
+    <div id="table_wrapper">
+        <table class="table_container">
+            <tbody>
+                <tr>
+                    <td><img class="item_img" title="Hitpoints" src="{{concat 'base_url' '/static/assets/calculator/hitpoints.png'}}"></td>
+                    <td>Hitpoints</td>
+                    <td><input class="combat_input" id="hitpoints_input" type="text" value="10" data-input_type="Hitpoints" maxlength="2" /></td>
+                    <td><img class="item_img" title="Magic" src="{{concat 'base_url' '/static/assets/calculator/magic.png'}}"></td>
+                    <td>Magic</td>
+                    <td><input class="combat_input" id="magic_input" type="text" value="1" data-input_type="Magic" maxlength="2" /></td>
+                </tr>
+                <tr>
+                    <td><img class="item_img" title="Attack" src="{{concat 'base_url' '/static/assets/calculator/attack.png'}}"></td>
+                    <td>Attack</td>
+                    <td><input class="combat_input" id="attack_input" type="text" value="1" data-input_type="Attack" maxlength="2" /></td>
+                    <td><img class="item_img" title="Ranged" src="{{concat 'base_url' '/static/assets/calculator/range.png'}}"></td>
+                    <td>Ranged</td>
+                    <td><input class="combat_input" id="range_input" type="text" value="1" data-input_type="Ranged" maxlength="2" /></td>
+                </tr>
+                <tr>
+                    <td><img class="item_img" title="Strength" src="{{concat 'base_url' '/static/assets/calculator/strength.png'}}"></td>
+                    <td>Strength</td>
+                    <td><input class="combat_input" id="strength_input" type="text" value="1" data-input_type="Strength" maxlength="2" /></td>
+                    <td><img class="item_img" title="Prayer" src="{{concat 'base_url' '/static/assets/calculator/prayer.png'}}"></td>
+                    <td>Prayer</td>
+                    <td><input class="combat_input" id="prayer_input" type="text" value="1" data-input_type="Prayer" maxlength="2" /></td>
+                </tr>
+                <tr>
+                    <td><img class="item_img" title="Defence" src="{{concat 'base_url' '/static/assets/calculator/defense.png'}}"></td>
+                    <td>Defence</td>
+                    <td><input class="combat_input" id="defence_input" type="text" value="1" data-input_type="Defence" maxlength="2" /></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td id="combat_result" colspan="6">Combat level: <span id="combat_level">3.4</span></td>
+                </tr>
+                <tr>
+                    <td id="next_level_wrapper" colspan="6">
+                        <h4 id="next_level_title">To achieve level <span id="next_level">4</span> you need the following:</h4>
+                        <div id="next_level_container">
+                            <ul>
+                                <li><span id="hitpoints_level">3</span> Hitpoints Levels</li>
+                                <li><span id="attack_level">2</span> Attack Levels</li>
+                                <li><span id="strength_level">2</span> Strength Levels</li>
+                                <li><span id="defence_level">3</span> Defence Levels</li>
+                            </ul>
+                            <ul>
+                                <li><span id="magic_level">2</span> Magic Levels</li>
+                                <li><span id="range_level">2</span> Ranged Levels</li>
+                                <li><span id="prayer_level">5</span> Prayer Levels</li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</script>
+{% endverbatim %}
+
+{% verbatim %}
+<script id="next_level_template" type="text/x-handlebars-template">
+    <h4 id="next_level_title">{{#ifCond combat_level '<=' 126}}To achieve level <span id="next_level">{{next_level}}</span> you need the following:{{else}}You cannot advance your combat level any further.{{/ifCond}}</h4>
+    <div id="next_level_container">
+        <ul>
+            {{#ifCond hitpoints_total '<' 99}}<li>{{base_levels}} Hitpoints Levels</li>{{else}}{{/ifCond}}
+            {{#ifCond attack_total '<' 99}}<li>{{melee_levels}} Attack Levels</li>{{else}}{{/ifCond}}
+            {{#ifCond strength_total '<' 99}}<li>{{melee_levels}} Strength Levels</li>{{else}}{{/ifCond}}
+            {{#ifCond defence_total '<' 99}}<li>{{base_levels}} Defense Levels</li>{{else}}{{/ifCond}}
+        </ul>
+        <ul>
+            {{#ifCond magic_total '<' 99}}<li>{{magic_levels}} Magic Levels</li>{{else}}{{/ifCond}}
+            {{#ifCond range_total '<' 99}}<li>{{range_levels}} Ranged Levels</li>{{else}}{{/ifCond}}
+            {{#ifCond prayer_total '<' 99}}<li>{{prayer_levels}} Prayer Levels</li>{{else}}{{/ifCond}}
+        </ul>
+    </div>
+</script>
+{% endverbatim %}

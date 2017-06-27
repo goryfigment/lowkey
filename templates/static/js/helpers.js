@@ -103,6 +103,10 @@ function number_comma_format(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+function replace_all(str, find, replace) {
+    return str.replace(new RegExp(find.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1"), 'g'), replace);
+}
+
 function handlebars_helper(response, $template) {
     var html_template = Handlebars.compile($template.html());
     var $generated_html = $(html_template(response));

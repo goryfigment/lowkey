@@ -1,0 +1,39 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RsEfficiency</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content='Utilize 2007 OSRS Runescape Calculator to calculate levels, skills and much more!'>
+    <meta name="keywords" content="rsefficiency,runescape,07,2007,fansite,old,school,osrs,guides,skill,minigame,money making,calculator,combat calculator">
+    <link rel='shortcut icon' type='image/x-icon' href="{% static 'assets/rsefficiency/rse16.ico' %}" />
+    <base href='{{base_url}}' />
+
+    <script>
+        var globals = {};
+        globals.base_url = '{{base_url}}';
+        globals.template = '{{template}}';
+    </script>
+
+    <link href="{% static 'css/general.css' %}" type="text/css" rel="stylesheet">
+    <link href="{% static 'css/calculator.css' %}" type="text/css" rel="stylesheet">
+
+    <script src="{% static 'js/libs/jquery.js' %}"></script>
+    <script src="{% static 'js/libs/handlebars.js' %}"></script>
+    <script src="{% static 'js/helpers.js' %}"></script>
+    <script src="{% static 'js/general.js' %}"></script>
+    <script src="{% static 'js/calculator.js' %}"></script>
+
+    {% include "static/partial/calculator_partial.html" %}
+</head>
+<body>
+    {% include "static/partial/navigation_bar.html" %}
+
+    <div id="calculator_wrapper">
+
+    </div>
+
+    {% include "static/partial/footer.html" %}
+</body>
+</html>

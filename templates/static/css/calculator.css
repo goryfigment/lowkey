@@ -1,0 +1,143 @@
+#calculator_wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 22px;
+    position: relative;
+    min-height: calc(100vh - 218px);
+}
+
+#calculator_title {
+    text-align: center;
+    font-size: 49px;
+    padding: 0 0 25px;
+    cursor: default;
+    -webkit-text-stroke: 0.1px black;
+    color: #ffffff;
+}
+
+.calculator {
+    margin: 25px 0;
+    text-align: center;
+    color: white;
+    background: rgba(41, 41, 41, 0.8);
+    border-radius: 3px;
+    padding: 7px 10px;
+    width: 100%;
+    max-width: 584px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.calculator:hover {
+    background: rgb(197, 197, 197);
+    color: #0E0E0E;
+}
+
+#attack_image {
+    height: 34px;
+    padding: 0 15px;
+}
+
+#highscore_wrapper {
+    min-width: 323px;
+    margin-bottom: 23px;
+}
+
+#highscore_label {
+    color: #FDFCFC;
+    font-size: 16px;
+    font-family: cursive;
+}
+
+#highscore_username {
+    border-radius: 2px;
+    height: 29px;
+    width: 146px;
+    outline: none;
+    border: none;
+    font-size: 15px;
+    padding: 0 5px;
+    margin: 0 13px;
+    text-align: center;
+}
+
+#highscore_submit {
+    padding: 0 12px;
+    font-size: 12px;
+    background: #2FC749;
+    color: #fff;
+    border: none;
+    text-align: center;
+    height: 30px;
+    cursor: pointer;
+}
+
+#table_wrapper {
+    display: flex;
+}
+
+.table_container {
+    display: table;
+    text-align: left;
+    border-collapse: collapse;
+    font-family: cursive;
+    color: #E6E1E1;
+}
+
+.table_container tr:nth-child(odd) {
+    background-color: #323C50;
+}
+
+.table_container tr:nth-child(even) {
+    background-color: #2C3446;
+}
+
+.table_container th {
+    background-color: #1F2739;
+    color: #cc9900;
+    border: solid #757575;
+    padding: 6px 8px;
+    font-weight: 500;
+}
+
+.table_container td {
+    padding: 8px 8px 4px 13px;
+    border: solid #757575;
+    white-space: nowrap;
+}
+
+.combat_input {
+    width: 28px;
+    text-align: center;
+    height: 20px;
+}
+
+#combat_result {
+    height: 36px;
+    text-align: center;
+}
+
+#combat_level {
+    color: #FDF504;
+}
+
+#next_level_container {
+    display: flex;
+}
+
+#next_level_container ul {
+    margin: 10px 0;
+}
+
+#next_level_title {
+    text-align: center;
+    font-weight: 500;
+    margin: 5px 0;
+}
+
+#next_level {
+    color: #FF9120;
+}

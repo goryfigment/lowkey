@@ -27,6 +27,7 @@ body {
     display: flex;
     align-items: stretch;
     color: #CACACA;
+    min-width: 432px;
 }
 
 #nav_links_container a {
@@ -83,10 +84,11 @@ body {
     background: #2C2E33;
     color: #D4D4D4;
     display: flex;
-    padding: 20px;
+    padding: 12px;
     font-size: 14px;
     text-align: center;
-    line-height: 23px;
+    line-height: 20px;
+    min-width: 500px;
 }
 
 #footer .subsection {

@@ -180,8 +180,7 @@
 }
 
 #directory {
-    width: 100%;
-    max-width: 756px;
+    min-width: 756px;
     display: flex;
     justify-content: space-around;
     background: rgba(0, 0, 0, 0.35);

@@ -2,7 +2,7 @@ from django.conf.urls import url
 from django.contrib import admin
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
-from rsefficiency.controllers import site, treasure_trails, grand_exchange
+from rsefficiency.controllers import site, treasure_trails, grand_exchange, calculator
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -35,4 +35,8 @@ urlpatterns = [
     url(r'^grand-exchange/tan-leather/$',  csrf_exempt(grand_exchange.tan_leather), name='tan_leather'),
     url(r'^grand-exchange/item-sets/$',  csrf_exempt(grand_exchange.item_sets), name='item_sets'),
     url(r'^grand-exchange/magic-tablets/$',  csrf_exempt(grand_exchange.magic_tablets), name='magic_tablets'),
+
+    url(r'^calculator/$', calculator.calculator, name='calculator'),
+    url(r'^calculator/combat-calculator$', calculator.combat_calculator, name='combat_calculator'),
+    url(r'^calculator/highscore$', calculator.highscore, name='highscore'),
 ]

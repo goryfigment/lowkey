@@ -13,6 +13,13 @@ $(document).ready(function() {
         window.location.href = treasure_trails_url;
     });
 
+    $(document).on('click', '#calculator', function () {
+        var calculator_url = globals.base_url + '/calculator';
+
+        window.location.replace(calculator_url);
+        window.location.href = calculator_url;
+    });
+
     $(document).on('click', '#donate', function () {
         var donate_url = globals.base_url + '/donate';
 

@@ -428,10 +428,11 @@ input[type="number"] {
 }
 
 #herblore {
-    max-width: 660px;
+    min-width: 660px;
+    width: 660px;
 }
 
 #general {
     margin-bottom: 20px;
-    max-width: 720px;
+    min-width: 720px;
 }
