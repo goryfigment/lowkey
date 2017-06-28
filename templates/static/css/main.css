@@ -31,6 +31,7 @@
     align-items: center;
     margin: 22px;
     position: relative;
+    min-height: calc(100vh - 218px);
 }
 
 .title {
@@ -77,9 +78,4 @@
     line-height: 26px;
     margin: 5px 28px;
     font-size: 13px;
-}
-
-#footer {
-    position: absolute;
-    bottom: 0;
 }

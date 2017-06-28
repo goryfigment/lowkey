@@ -4,6 +4,7 @@
     align-items: center;
     margin: 40px;
     position: relative;
+    min-height: calc(100vh - 254px);
 }
 
 #clue_search {

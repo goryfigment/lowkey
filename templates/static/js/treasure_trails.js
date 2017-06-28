@@ -9,6 +9,9 @@ function init() {
     }
 
     if(clue_data !== null && clue_data.length !== 0) {
+        var $clue_result_container = $('#clue_result_container');
+        $clue_result_container.empty();
+
         if(typeof clue_data == 'string') {
             clue_data = JSON.parse(clue_data);
         }
@@ -20,10 +23,7 @@ function init() {
             $clue_template = $('#clue_template');
         }
 
-        var $clue_result_container = $('#clue_result_container');
         var $generated_html = handlebars_helper(clue_data, $clue_template);
-
-        $clue_result_container.empty();
         $clue_result_container.append($generated_html);
     }
 }

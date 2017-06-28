@@ -23,14 +23,7 @@ function highscore_lookup(username, highscore_type) {
         url: globals.base_url + '/calculator/highscore',
         data: {'username': username, 'type': highscore_type},
         dataType: 'json',
-        type: "GET",
-        success: function (response) {
-            if (response['success']) {
-                console.log(JSON.stringify(response));
-            } else {
-                console.log(JSON.stringify(response));
-            }
-        }
+        type: "GET"
     });
 }
 

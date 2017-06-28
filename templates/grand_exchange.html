@@ -24,13 +24,13 @@
     <link href="{% static 'css/general.css' %}" type="text/css" rel="stylesheet">
     <link href="{% static 'css/grand_exchange.css' %}" type="text/css" rel="stylesheet">
 
-    <script src="{% static 'js/libs/jquery.js' %}"></script>
-    <script src="{% static 'js/libs/handlebars.js' %}"></script>
-    <script src="{% static 'js/libs/google_charts.js' %}"></script>
+    <script src="{% static 'js/libs/jquery.js' %}" defer></script>
+    <script src="{% static 'js/libs/handlebars.js' %}" defer></script>
+    <script src="{% static 'js/libs/google_charts.js' %}" defer></script>
 
-    <script src="{% static 'js/helpers.js' %}"></script>
-    <script src="{% static 'js/general.js' %}"></script>
-    <script src="{% static 'js/grand_exchange.js' %}"></script>
+    <script src="{% static 'js/helpers.js' %}" defer></script>
+    <script src="{% static 'js/general.js' %}" defer></script>
+    <script src="{% static 'js/grand_exchange.js' %}" defer></script>
 
     {% include "static/partial/grand_exchange_partial.html" %}
 

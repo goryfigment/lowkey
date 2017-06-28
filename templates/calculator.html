@@ -19,11 +19,11 @@
     <link href="{% static 'css/general.css' %}" type="text/css" rel="stylesheet">
     <link href="{% static 'css/calculator.css' %}" type="text/css" rel="stylesheet">
 
-    <script src="{% static 'js/libs/jquery.js' %}"></script>
-    <script src="{% static 'js/libs/handlebars.js' %}"></script>
-    <script src="{% static 'js/helpers.js' %}"></script>
-    <script src="{% static 'js/general.js' %}"></script>
-    <script src="{% static 'js/calculator.js' %}"></script>
+    <script src="{% static 'js/libs/jquery.js' %}" defer></script>
+    <script src="{% static 'js/libs/handlebars.js' %}" defer></script>
+    <script src="{% static 'js/helpers.js' %}" defer></script>
+    <script src="{% static 'js/general.js' %}" defer></script>
+    <script src="{% static 'js/calculator.js' %}" defer></script>
 
     {% include "static/partial/calculator_partial.html" %}
 </head>
