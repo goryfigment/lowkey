@@ -10,9 +10,7 @@
 #calculator_title {
     text-align: center;
     font-size: 49px;
-    padding: 0 0 25px;
     cursor: default;
-    -webkit-text-stroke: 0.1px black;
     color: #ffffff;
 }
 
@@ -36,7 +34,7 @@
     color: #0E0E0E;
 }
 
-#attack_image {
+#attack_image, #prayer_image {
     height: 34px;
     padding: 0 15px;
 }
@@ -54,7 +52,7 @@
 
 #highscore_username {
     border-radius: 2px;
-    height: 29px;
+    height: 28px;
     width: 146px;
     outline: none;
     border: none;
@@ -64,19 +62,15 @@
     text-align: center;
 }
 
-#highscore_submit {
+.highscore_submit {
     padding: 0 12px;
     font-size: 12px;
     background: #2FC749;
     color: #fff;
     border: none;
     text-align: center;
-    height: 30px;
+    height: 29px;
     cursor: pointer;
-}
-
-#table_wrapper {
-    display: flex;
 }
 
 .table_container {
@@ -104,12 +98,13 @@
 }
 
 .table_container td {
-    padding: 8px 8px 4px 13px;
+    padding: 2px 6px 2px 10px;
     border: solid #757575;
     white-space: nowrap;
+    font-size: 15px;
 }
 
-.combat_input {
+.combat_input, .level_input {
     width: 28px;
     text-align: center;
     height: 20px;
@@ -140,4 +135,69 @@
 
 #next_level {
     color: #FF9120;
+}
+
+.calculator_options {
+    padding: 5px !important;
+    text-align: center;
+}
+
+#table_details_wrapper #highscore_wrapper {
+    margin: 10px;
+}
+
+#level_wrapper, #exp_wrapper {
+    text-align: center;
+    margin: 6px;
+}
+
+.level_input {
+    margin: 0 10px;
+}
+
+.exp_input {
+    width: 120px;
+    text-align: center;
+    height: 20px;
+    margin: 0 6px;
+}
+
+.calculate_submit {
+    padding: 0 15px;
+    font-size: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border: solid #bbbbbb;
+    text-align: center;
+    height: 29px;
+    cursor: pointer;
+}
+
+.calculate_submit:hover {
+     border: solid #ffffff;
+}
+
+.subheaders {
+    color: #ffffff;
+}
+
+.content {
+    position: relative;
+    padding: 0 2px;
+    margin: 0 3px;
+}
+
+.multiple {
+    position: absolute;
+    left: -6px;
+    top: -18px;
+    font-size: 13px;
+}
+
+.sortable {
+    cursor: pointer;
+}
+
+.negative {
+    color: #F51C23;
 }

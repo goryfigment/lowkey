@@ -14,6 +14,8 @@
         var globals = {};
         globals.base_url = '{{base_url}}';
         globals.template = '{{template}}';
+        globals.calc_data = {{calc_data|safe}};
+        globals.calc_type = '{{calc_type}}';
     </script>
 
     <link href="{% static 'css/general.css' %}" type="text/css" rel="stylesheet">

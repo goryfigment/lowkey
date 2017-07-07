@@ -24,7 +24,7 @@ body {
     cursor: pointer;
     font-size: 18px;
     display: flex;
-    align-items: stretch;
+    white-space: nowrap;
     color: #CACACA;
     min-width: 432px;
 }
@@ -88,6 +88,8 @@ body {
     text-align: center;
     line-height: 20px;
     min-width: 500px;
+    min-height: 85px;
+    max-height: 85px;
 }
 
 #footer .subsection {

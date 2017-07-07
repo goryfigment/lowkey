@@ -38,6 +38,10 @@ Handlebars.registerHelper("math", function(first_value, operator, second_value, 
     return (format) ? number_comma_format(math_dict[operator]) : math_dict[operator]
 });
 
+Handlebars.registerHelper("ceil", function(num, format) {
+    return (format) ? number_comma_format(Math.ceil(num)) : Math.ceil(num);
+});
+
 Handlebars.registerHelper('concat', function() {
     var outStr = '';
     for(var arg in arguments){

@@ -2,6 +2,7 @@
 <script id="main_template" type="text/x-handlebars-template">
     <div id="calculator_title">Calculators</div>
     <h1 class="calculator" id="combat_calculator"><img id="attack_image" src="{{concat 'base_url' '/static/assets/calculator/attack.png'}}"/> Combat Calculator</h1>
+    <h1 class="calculator" id="prayer_calculator"><img id="prayer_image" src="{{concat 'base_url' '/static/assets/calculator/prayer.png'}}"/> Prayer Calculator</h1>
 </script>
 {% endverbatim %}
 
@@ -12,7 +13,7 @@
     <div id="highscore_wrapper">
         <label id="highscore_label" for="highscore_username">Username</label>
         <input id="highscore_username" type="text" placeholder="Username" />
-        <input id="highscore_submit" type="submit" />
+        <input id="combat_submit" class="highscore_submit" type="submit" />
     </div>
     <div id="table_wrapper">
         <table class="table_container">
@@ -73,6 +74,111 @@
             </tbody>
         </table>
     </div>
+</script>
+{% endverbatim %}
+
+{% verbatim %}
+<script id="prayer_calculator_template" type="text/x-handlebars-template">
+    <h1 id="calculator_title">Prayer Calculator</h1>
+
+    <table class="table_container" id="table_details_wrapper">
+        <tbody>
+            <tr>
+                <td id="calculator_options" colspan="6">
+                    <div id="highscore_wrapper">
+                        <label id="highscore_label" for="highscore_username">Username</label>
+                        <input id="highscore_username" type="text" placeholder="Username" data-type="Prayer" />
+                        <input id="skill_submit" class="highscore_submit" type="submit" />
+                    </div>
+
+                    <div id="level_wrapper">
+                        <label for="current_level_input">Current Level</label>
+                        <input class="level_input" id="current_level_input" type="text" maxlength="2" value="1" />
+                        <label for="target_level_input">Target Level</label>
+                        <input class="level_input" id="target_level_input" type="text" maxlength="2" value="2" />
+                    </div>
+
+                    <div id="exp_wrapper">
+                        <label for="current_exp_input">Current Exp</label>
+                        <input class="exp_input" id="current_exp_input" type="text" maxlength="2" value="0" />
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="calculator_options" colspan="6">
+                    <input id="ectofuntus_input" class="radio_input" type="radio" name="prayer" />
+                    <label for="ectofuntus_input">Ectofuntus</label>
+                    <input id="gilded_input" class="radio_input" type="radio" name="prayer" checked />
+                    <label for="gilded_input">Gilded Altar (2 Burners)</label>
+                </td>
+            </tr>
+            <tr>
+                <td class="calculator_options" colspan="6">
+                    <div id="calculate_wrapper">
+                        <input class="calculate_submit" id="prayer_submit" type="submit" value="Calculate" />
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2 class="subheaders">Bones</h2>
+
+    <table class="table_container" id="bone_table">
+        <thead>
+            <tr>
+                <th scope="col">Item</th>
+                <th scope="col">Name</th>
+                <th class="sortable" scope="col">Exp</th>
+                <th class="sortable" scope="col">GP/EXP</th>
+                <th class="sortable" scope="col">Profit</th>
+                <th class="sortable" scope="col">Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{#each bones_list}}
+            <tr class="bone" data-id="{{id}}" data-exp="{{exp}}">
+                <td class="img_column"> <a href="{{concat 'base_url' '/grand-exchange/' id}}"> <img class="item_img" title="{{name}}" src="{{concat 'base_url' '/static/assets/rs_items/icons/' file_name}}" /> </a></td>
+                <td>{{name}}</td>
+                <td class="exp">{{math exp '*' 3.5 false}}</td>
+                <td class="gp_per_exp negative">-</td>
+                <td class="profit negative">-</td>
+                <td class="amount">{{ceil (math 83 '/' (math exp '*' 3.5 false) false) true}}</td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+
+    <h2 class="subheaders">Ensouled Heads</h2>
+
+    <table id="ensouled_table" class="table_container">
+        <thead>
+            <tr>
+                <th scope="col">Magic Level</th>
+                <th scope="col">Item</th>
+                <th scope="col">Name</th>
+                <th scope="col">Runes</th>
+                <th class="sortable" scope="col">Exp</th>
+                <th class="sortable" scope="col">GP/EXP</th>
+                <th class="sortable" scope="col">Profit</th>
+                <th class="sortable" scope="col">Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{#each ensouled_list}}
+            <tr class="ensouled" data-id="{{id}}" data-exp="{{exp}}">
+                <td>{{magic_level}}</td>
+                <td class="img_column"> <a href="{{concat 'base_url' '/grand-exchange/' id}}"> <img class="item_img" title="{{name}}" src="{{concat 'base_url' '/static/assets/rs_items/icons/' file_name}}" /> </a></td>
+                <td>{{name}}</td>
+                <td class="ingredient">{{#each runes}}<span class="content" data-id="{{id}}" data-multiple="{{access_dict multiple id}}"><span class="multiple">{{access_dict multiple id}}</span><a href="{{concat 'base_url' '/grand-exchange/' id}}"> <img class="ingredient_img" title="{{#if multiple}}{{access_dict multiple id}}x{{/if}} {{name}}" src="{{concat 'base_url' '/static/assets/rs_items/icons/' file_name}}" /> </a> </span>{{/each}}</td>
+                <td class="exp">{{exp}}</td>
+                <td class="gp_per_exp negative">-</td>
+                <td class="profit negative">-</td>
+                <td class="amount">{{ceil (math 83 '/' exp false) true}}</td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
 </script>
 {% endverbatim %}
 
