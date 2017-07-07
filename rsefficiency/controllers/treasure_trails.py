@@ -48,7 +48,6 @@ def clue_string_search(request):
 
 def clue_type_search(request, clue_type):
     clue_dict = {}
-
     try:
         my_dir = os.path.dirname(__file__)
         file_path = os.path.join(my_dir, 'static_data/treasure_trails.json')
@@ -105,9 +104,11 @@ def clue_type_search(request, clue_type):
     if clue_type == 'coordinate' or clue_type == 'map':
         clue_dict = {int(k): v for k, v in clue_dict.items()}
     elif clue_type == 'emote':
-        clue_dict = {ord(k[0]): v for k, v in clue_dict.items()}
+        clue_dict = {ord(k[0])*100 + ord(k[1]): v for k, v in clue_dict.items()}
     else:
         clue_dict = {ord(k): v for k, v in clue_dict.items()}
+
+    print clue_dict
 
     data = {'success': True, 'base_url': get_base_url(), 'type': clue_type.title(), 'clue': json.dumps(clue_dict)}
     return render(request, 'treasure_trails.html', data)

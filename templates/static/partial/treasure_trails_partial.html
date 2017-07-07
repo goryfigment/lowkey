@@ -158,7 +158,7 @@
                 {{../type}}s starting with '{{ascii_to_char @key}}'
             {{/ifCond}}
             {{#ifCond ../type '==' 'Emote'}}
-                <span><img id="emote_icon" title={{this.0.challenge}} src="{{concat 'base_url' '/static/assets/treasure_trail/emote_icon/' (replace this.0.challenge ' ' '-') '.png'}}" />
+                <span><img id="emote_icon" title="{{this.0.challenge}}" src="{{concat 'base_url' '/static/assets/treasure_trail/emote_icon/' (replace this.0.challenge ' ' '-') '.png'}}" />
                 {{this.0.challenge}} {{../type}} Clues</span>
             {{/ifCond}}
             {{#ifCond ../type '==' 'Map'}}
