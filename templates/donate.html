@@ -20,19 +20,18 @@
     <link href="{% static 'css/donate.css' %}" type="text/css" rel="stylesheet">
 
     <script src="{% static 'js/libs/jquery.js' %}" defer></script>
-    <script src="{% static 'js/general.js' %}" defer></script>
     <script src="{% static 'js/donate.js' %}" defer></script>
 </head>
 <body>
 
     {% include "static/partial/navigation_bar.html" %}
 
-    <div id="update_wrapper">
-        <div id="update_logo_container">
-            Support <span id="rs_logo">RS</span><span id="efficiency_log">Efficiency</span>
+    <div id="update-wrapper">
+        <div id="update-logo-container">
+            Support <span id="rs-logo">RS</span><span id="efficiency-log">Efficiency</span>
         </div>
 
-        <div id="donate_description">
+        <div id="donate-description">
             <p>Thank you for taking an interest in donating to RsEfficiency. We rely on our users to support our growing website. This not only helps us cover the costs of running the site but allows us continually update the site with countless features and deliver a top notch ecperience for you all. RsEfficiency is, all will always be, a free site. But, if you like what we do and want to show your appreciation, please consider supporting the site with a donation.</p>
             <p>As a huge thanks, supporters can choose to appear on the Wall of Fame. Just remember to add a note of the name you wished to be referred to or message us the email and amount donated to our email: osrsefficiency@gmail.com!</p>
             <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
@@ -45,14 +44,14 @@
                 <input type="hidden" name="no_shipping" value="1">
                 <input type="hidden" name="currency_code" value="USD">
                 <input type="hidden" name="bn" value="PP-DonationsBF:btn_donateCC_LG.gif:NonHosted">
-                <input id="donation_button" type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                <input id="donation-button" type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
                 <img border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
             </form>
         </div>
 
-        <div class="wall_of_fame_title" id="update_logo_container">Wall of Fame</div>
+        <div class="wall-of-fame-title" id="update-logo-container">Wall of Fame</div>
 
-        <div id="wall_of_fame">
+        <div id="wall-of-fame">
             Be the first one on here!
         </div>
 

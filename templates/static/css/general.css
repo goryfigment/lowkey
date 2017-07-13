@@ -13,14 +13,14 @@ body {
     min-height: 100vh;
 }
 
-#navigation_bar {
+#navigation-bar {
     display: flex;
     background-color: #36393E;
     color: rgba(255, 255, 255, 0.6);
     border-bottom: solid 2px #303337;
 }
 
-#nav_links_container {
+#nav-links-container {
     cursor: pointer;
     font-size: 18px;
     display: flex;
@@ -29,35 +29,35 @@ body {
     min-width: 432px;
 }
 
-#nav_links_container a {
+#nav-links-container a {
     padding: 0 7px;
     line-height: 63px;
     color: #F1EEE6;
     text-decoration: none;
 }
 
-#nav_links_container a.active {
+#nav-links-container a.active {
     background-color: rgba(115,125,124,0.2);
     color: rgba(23, 245, 235, 0.8);
     text-decoration: none;
 }
 
-#nav_links_container a:hover {
+#nav-links-container a:hover {
     color: #ffffff;
 }
 
-#h1_logo {
+#h1-logo {
     margin: 0;
     font-weight: 500;
     font-size: 29px;
     font-family: cursive;
 }
 
-#logo_link {
+#logo-link {
     text-decoration: none;
 }
 
-#logo_container {
+#logo-container {
     font-size: 35px;
     padding: 9px 8px;
     cursor: pointer;
@@ -65,13 +65,13 @@ body {
     color: rgba(255, 255, 255, 0.9)
 }
 
-.h3_links {
+.h3-links {
     font-size: 18px;
     font-weight: 500;
     margin: 0;
 }
 
-#rs_logo {
+#rs-logo {
     color: #35ECFF;
 }
 

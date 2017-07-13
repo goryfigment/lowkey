@@ -23,23 +23,23 @@ Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
     }
 });
 
-Handlebars.registerHelper("math", function(first_value, operator, second_value, format) {
-    first_value = parseFloat(first_value);
-    second_value = parseFloat(second_value);
+Handlebars.registerHelper("math", function(firstValue, operator, secondValue, format) {
+    firstValue = parseFloat(firstValue);
+    secondValue = parseFloat(secondValue);
 
-    var math_dict = {
-        "+": first_value + second_value,
-        "-": (first_value - second_value).toString().replace('-', '- '),
-        "*": first_value * second_value,
-        "/": first_value / second_value,
-        "%": first_value % second_value
+    var mathDict = {
+        "+": firstValue + secondValue,
+        "-": (firstValue - secondValue).toString().replace('-', '- '),
+        "*": firstValue * secondValue,
+        "/": firstValue / secondValue,
+        "%": firstValue % secondValue
     };
 
-    return (format) ? number_comma_format(math_dict[operator]) : math_dict[operator]
+    return (format) ? numberCommaFormat(mathDict[operator]) : mathDict[operator];
 });
 
 Handlebars.registerHelper("ceil", function(num, format) {
-    return (format) ? number_comma_format(Math.ceil(num)) : Math.ceil(num);
+    return (format) ? numberCommaFormat(Math.ceil(num)) : Math.ceil(num);
 });
 
 Handlebars.registerHelper('concat', function() {
@@ -55,27 +55,27 @@ Handlebars.registerHelper('concat', function() {
     return outStr;
 });
 
-Handlebars.registerHelper('replace', function(string, string_to_replace, string_replacement) {
-    return string.split(string_to_replace).join(string_replacement);
+Handlebars.registerHelper('replace', function(string, stringToReplace, stringReplacement) {
+    return string.split(stringToReplace).join(stringReplacement);
 });
 
-Handlebars.registerHelper('ascii_to_char', function(ascii) {
+Handlebars.registerHelper('asciiToChar', function(ascii) {
     return String.fromCharCode(ascii);
 });
 
-Handlebars.registerHelper('num_comma_format', function(x) {
-    return number_comma_format(x);
+Handlebars.registerHelper('numCommaFormat', function(x) {
+    return numberCommaFormat(x);
 });
 
-Handlebars.registerHelper('time_passed', function(x) {
-    return time_passed(x);
+Handlebars.registerHelper('timePassed', function(x) {
+    return timePassed(x);
 });
 
-Handlebars.registerHelper('access_dict', function(dict, key) {
+Handlebars.registerHelper('accessDict', function(dict, key) {
     return dict[key.toString()];
 });
 
-Handlebars.registerHelper('is_substring', function(substring, string) {
+Handlebars.registerHelper('isSubstring', function(substring, string) {
     if ((string.toString()).indexOf(substring) != -1) {
         return true;
     } else {
@@ -83,41 +83,42 @@ Handlebars.registerHelper('is_substring', function(substring, string) {
     }
 });
 
-function time_passed(epoch_time) {
-    var d1 = new Date(parseInt(epoch_time));
+function timePassed(epochTime) {
+    var d1 = new Date(parseInt(epochTime));
     var milliseconds = Math.abs(new Date() - d1);
     var minutes = Math.floor(milliseconds / 60000);
-    var minute_string = '';
+    var minuteString = '';
+    var timestampString = '';
 
     if(minutes > 60) {
         var hours = Math.floor(minutes / 60);
         minutes = minutes - (hours * 60);
-        var hour_string = hours != 1 ? 'hours' : 'hour';
-        minute_string = minutes != 1 ? 'minutes' : 'minute';
-        var timestamp_string = hours.toString() + ' ' + hour_string + ' and ' + minutes.toString() + ' ' + minute_string
+        var hourString = hours != 1 ? 'hours' : 'hour';
+        minuteString = minutes != 1 ? 'minutes' : 'minute';
+        timestampString = hours.toString() + ' ' + hourString + ' and ' + minutes.toString() + ' ' + minuteString;
     } else {
-        minute_string = minutes != 1 ? 'minutes' : 'minute';
-        timestamp_string = minutes.toString() + ' ' + minute_string
+        minuteString = minutes != 1 ? 'minutes' : 'minute';
+        timestampString = minutes.toString() + ' ' + minuteString;
     }
 
-    return timestamp_string;
+    return timestampString;
 }
 
-function number_comma_format(x) {
+function numberCommaFormat(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-function replace_all(str, find, replace) {
+function replaceAll(str, find, replace) {
     return str.replace(new RegExp(find.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1"), 'g'), replace);
 }
 
-function handlebars_helper(response, $template) {
-    var html_template = Handlebars.compile($template.html());
-    var $generated_html = $(html_template(response));
-    return $generated_html;
+function handlebarsHelper(response, $template) {
+    var htmlTemplate = Handlebars.compile($template.html());
+    var $generatedHtml = $(htmlTemplate(response));
+    return $generatedHtml;
 }
 
-function scroll_to_element($container, $element, speed){
+function scrollToElement($container, $element, speed){
     var elementTop = $element.offset().top;
     var elementHeight = $element.height();
     var containerTop = $container.offset().top;
@@ -133,53 +134,51 @@ function scroll_to_element($container, $element, speed){
 }
 
 
-function up_and_down_popups(keyCode, $popup, $options, scroll) {
+function upAndDownPopups(keyCode, $popup, $options, scroll) {
     var $selected = $popup.find('.selected');
-    //var $visible_options = $popup
-    var $first_option = $options.filter(':visible').eq(0);
-    var $last_option = $options.filter(':visible').eq(-1);
-    //alert($first_option.attr('data-value'));
+    var $firstOption = $options.filter(':visible').eq(0);
+    var $lastOption = $options.filter(':visible').eq(-1);
 
     if (keyCode == 40) { //down arrow
-        var $next_option = $selected.nextAll($options).filter(':visible').first();
+        var $nextOption = $selected.nextAll($options).filter(':visible').first();
         if($selected.length) {
             $selected.removeClass('selected');
-            if($next_option.length){
-                $next_option.addClass('selected');
+            if($nextOption.length){
+                $nextOption.addClass('selected');
                 if(scroll) {
-                    scroll_to_element($popup, $next_option, 50);
+                    scrollToElement($popup, $nextOption, 50);
                 }
             } else{
-                $first_option.addClass('selected');
+                $firstOption.addClass('selected');
                 if(scroll) {
-                    scroll_to_element($popup, $first_option, 50);
+                    scrollToElement($popup, $firstOption, 50);
                 }
             }
         } else {
-            $first_option.addClass('selected');
+            $firstOption.addClass('selected');
             if(scroll) {
-                scroll_to_element($popup, $first_option, 50);
+                scrollToElement($popup, $firstOption, 50);
             }
         }
     } else if (keyCode == 38) { //up arrow
-        var $prev_option = $selected.prevAll($options).filter(':visible').first();
+        var $prevOption = $selected.prevAll($options).filter(':visible').first();
         if($selected.length) {
             $selected.removeClass('selected');
-            if($prev_option.length){
-                $prev_option.addClass('selected');
+            if($prevOption.length){
+                $prevOption.addClass('selected');
                 if(scroll) {
-                    scroll_to_element($popup, $prev_option, 50);
+                    scrollToElement($popup, $prevOption, 50);
                 }
             }else{
-                $last_option.addClass('selected');
+                $lastOption.addClass('selected');
                 if(scroll) {
-                    scroll_to_element($popup, $last_option, 50);
+                    scrollToElement($popup, $lastOption, 50);
                 }
             }
         } else {
-            $last_option.addClass('selected');
+            $lastOption.addClass('selected');
             if(scroll) {
-                scroll_to_element($popup, $last_option, 50);
+                scrollToElement($popup, $lastOption, 50);
             }
         }
     } else if(keyCode == 13) { //enter button

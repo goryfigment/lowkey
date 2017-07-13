@@ -20,6 +20,21 @@
   <priority>0.80</priority>
 </url>
 <url>
+  <loc>http://www.rsefficiency.com/calculator/</loc>
+  <changefreq>monthly</changefreq>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>http://www.rsefficiency.com/grand-exchange/combat-calculator/</loc>
+  <changefreq>monthly</changefreq>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>http://www.rsefficiency.com/grand-exchange/prayer-calculator/</loc>
+  <changefreq>monthly</changefreq>
+  <priority>0.64</priority>
+</url>
+<url>
   <loc>http://www.rsefficiency.com/grand-exchange/barrows-repair/</loc>
   <changefreq>monthly</changefreq>
   <priority>0.64</priority>

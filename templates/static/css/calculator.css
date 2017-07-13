@@ -1,4 +1,4 @@
-#calculator_wrapper {
+#calculator-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -7,7 +7,7 @@
     min-height: calc(100vh - 218px);
 }
 
-#calculator_title {
+#calculator-title {
     text-align: center;
     font-size: 49px;
     cursor: default;
@@ -34,23 +34,23 @@
     color: #0E0E0E;
 }
 
-#attack_image, #prayer_image {
+#attack-image, #prayer-image {
     height: 34px;
     padding: 0 15px;
 }
 
-#highscore_wrapper {
+#highscore-wrapper {
     min-width: 323px;
     margin-bottom: 23px;
 }
 
-#highscore_label {
+#highscore-label {
     color: #FDFCFC;
     font-size: 16px;
     font-family: cursive;
 }
 
-#highscore_username {
+#highscore-username {
     border-radius: 2px;
     height: 28px;
     width: 146px;
@@ -62,7 +62,7 @@
     text-align: center;
 }
 
-.highscore_submit {
+.highscore-submit {
     padding: 0 12px;
     font-size: 12px;
     background: #2FC749;
@@ -73,7 +73,7 @@
     cursor: pointer;
 }
 
-.table_container {
+.table-container {
     display: table;
     text-align: left;
     border-collapse: collapse;
@@ -81,15 +81,15 @@
     color: #E6E1E1;
 }
 
-.table_container tr:nth-child(odd) {
+.table-container tr:nth-child(odd) {
     background-color: #323C50;
 }
 
-.table_container tr:nth-child(even) {
+.table-container tr:nth-child(even) {
     background-color: #2C3446;
 }
 
-.table_container th {
+.table-container th {
     background-color: #1F2739;
     color: #cc9900;
     border: solid #757575;
@@ -97,72 +97,72 @@
     font-weight: 500;
 }
 
-.table_container td {
+.table-container td {
     padding: 2px 6px 2px 10px;
     border: solid #757575;
     white-space: nowrap;
     font-size: 15px;
 }
 
-.combat_input, .level_input {
+.combat-input, .level-input {
     width: 28px;
     text-align: center;
     height: 20px;
 }
 
-#combat_result {
+#combat-result {
     height: 36px;
     text-align: center;
 }
 
-#combat_level {
+#combat-level {
     color: #FDF504;
 }
 
-#next_level_container {
+#next-level-container {
     display: flex;
 }
 
-#next_level_container ul {
+#next-level-container ul {
     margin: 10px 0;
 }
 
-#next_level_title {
+#next-level-title {
     text-align: center;
     font-weight: 500;
     margin: 5px 0;
 }
 
-#next_level {
+#next-level {
     color: #FF9120;
 }
 
-.calculator_options {
+.calculator-options {
     padding: 5px !important;
     text-align: center;
 }
 
-#table_details_wrapper #highscore_wrapper {
+#table-details-wrapper #highscore-wrapper {
     margin: 10px;
 }
 
-#level_wrapper, #exp_wrapper {
+#level-wrapper, #exp-wrapper {
     text-align: center;
     margin: 6px;
 }
 
-.level_input {
+.level-input {
     margin: 0 10px;
 }
 
-.exp_input {
+.exp-input {
     width: 120px;
     text-align: center;
     height: 20px;
     margin: 0 6px;
 }
 
-.calculate_submit {
+.calculate-submit {
     padding: 0 15px;
     font-size: 12px;
     background: rgba(0, 0, 0, 0.8);
@@ -173,7 +173,7 @@
     cursor: pointer;
 }
 
-.calculate_submit:hover {
+.calculate-submit:hover {
      border: solid #ffffff;
 }
 

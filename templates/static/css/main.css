@@ -1,13 +1,8 @@
-#twitter_feed {
-    display: flex;
-    justify-content: center;
-}
-
-#efficiency_log {
+#efficiency-log {
     color: #ffffff;
 }
 
-#update_logo_container {
+#update-logo-container {
     text-align: center;
     font-size: 49px;
     padding: 0 0 10px;
@@ -16,16 +11,7 @@
     color: #ffffff;
 }
 
-#motto_container {
-    text-align: center;
-    font-size: 38px;
-    cursor: default;
-    -webkit-text-stroke: 0.7px black;
-    color: #AFD4D6;
-    animation: fadein 2s;
-}
-
-#update_wrapper {
+#update-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -49,33 +35,4 @@
 .title:hover {
     background: rgb(197, 197, 197);
     color: #0E0E0E;
-}
-
-.post_update_container {
-    background-color: #fff;
-    border-radius: 4px;
-    padding: 10px;
-    max-width: 584px;
-    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.post_date {
-    margin: 0 0 7px;
-    font-size: 12px;
-    color: #909090;
-    -webkit-text-stroke: 0.1px black;
-}
-
-.post_img {
-    height: auto;
-    width: 554px;
-}
-
-.post_body {
-    line-height: 26px;
-    margin: 5px 28px;
-    font-size: 13px;
 }

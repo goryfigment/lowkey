@@ -48,7 +48,6 @@
     <script src="{% static 'js/libs/jquery.js' %}"></script>
     <script src="{% static 'js/libs/handlebars.js' %}"></script>
     <script src="{% static 'js/helpers.js' %}"></script>
-    <script src="{% static 'js/general.js' %}"></script>
     <script src="{% static 'js/treasure_trails.js' %}"></script>
 
     {% include "static/partial/treasure_trails_partial.html" %}
@@ -58,35 +57,35 @@
 
     {% include "static/partial/navigation_bar.html" %}
 
-    <div id="treasure_trail_wrapper">
-        <div id="clue_search_popup">
+    <div id="treasure-trail-wrapper">
+        <div id="clue-search-popup">
 
         </div>
 
         <div id="directory">
             <div class="empty">|</div>
-            <a class="clue_type" href="/treasure-trails/anagram">Annagrams</a>
+            <a class="clue-type" href="/treasure-trails/anagram">Annagrams</a>
             <div>|</div>
-            <a class="clue_type" href="/treasure-trails/cipher">Ciphers</a>
+            <a class="clue-type" href="/treasure-trails/cipher">Ciphers</a>
             <div>|</div>
-            <a class="clue_type" href="/treasure-trails/coordinate">Coordinates</a>
+            <a class="clue-type" href="/treasure-trails/coordinate">Coordinates</a>
             <div>|</div>
-            <a class="clue_type" href="/treasure-trails/cryptic">Cryptics</a>
+            <a class="clue-type" href="/treasure-trails/cryptic">Cryptics</a>
             <div>|</div>
-            <a class="clue_type" href="/treasure-trails/emote">Emotes</a>
+            <a class="clue-type" href="/treasure-trails/emote">Emotes</a>
             <div>|</div>
-            <a class="clue_type" href="/treasure-trails/map">Maps</a>
+            <a class="clue-type" href="/treasure-trails/map">Maps</a>
             <div class="empty">|</div>
         </div>
 
-        <input id="clue_search" type="search" placeholder="Search for a clue.." />
+        <input id="clue-search" type="search" placeholder="Search for a clue.." />
 
-        <div id="clue_result_container">
+        <div id="clue-result-container">
 
-            <h2 id="clue_title">A Baker</h2>
+            <h2 id="clue-title">A Baker</h2>
 
-            <div id="clue_info_container">
-                <table class="clue_table" summary="Clue Information">
+            <div id="clue-info-container">
+                <table class="clue-table" summary="Clue Information">
                     <thead>
                         <tr>
                             <th scope="col">Difficulty</th>
@@ -109,21 +108,21 @@
                 </table>
             </div>
 
-            <div id="coordinate_clue">
-                <div id="clue_spot_wrapper">
-                    <div class="clue_subtitle">NPC Spot</div>
-                    <div class="clue_image_container">
-                        <img class="clue_spot" src="{% static 'assets/treasure_trail/anagram_spot/baraek.png' %}" />
+            <div id="coordinate-clue">
+                <div id="clue-spot-wrapper">
+                    <div class="clue-subtitle">NPC Spot</div>
+                    <div class="clue-image-container">
+                        <img class="clue-spot" src="{% static 'assets/treasure_trail/anagram_spot/baraek.png' %}" />
                     </div>
                 </div>
 
-                <div id="clue_info_wrapper">
-                    <div class="clue_panel_wrapper">
+                <div id="clue-info-wrapper">
+                    <div class="clue-panel-wrapper">
 
-                        <div id="clue_map_wrapper">
-                            <div class="clue_subtitle">Map</div>
-                            <div class="clue_image_container">
-                                <img class="clue_map" src="{% static 'assets/treasure_trail/anagram_map/baraek-map.png' %}" />
+                        <div id="clue-map-wrapper">
+                            <div class="clue-subtitle">Map</div>
+                            <div class="clue-image-container">
+                                <img class="clue-map" src="{% static 'assets/treasure_trail/anagram_map/baraek-map.png' %}" />
                             </div>
                         </div>
                     </div>

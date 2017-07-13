@@ -1,4 +1,4 @@
-#treasure_trail_wrapper {
+#treasure-trail-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -7,7 +7,7 @@
     min-height: calc(100vh - 254px);
 }
 
-#clue_search {
+#clue-search {
     border-radius: 2px;
     margin: 35px 0 12px;
     height: 45px;
@@ -20,7 +20,7 @@
     padding: 0 8px;
 }
 
-.clue_item {
+.clue-item {
     padding: 4px;
     font-family: initial;
     text-overflow: ellipsis;
@@ -28,11 +28,11 @@
     overflow: hidden;
 }
 
-.clue_item.selected {
+.clue-item.selected {
     background: #DADADA;
 }
 
-#clue_search_popup {
+#clue-search-popup {
     display: none;
     width: 55%;
     max-width: 685px;
@@ -51,29 +51,29 @@
     overflow-y: auto;
 }
 
-#clue_search_popup::-webkit-scrollbar {
+#clue-search-popup::-webkit-scrollbar {
     width: 10px;
     background-color: #D8E2EC;
 }
 
-#clue_search_popup::-webkit-scrollbar-thumb {
+#clue-search-popup::-webkit-scrollbar-thumb {
     background-color: #616565;
     border-radius: 1px;
 }
 
-#coordinate_clue {
+#coordinate-clue {
     display: flex;
     justify-content: center;
 }
 
-.clue_subtitle {
+.clue-subtitle {
     font-size: 22px;
     background: #232323;
     padding: 5px 10px;
     color: #ffffff;
 }
 
-#clue_title {
+#clue-title {
     margin: 25px 0;
     text-align: center;
     color: white;
@@ -85,39 +85,11 @@
     font-size: 27px;
 }
 
-#clue_details_container {
-    display: flex;
-    background: #0A6118;
-    padding: 5px 30px;
-    color: white;
-    font-size: 18px;
-}
-
-#clue_details_container.Hard {
-    background: #AB9815;
-}
-
-#clue_details_container.Elite {
-    background: #986B18;
-}
-
-#clue_details_container.Master {
-    background: #B11414;
-}
-
-#clue_label_wrapper {
-    padding-right: 50px;
-}
-
-#clue_details_wrapper {
-    max-width: 210px;
-}
-
 #clue {
     font-weight: 600;
 }
 
-.clue_image_container {
+.clue-image-container {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -125,20 +97,20 @@
     background: #ffffff;
 }
 
-#clue_map_wrapper {
+#clue-map-wrapper {
     margin: 0 auto 20px auto;
     width: 270px;
 }
 
-#clue_info_container {
+#clue-info-container {
     margin-bottom: 20px;
 }
 
-#clue_spot_wrapper {
+#clue-spot-wrapper {
     margin: 0 46px 20px 0;
 }
 
-.clue_table {
+.clue-table {
     font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
     max-width: 756px;
     font-size: 13px;
@@ -148,12 +120,12 @@
     cursor: default;
 }
 
-.clue_table tbody tr:hover td {
+.clue-table tbody tr:hover td {
     background: #d9d9d9;
     color: #000000;
 }
 
-.clue_table th {
+.clue-table th {
     font-size: 13px;
     font-weight: normal;
     background: #232323;
@@ -163,7 +135,7 @@
     color: #ffffff;
 }
 
-.clue_table td {
+.clue-table td {
     border: 1px solid #ffffff;
     color: #000;
     background: #C1C1C1;
@@ -175,7 +147,7 @@
     padding: 10px;
 }
 
-.index .clue_spot, .index .clue_map {
+.index .clue-spot, .index .clue-map {
     height: 175px;
     width: auto;
 }
@@ -204,12 +176,12 @@
     margin: -10px;
 }
 
-#map_clue {
+#map-clue {
     width: 200px;
     height: auto;
 }
 
-#emote_icon {
+#emote-icon {
     vertical-align: middle;
     padding-right: 5px;
 }

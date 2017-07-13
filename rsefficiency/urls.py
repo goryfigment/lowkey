@@ -11,6 +11,8 @@ urlpatterns = [
     url(r'^robots\.txt$', TemplateView.as_view(template_name="robots.txt", content_type='text/plain')),
     url(r'^sitemap\.xml$', TemplateView.as_view(template_name='sitemap.xml', content_type='text/xml')),
     url(r'^BingSiteAuth\.xml$', TemplateView.as_view(template_name='BingSiteAuth.xml', content_type='text/xml')),
+    url(r'^404/$', site.error_page, name='404'),
+    url(r'^500/$', site.server_error, name='500'),
 
     url(r'^treasure-trails/$', treasure_trails.treasure_trails, name='treasure_trails'),
     url(r'^treasure-trails/(\d+)/$', csrf_exempt(treasure_trails.clue_id_search), name='clue_id_search'),
@@ -22,7 +24,6 @@ urlpatterns = [
     url(r'^grand-exchange/item_search/$',  csrf_exempt(grand_exchange.item_string_search), name='item_string_search'),
     url(r'^grand-exchange/(\d+)/$', csrf_exempt(grand_exchange.item_id_search), name='item_id_search'),
     url(r'^item_price_graph/$', grand_exchange.item_price_graph, name='item_price_graph'),
-    url(r'^item_price_data/$', grand_exchange.item_price_data, name='item_price_data'),
 
     url(r'^grand-exchange/decant-potions/$',  csrf_exempt(grand_exchange.decant_potions), name='decant_potions'),
     url(r'^grand-exchange/clean-herbs/$',  csrf_exempt(grand_exchange.clean_herbs), name='clean_herbs'),

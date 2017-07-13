@@ -29,7 +29,6 @@
     <script src="{% static 'js/libs/google_charts.js' %}" defer></script>
 
     <script src="{% static 'js/helpers.js' %}" defer></script>
-    <script src="{% static 'js/general.js' %}" defer></script>
     <script src="{% static 'js/grand_exchange.js' %}" defer></script>
 
     {% include "static/partial/grand_exchange_partial.html" %}
@@ -37,71 +36,72 @@
 </head>
 <body>
     {% include "static/partial/navigation_bar.html" %}
-        <div id="ge_wrapper">
 
-            <div class="directory" id="general">
-                <div></div>
-                <a class="clue_type" href="/grand-exchange/barrows-repair">Barrows Repair</a>
-                <div>|</div>
-                <a class="clue_type" href="/grand-exchange/enchant-bolts">Enchant Bolts</a>
-                <div>|</div>
-                <a class="clue_type" href="/grand-exchange/item-sets">Item Sets</a>
-                <div>|</div>
-                <a class="clue_type" href="/grand-exchange/plank-making">Plank Making</a>
-                <div>|</div>
-                <a class="clue_type" href="/grand-exchange/tan-leather">Tan Leather</a>
-                <div>|</div>
-                <a class="clue_type" href="/grand-exchange/magic-tablets">Magic Tablets</a>
-                <div></div>
+    <div id="ge-wrapper">
+
+        <div class="directory" id="general">
+            <div></div>
+            <a class="clue-type" href="/grand-exchange/barrows-repair">Barrows Repair</a>
+            <div>|</div>
+            <a class="clue-type" href="/grand-exchange/enchant-bolts">Enchant Bolts</a>
+            <div>|</div>
+            <a class="clue-type" href="/grand-exchange/item-sets">Item Sets</a>
+            <div>|</div>
+            <a class="clue-type" href="/grand-exchange/plank-making">Plank Making</a>
+            <div>|</div>
+            <a class="clue-type" href="/grand-exchange/tan-leather">Tan Leather</a>
+            <div>|</div>
+            <a class="clue-type" href="/grand-exchange/magic-tablets">Magic Tablets</a>
+            <div></div>
+        </div>
+
+        <div class="directory" id="herblore">
+            <div></div>
+            <a class="clue-type" href="/grand-exchange/decant-potions">Decant Potions</a>
+            <div>|</div>
+            <a class="clue-type" href="/grand-exchange/clean-herbs">Clean Herbs</a>
+            <div>|</div>
+            <a class="clue-type" href="/grand-exchange/potion-making">Potion Making</a>
+            <div>|</div>
+            <a class="clue-type" href="/grand-exchange/unfinished-potions">Unfinished Potions</a>
+            <div></div>
+        </div>
+
+        <div id="ge-search-popup">
+
+        </div>
+
+        <input id="ge-search" type="search" placeholder="Search for an item.." />
+
+        <div id="result-wrapper">
+        </div>
+
+        <div id="osrs-item-wrapper">
+
+        </div>
+
+        <div id="price-chart-wrapper">
+            <div id="price-chart-title-container">
+                <div id="price-chart-title">Price Graph</div>
+                <div class="graph-button active" id="one-month-button" data-type="price">1 Month</div>
+                <div class="graph-button" id="one-week-button" data-type="price">1 Week</div>
             </div>
+            <div id="price-chart-container">
 
-            <div class="directory" id="herblore">
-                <div></div>
-                <a class="clue_type" href="/grand-exchange/decant-potions">Decant Potions</a>
-                <div>|</div>
-                <a class="clue_type" href="/grand-exchange/clean-herbs">Clean Herbs</a>
-                <div>|</div>
-                <a class="clue_type" href="/grand-exchange/potion-making">Potion Making</a>
-                <div>|</div>
-                <a class="clue_type" href="/grand-exchange/unfinished-potions">Unfinished Potions</a>
-                <div></div>
-            </div>
-
-            <div id="ge_search_popup">
-
-            </div>
-
-            <input id="ge_search" type="search" placeholder="Search for an item.." />
-
-            <div id="result_wrapper">
-            </div>
-
-            <div id="osrs_item_wrapper">
-
-            </div>
-
-            <div id="price_chart_wrapper">
-                <div id="price_chart_title_container">
-                    <div id="price_chart_title">Price Graph</div>
-                    <div class="graph_button active" id="one_month_button" data-type="price">1 Month</div>
-                    <div class="graph_button" id="one_week_button" data-type="price">1 Week</div>
-                </div>
-                <div id="price_chart_container">
-
-                </div>
-            </div>
-
-            <div id="trade_chart_wrapper">
-                <div id="trade_chart_title_container">
-                    <div id="trade_chart_title">Trade Graph</div>
-                    <div class="graph_button active" id="one_month_button" data-type="trade">1 Month</div>
-                    <div class="graph_button" id="one_week_button" data-type="trade">1 Week</div>
-                </div>
-                <div id="trade_chart_container">
-
-                </div>
             </div>
         </div>
+
+        <div id="trade-chart-wrapper">
+            <div id="trade-chart-title-container">
+                <div id="trade-chart-title">Trade Graph</div>
+                <div class="graph-button active" id="one-month-button" data-type="trade">1 Month</div>
+                <div class="graph-button" id="one-week-button" data-type="trade">1 Week</div>
+            </div>
+            <div id="trade-chart-container">
+
+            </div>
+        </div>
+    </div>
 
     {% include "static/partial/footer.html" %}
 

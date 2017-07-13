@@ -1,5 +1,5 @@
 function init() {
-    $('#grand_exchange_link').addClass('active');
+    $('#grand-exchange-link').addClass('active');
 
     google.charts.load('current', {packages: ['corechart', 'line']});
 
@@ -20,86 +20,63 @@ function init() {
     globals.today = d3.valueOf();
 
     if(!$.isEmptyObject(globals.item_data)) {
-        get_item_data(globals.item_data);
-    } else if(!$.isEmptyObject(globals.high_alch)) {
-        var $high_alch_template = $('#high_alch_template');
-        var $high_alch_table_wrapper = $('#high_alch_table_wrapper');
-        $high_alch_table_wrapper.append(handlebars_helper(globals.high_alch, $high_alch_template));
+        getItemData(globals.item_data);
     } else if(!$.isEmptyObject(globals.result_list)) {
         //console.log(JSON.stringify(globals.result_list));
-        var $result_template = $('#' + globals.result_type + '_template');
-        var $result_wrapper = $('#result_wrapper');
-        $result_wrapper.append(handlebars_helper(globals.result_list, $result_template));
+        var $resultTemplate = $('#' + globals.result_type + '-template');
+        var $resultWrapper = $('#result-wrapper');
+        $resultWrapper.append(handlebarsHelper(globals.result_list, $resultTemplate));
     }
 }
 
-function epoch_to_utc(epoch_time) {
-    var date = new Date(epoch_time);
+function epochToUtc(epochTime) {
+    var date = new Date(epochTime);
 
     return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(),  date.getUTCHours(),
         date.getUTCMinutes(), date.getUTCSeconds());
 }
 
-function number_type(number) {
-    if(number > 0) {
-        return 'positive';
-    } else if(number < 0) {
-        return 'negative'
-    } else {
-        return 'neutral'
-    }
-}
-
-function get_item_data(item_data) {
-    $.when(item_price(item_data['id'])).done(function(response) {
+function getItemData(itemData) {
+    $.when(itemPrice(itemData['id'])).done(function(response) {
         //console.log(JSON.stringify(response));
-        var $osrs_item_wrapper = $('#osrs_item_wrapper');
-        var $item_template = $('#item_template');
-        response['item_data'] = item_data;
-        var $generated_html = handlebars_helper(response, $item_template);
+        var $osrsItemWrapper = $('#osrs-item-wrapper');
+        var $itemTemplate = $('#item-template');
+        response['item_data'] = itemData;
+        var $generatedHtml = handlebarsHelper(response, $itemTemplate);
 
-        $osrs_item_wrapper.empty();
-        $osrs_item_wrapper.append($generated_html);
+        $osrsItemWrapper.empty();
+        $osrsItemWrapper.append($generatedHtml);
 
-        get_price_graph(item_data['id'], globals.one_month_ago)
+        getPriceGraph(itemData['id'], globals.one_month_ago)
     });
 }
 
-function get_price_data(item_id) {
-    return $.ajax ({
-        url: globals.base_url + '/item_price_data',
-        data: {item_id: item_id},
-        dataType: 'json',
-        type: "GET"
-    });
-}
-
-function item_price(item_id) {
+function itemPrice(itemId) {
     return $.ajax ({
         url: globals.base_url + '/grand-exchange/item_price',
-        data: {item_id: item_id},
+        data: {item_id: itemId},
         dataType: 'json',
         type: "GET"
     });
 }
 
-function get_price_graph(item_id, start_time) {
-    var post_data = {
-        start_time: parseInt(start_time),
-        item_id: parseInt(item_id)
+function getPriceGraph(itemId, startTime) {
+    var postData = {
+        start_time: parseInt(startTime),
+        item_id: parseInt(itemId)
     };
 
     $.ajax({
         url: globals.base_url + '/item_price_graph',
-        data: post_data,
+        data: postData,
         dataType: 'json',
         type: "GET",
         success: function (response) {
             if (response['success']) {
-                console.log(JSON.stringify(response));
-                //console.log('https://api.rsbuddy.com/grandExchange?a=graph&g=1440&i=' + item_id + '&start=' + start_time)
+                //console.log(JSON.stringify(response));
+                //console.log('https://api.rsbuddy.com/grandExchange?a=graph&g=1440&i=' + itemId + '&start=' + startTime)
                 globals.item_price_graph = response;
-                prepare_graph_data(response);
+                prepareGraphData(response);
             } else {
                 console.log(JSON.stringify(response));
             }
@@ -107,39 +84,39 @@ function get_price_graph(item_id, start_time) {
     });
 }
 
-function prepare_graph_data(response, max_time, type) {
-    var osbuddy_price_graph = response['osbuddy_price_graph'];
-    var price_graph_array = [];
-    var trade_graph_array = [];
+function prepareGraphData(response, maxTime, type) {
+    var osbuddyPriceGraph = response['osbuddy_price_graph'];
+    var priceGraphArray = [];
+    var tradeGraphArray = [];
 
-    for (var i = 0; i < osbuddy_price_graph.length; i++) {
-        var item = osbuddy_price_graph[i];
+    for (var i = 0; i < osbuddyPriceGraph.length; i++) {
+        var item = osbuddyPriceGraph[i];
 
-        if(max_time && parseInt(max_time) > parseInt(item['ts'])) {
+        if(maxTime && parseInt(maxTime) > parseInt(item['ts'])) {
             continue;
         }
 
-        var item_date = epoch_to_utc(item['ts']);
+        var itemDate = epochToUtc(item['ts']);
 
-        price_graph_array.push([item_date, response['osrs_price_graph'][item['ts']], item['buyingPrice'], item['sellingPrice']]);
-        trade_graph_array.push([item_date, item['buyingCompleted'], item['sellingCompleted']]);
+        priceGraphArray.push([itemDate, response['osrs_price_graph'][item['ts']], item['buyingPrice'], item['sellingPrice']]);
+        tradeGraphArray.push([itemDate, item['buyingCompleted'], item['sellingCompleted']]);
     }
 
     if(type && type == 'price') {
-        google.charts.setOnLoadCallback(create_price_chart(price_graph_array));
+        google.charts.setOnLoadCallback(createPriceChart(priceGraphArray));
     } else if(type && type == 'trade') {
-        google.charts.setOnLoadCallback(create_trade_chart(trade_graph_array));
+        google.charts.setOnLoadCallback(createTradeChart(tradeGraphArray));
     } else {
-        google.charts.setOnLoadCallback(load_charts(price_graph_array, trade_graph_array));
+        google.charts.setOnLoadCallback(loadCharts(priceGraphArray, tradeGraphArray));
     }
 }
 
-function load_charts(price_array, trade_array) {
-    create_price_chart(price_array);
-    create_trade_chart(trade_array);
+function loadCharts(priceArray, tradeArray) {
+    createPriceChart(priceArray);
+    createTradeChart(tradeArray);
 }
 
-function create_price_chart(array) {
+function createPriceChart(array) {
     var data = new google.visualization.DataTable();
     data.addColumn('date', 'Date');
     data.addColumn('number', 'GE Price');
@@ -196,14 +173,14 @@ function create_price_chart(array) {
         backgroundColor: 'white'
     };
 
-    $('#price_chart_wrapper').show();
+    $('#price-chart-wrapper').show();
 
-    var chart = new google.visualization.LineChart(document.getElementById('price_chart_container'));
+    var chart = new google.visualization.LineChart(document.getElementById('price-chart-container'));
 
     chart.draw(data, options);
 }
 
-function create_trade_chart(array) {
+function createTradeChart(array) {
     var data = new google.visualization.DataTable();
     data.addColumn('date', 'Date');
     data.addColumn('number', 'Buying Quantity');
@@ -258,9 +235,9 @@ function create_trade_chart(array) {
         backgroundColor: 'white'
     };
 
-    $('#trade_chart_wrapper').show();
+    $('#trade-chart-wrapper').show();
 
-    var chart = new google.visualization.LineChart(document.getElementById('trade_chart_container'));
+    var chart = new google.visualization.LineChart(document.getElementById('trade-chart-container'));
 
     chart.draw(data, options);
 }
@@ -269,85 +246,85 @@ $(document).ready(function() {
     init();
 
     $(document).on('click', 'body', function () {
-        var $ge_search_popup = $('#ge_search_popup');
-        if($ge_search_popup.hasClass('active')){
-            $ge_search_popup.removeClass('active');
+        var $geSearchPopup = $('#ge-search-popup');
+        if($geSearchPopup.hasClass('active')){
+            $geSearchPopup.removeClass('active');
         }
     });
 
-    $(document).on('click', '#ge_search', function (e) {
+    $(document).on('click', '#ge-search', function (e) {
         e.stopPropagation();
 
-        var $ge_search_popup = $('#ge_search_popup');
-        if(!$ge_search_popup.hasClass('active') && $ge_search_popup.children().length != 0){
-            $ge_search_popup.addClass('active');
+        var $geSearchPopup = $('#ge-search-popup');
+        if(!$geSearchPopup.hasClass('active') && $geSearchPopup.children().length != 0){
+            $geSearchPopup.addClass('active');
         }
     });
 
     $(document).on({
         mouseenter: function () {
-            var $ge_item = $(this);
-            var $active_ge_item = $ge_item.siblings('.selected');
-            $active_ge_item.removeClass('selected');
-            $ge_item.addClass('selected');
+            var $geItem = $(this);
+            var $activeGeItem = $geItem.siblings('.selected');
+            $activeGeItem.removeClass('selected');
+            $geItem.addClass('selected');
         },
         mouseleave: function () {
            $(this).removeClass("selected");
         }
-    }, '.ge_item');
+    }, '.ge-item');
 
     var timer = null;
-    $('#ge_search').keyup(function(e){
+    $('#ge-search').keyup(function(e){
         clearTimeout(timer);
-        timer = setTimeout(done_typing, 1000);
+        timer = setTimeout(doneTyping, 1000);
 
-        function done_typing() {
-            var $ge_search = $('#ge_search');
-            var $ge_search_popup = $ge_search.siblings('#ge_search_popup');
-            var $ge_items = $ge_search_popup.find('.ge_item');
-            var $active_ge_item = $ge_search_popup.find('.ge_item.selected');
+        function doneTyping() {
+            var $geSearch = $('#ge-search');
+            var $geSearchPopup = $geSearch.siblings('#ge-search-popup');
+            var $geItems = $geSearchPopup.find('.ge-item');
+            var $activeGeItem = $geSearchPopup.find('.ge-item.selected');
             var keycode = e.keyCode;
 
-            if($ge_search_popup.is(':visible') && (keycode == 38 || keycode == 40)) {
-                up_and_down_popups(keycode, $ge_search_popup, $ge_items, true);
+            if($geSearchPopup.is(':visible') && (keycode == 38 || keycode == 40)) {
+                upAndDownPopups(keycode, $geSearchPopup, $geItems, true);
                 return;
-            } else if(keycode == 13 && $active_ge_item.length) {
-                $active_ge_item.click();
+            } else if(keycode == 13 && $activeGeItem.length) {
+                $activeGeItem.click();
                 return;
             }
 
-            var search_value = $ge_search.val().toLowerCase().trim();
+            var searchValue = $geSearch.val().toLowerCase().trim();
 
-            var post_data = {
-                search_value: search_value
+            var postData = {
+                search_value: searchValue
             };
 
-            if(search_value.length > 0) {
+            if(searchValue.length > 0) {
                 $.ajax({
                     url: globals.base_url + '/grand-exchange/item_search',
-                    data: post_data,
+                    data: postData,
                     dataType: 'json',
                     type: "GET",
                     success: function (response) {
                         if (response['success']) {
                             //console.log(JSON.stringify(response));
-                            var $ge_item_template = $('#ge_item_template');
-                            var ge_list = response['item_list'];
+                            var $geItemTemplate = $('#ge-item-template');
+                            var geList = response['item_list'];
 
-                            $ge_search_popup.empty();
+                            $geSearchPopup.empty();
 
-                            if(ge_list.length) {
-                                $ge_search_popup.addClass('active');
+                            if(geList.length) {
+                                $geSearchPopup.addClass('active');
                             } else {
-                                $ge_search_popup.removeClass('active');
+                                $geSearchPopup.removeClass('active');
                             }
 
-                            for (var i = 0; i < ge_list.length; i++) {
-                                item_data = ge_list[i];
+                            for (var i = 0; i < geList.length; i++) {
+                                var itemData = geList[i];
 
-                                var $generated_html = handlebars_helper(item_data, $ge_item_template);
-                                $generated_html.data('item_data', item_data);
-                                $ge_search_popup.append($generated_html);
+                                var $generatedHtml = handlebarsHelper(itemData, $geItemTemplate);
+                                $generatedHtml.data('item_data', itemData);
+                                $geSearchPopup.append($generatedHtml);
                             }
                         } else {
                             console.log(JSON.stringify(response));
@@ -358,56 +335,56 @@ $(document).ready(function() {
         }
     });
 
-    $(document).on('click', '.ge_item', function () {
-        var $ge_item = $(this);
-        var item_data = $ge_item.data('item_data');
+    $(document).on('click', '.ge-item', function () {
+        var $geItem = $(this);
+        var itemData = $geItem.data('item_data');
 
-        var $ge_search_popup = $ge_item.closest('#ge_search_popup');
-        var $ge_search = $ge_search_popup.siblings('#ge_search');
-        var $result_wrapper = $ge_search_popup.siblings('#result_wrapper');
+        var $geSearchPopup = $geItem.closest('#ge-search-popup');
+        var $geSearch = $geSearchPopup.siblings('#ge-search');
+        var $resultWrapper = $geSearchPopup.siblings('#result-wrapper');
 
-        $ge_search_popup.removeClass('active');
-        $ge_search.val(item_data['name']);
-        $result_wrapper.empty();
+        $geSearchPopup.removeClass('active');
+        $geSearch.val(itemData['name']);
+        $resultWrapper.empty();
 
-        get_item_data(item_data);
+        getItemData(itemData);
 
-        var url = globals.base_url + '/grand-exchange/' + parseInt(item_data['id']);
-        window.history.pushState(item_data, item_data['name'], url);
+        var url = globals.base_url + '/grand-exchange/' + parseInt(itemData['id']);
+        window.history.pushState(itemData, itemData['name'], url);
     });
 
-    $(document).on('click', '.graph_button', function () {
-        var $graph_button = $(this);
-        if($graph_button.hasClass('active')) {
+    $(document).on('click', '.graph-button', function () {
+        var $graphButton = $(this);
+        if($graphButton.hasClass('active')) {
             return;
         }
 
-        $graph_button.siblings('.active').removeClass('active');
-        $graph_button.addClass('active');
+        $graphButton.siblings('.active').removeClass('active');
+        $graphButton.addClass('active');
 
-        var graph_type = $graph_button.attr('data-type');
+        var graphType = $graphButton.attr('data-type');
 
-        if($graph_button.is('#one_week_button')) {
-            prepare_graph_data(globals.item_price_graph, globals.one_week_ago, graph_type);
+        if($graphButton.is('#one-week-button')) {
+            prepareGraphData(globals.item_price_graph, globals.one_week_ago, graphType);
         } else {
-            prepare_graph_data(globals.item_price_graph, false, graph_type);
+            prepareGraphData(globals.item_price_graph, false, graphType);
         }
     });
 
-    $(document).on('click', '#smithing_button', function () {
-        var $smithing_button = $(this);
-        var $smithing_input = $smithing_button.siblings('#smithing_input');
-        var smithing_level = $smithing_input.val();
+    $(document).on('click', '#smithing-button', function () {
+        var $smithingButton = $(this);
+        var $smithingInput = $smithingButton.siblings('#smithing-input');
+        var smithingLevel = $smithingInput.val();
 
-        if(!$.isNumeric(smithing_level) || parseInt(smithing_level) < 0) {
-            smithing_level = '0'
-        } else if(parseInt(smithing_level) > 99) {
-            smithing_level = '99'
+        if(!$.isNumeric(smithingLevel) || parseInt(smithingLevel) < 0) {
+            smithingLevel = '0'
+        } else if(parseInt(smithingLevel) > 99) {
+            smithingLevel = '99'
         }
 
-        var barrows_url = globals.base_url + '/grand-exchange/barrows-repair?smithing_level=' + smithing_level.toString();
+        var barrowsUrl = globals.base_url + '/grand-exchange/barrows-repair?smithing_level=' + smithingLevel.toString();
 
-        window.location.replace(barrows_url);
-        window.location.href = barrows_url;
+        window.location.replace(barrowsUrl);
+        window.location.href = barrowsUrl;
     });
 });

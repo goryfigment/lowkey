@@ -9,7 +9,7 @@ from rsefficiency.modules.calc_list import *
 
 def calculator(request):
     data = {
-        'template': '#main_template',
+        'template': '#main-template',
         'base_url': get_base_url(),
         'calc_data': {}
     }
@@ -19,7 +19,7 @@ def calculator(request):
 
 def combat_calculator(request):
     data = {
-        'template': '#combat_calculator_template',
+        'template': '#combat-calculator-template',
         'base_url': get_base_url(),
         'calc_data': {}
     }
@@ -29,7 +29,7 @@ def combat_calculator(request):
 
 def prayer_calculator(request):
     data = {
-        'template': '#prayer_calculator_template',
+        'template': '#prayer-calculator-template',
         'base_url': get_base_url(),
         'calc_data': {'bones_list': bones_list, 'ensouled_list': ensouled_list},
         'calc_type': 'Prayer'

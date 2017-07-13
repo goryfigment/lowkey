@@ -1,4 +1,4 @@
-#donate_description {
+#donate-description {
     background-color: #1F2739;
     color: #FFFFFF;
     border: solid #757575;
@@ -8,17 +8,17 @@
     text-align: center;
 }
 
-#donation_button {
+#donation-button {
     padding: 9px;
     background: #292929;
     border: #DEDEDE solid;
 }
 
-.wall_of_fame_title {
+.wall-of-fame-title {
     padding: 25px 0 7px 0 !important;
 }
 
-#wall_of_fame {
+#wall-of-fame {
     background-color: #1F2739;
     color: #FFFFFF;
     border: solid #757575;
