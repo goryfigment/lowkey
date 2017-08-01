@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from rsefficiency.modules.base import get_base_url
 
 
