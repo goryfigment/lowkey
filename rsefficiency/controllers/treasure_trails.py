@@ -66,7 +66,8 @@ def clue_type_search(request, clue_type):
     elif clue_type == 'emote':
         for clue in clue_data:
             if clue['type'] == clue_type:
-                key = clue['challenge']
+                clue['challenge'] = clue['challenge'].split(',')
+                key = clue['challenge'][0]
 
                 if clue['requirements'] != 'Nothing':
                     clue['requirements'] = clue['requirements'].split(',')
@@ -126,6 +127,7 @@ def clue_id_search(request, clue_id):
     clue = clue_data[int(clue_id) - 1]
 
     if clue['type'] == 'emote':
+        clue['challenge'] = clue['challenge'].split(',')
         if clue['requirements'] != 'Nothing':
             clue['requirements'] = clue['requirements'].split(',')
 

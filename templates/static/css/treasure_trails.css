@@ -71,6 +71,7 @@
     background: #232323;
     padding: 5px 10px;
     color: #ffffff;
+    font-weight: 600;
 }
 
 #clue-title {
@@ -94,7 +95,7 @@
     align-items: center;
     justify-content: center;
     padding: 20px;
-    background: #ffffff;
+    background: #c9c9c9;
 }
 
 #clue-map-wrapper {
@@ -111,36 +112,42 @@
 }
 
 .clue-table {
-    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
-    max-width: 756px;
-    font-size: 13px;
-    text-align: left;
+    display: table;
+    text-align: center;
     border-collapse: collapse;
+    font-family: cursive;
+    max-width: 756px;
     width: 100%;
-    cursor: default;
+    color: #EFEFEF;
 }
 
-.clue-table tbody tr:hover td {
-    background: #d9d9d9;
-    color: #000000;
+.clue-table tr:nth-child(odd) {
+    background-color: #323C50;
+}
+
+.clue-table tr:nth-child(even) {
+    background-color: #2C3446;
 }
 
 .clue-table th {
-    font-size: 13px;
-    font-weight: normal;
-    background: #232323;
-    border-bottom: 1px solid #fff;
-    padding: 5px;
-    text-align: center;
-    color: #ffffff;
+    background-color: #1F2739;
+    color: #cc9900;
+    border: solid #757575;
+    padding: 6px 8px;
+    font-weight: 500;
 }
 
 .clue-table td {
-    border: 1px solid #ffffff;
-    color: #000;
-    background: #C1C1C1;
-    padding: 5px;
-    text-align: center;
+    padding: 8px 8px 4px 13px;
+    border: solid #757575;
+}
+
+.clue-table a {
+    color: #05D2FF;
+}
+
+.clue-table #coordinate {
+    white-space: nowrap;
 }
 
 .index td {
@@ -183,5 +190,22 @@
 
 #emote-icon {
     vertical-align: middle;
-    padding-right: 5px;
+    padding: 0 5px 0 10px;
+}
+
+#treasure-trail-info {
+    max-width: 700px;
+    min-width: 700px;
+    color: #ececec;
+    line-height: 23px;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    border: 8px solid rgb(47, 50, 50);
+    padding: 20px;
+    background: rgba(37, 35, 35, 0.5);
+}
+
+.tutorial:hover {
+    filter: brightness(1.15) hue-rotate(10deg) contrast(1.5);
+    box-shadow: 0 10px 15px -1px rgba(0, 0, 0, 0.1), 0 25px 50px -4px rgba(0, 0, 0, 0.3);
 }

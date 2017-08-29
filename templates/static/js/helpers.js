@@ -83,6 +83,10 @@ Handlebars.registerHelper('isSubstring', function(substring, string) {
     }
 });
 
+Handlebars.registerHelper('title', function(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+});
+
 function timePassed(epochTime) {
     var d1 = new Date(parseInt(epochTime));
     var milliseconds = Math.abs(new Date() - d1);
@@ -90,7 +94,29 @@ function timePassed(epochTime) {
     var minuteString = '';
     var timestampString = '';
 
-    if(minutes > 60) {
+    if(minutes > 43800) {
+        var months =  Math.floor(minutes / 43800);
+        var monthString = months != 1 ? 'months' : 'month';
+        timestampString = months.toString() + ' ' + monthString;
+    } else if(minutes > 10080) {
+        var weeks =  Math.floor(minutes / 10080);
+        minutes = minutes - (weeks * 10080);
+        var days = Math.floor(minutes / 1440);
+        minutes = minutes - (days * 1440);
+        var hours = Math.floor(minutes / 60);
+        minutes = minutes - (hours * 60);
+        var weekString = weeks != 1 ? 'weeks' : 'week';
+        var dayString = days != 1 ? 'days' : 'day';
+        timestampString = weeks.toString() + ' ' + weekString + ' and ' + days.toString() + ' ' + dayString;
+    } else if(minutes > 1440) {
+        var days = Math.floor(minutes / 1440);
+        minutes = minutes - (days * 1440);
+        var hours = Math.floor(minutes / 60);
+        minutes = minutes - (hours * 60);
+        var dayString = days != 1 ? 'days' : 'day';
+        var hourString = hours != 1 ? 'hours' : 'hour';
+        timestampString = days.toString() + ' ' + dayString + ' and ' + hours.toString() + ' ' + hourString;
+    } else if(minutes > 60) {
         var hours = Math.floor(minutes / 60);
         minutes = minutes - (hours * 60);
         var hourString = hours != 1 ? 'hours' : 'hour';

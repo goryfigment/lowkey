@@ -44,7 +44,9 @@
 
     <link href="{% static 'css/general.css' %}" type="text/css" rel="stylesheet">
     <link href="{% static 'css/treasure_trails.css' %}" type="text/css" rel="stylesheet">
+    <link href="{% static 'js/libs/tippy/tippy.css' %}" type="text/css" rel="stylesheet">
 
+    <script src="{% static 'js/libs/tippy/tippy.js' %}"></script>
     <script src="{% static 'js/libs/jquery.js' %}"></script>
     <script src="{% static 'js/libs/handlebars.js' %}"></script>
     <script src="{% static 'js/helpers.js' %}"></script>
@@ -81,8 +83,15 @@
         <input id="clue-search" type="search" placeholder="Search for a clue.." />
 
         <div id="clue-result-container">
+            <p id="treasure-trail-info">Treasure Trails is an activity on Runescape that involves clue scrolls, which consist of
+            riddles, coordinates and other various puzzles to solve for unique rewards. Every clue can be search by
+            their clue names. Although, coordinate clues can also be search by their shorthand names. For example to search for
+            <i>'0 degrees 5 minutes South, 1 degree 13 minutes East'</i> you could enter the following, <i>'0005S0113E'</i>
+            <br/> <br/>
+            Below is an example of what a clue consist of. If you are unsure of any specific piece just hover over any
+            element for more details.</p>
 
-            <h2 id="clue-title">A Baker</h2>
+            <h2 id="clue-title" class="tutorial" title="This contains what the clue displays, word-for-word.">A Baker</h2>
 
             <div id="clue-info-container">
                 <table class="clue-table" summary="Clue Information">
@@ -95,21 +104,21 @@
                     </thead>
                     <tfoot>
                         <tr>
-                            <td colspan="3">Fur Trader at Varrock Square.</td>
+                            <td colspan="3" class="tutorial" title="The description of the location or further details about the clue.">Fur Trader at Varrock Square.</td>
                         </tr>
                     </tfoot>
                     <tbody>
                         <tr>
-                            <td>Hard</td>
-                            <td>None</td>
-                            <td>5</td>
+                            <td class="tutorial" title="The Clue level of difficulty.">Hard</td>
+                            <td class="tutorial" title="The requirements to complete the clue.">None</td>
+                            <td class="tutorial" title="The Solution to each clue.">5</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
             <div id="coordinate-clue">
-                <div id="clue-spot-wrapper">
+                <div id="clue-spot-wrapper" class="tutorial" title="The actual ingame location of where to solve the clue.">
                     <div class="clue-subtitle">NPC Spot</div>
                     <div class="clue-image-container">
                         <img class="clue-spot" src="{% static 'assets/treasure_trail/anagram_spot/baraek.png' %}" />
@@ -117,8 +126,7 @@
                 </div>
 
                 <div id="clue-info-wrapper">
-                    <div class="clue-panel-wrapper">
-
+                    <div class="clue-panel-wrapper tutorial" title="A general map location of the clue spot.">
                         <div id="clue-map-wrapper">
                             <div class="clue-subtitle">Map</div>
                             <div class="clue-image-container">

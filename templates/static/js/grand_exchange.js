@@ -175,7 +175,15 @@ function createPriceChart(array) {
 
     $('#price-chart-wrapper').show();
 
-    var chart = new google.visualization.LineChart(document.getElementById('price-chart-container'));
+    var priceChartContainer = document.getElementById('price-chart-container');
+    var chart = new google.visualization.LineChart(priceChartContainer);
+
+    google.visualization.events.addListener(chart, 'error', function (chartError) {
+        google.visualization.errors.removeError(chartError.id);
+        priceChartContainer.style.display = 'none';
+        var priceErrorContainer = document.getElementById('price-error-container');
+        $(priceErrorContainer).fadeIn(1000);
+    });
 
     chart.draw(data, options);
 }
@@ -237,7 +245,15 @@ function createTradeChart(array) {
 
     $('#trade-chart-wrapper').show();
 
-    var chart = new google.visualization.LineChart(document.getElementById('trade-chart-container'));
+    var tradeChartContainer = document.getElementById('trade-chart-container');
+    var chart = new google.visualization.LineChart(tradeChartContainer);
+
+    google.visualization.events.addListener(chart, 'error', function (chartError) {
+        google.visualization.errors.removeError(chartError.id);
+        tradeChartContainer.style.display = 'none';
+        var tradeErrorContainer = document.getElementById('trade-error-container');
+        $(tradeErrorContainer).fadeIn(1000);
+    });
 
     chart.draw(data, options);
 }

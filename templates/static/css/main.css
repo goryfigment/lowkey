@@ -29,6 +29,7 @@
     padding: 7px 10px;
     width: 100%;
     max-width: 584px;
+    min-width: 300px;
     cursor: pointer;
 }
 

@@ -10,8 +10,6 @@ body {
 }
 
 #ge-wrapper {
-    display: flex;
-    flex-direction: column;
     align-items: center;
     margin: 40px;
     position: relative;
@@ -20,7 +18,7 @@ body {
 
 #ge-search {
     border-radius: 2px;
-    margin: 35px 0 12px;
+    margin: 35px auto 12px auto;
     height: 45px;
     outline: none;
     width: 55%;
@@ -29,6 +27,7 @@ body {
     border: none;
     font-size: 18px;
     padding: 0 8px;
+    display: block;
 }
 
 .ge-item {
@@ -50,7 +49,7 @@ body {
     width: 55%;
     max-width: 685px;
     min-width: 300px;
-    background: white;
+    background: #403e3e;
     position: absolute;
     top: 158px;
     right: 0;
@@ -62,7 +61,7 @@ body {
     cursor: default;
     max-height: 211px;
     overflow-y: auto;
-    color: #000000;
+    color: #ffffff;
     z-index: 1;
 }
 
@@ -90,7 +89,7 @@ body {
 }
 
 .ge-item {
-    padding: 0px 10px 0 3px;
+    padding: 0 10px 0 3px;
 }
 
 #ge-item {
@@ -177,13 +176,43 @@ body {
 }
 
 #price-chart-wrapper {
-    margin-bottom: 40px;
+    margin: 0 auto 40px;
+}
+
+#trade-chart-wrapper {
+    margin: 0 auto;
 }
 
 #price-chart-wrapper, #trade-chart-wrapper {
     display: none;
     width: 650px;
     height: 499px;
+}
+
+#price-error-message {
+    position: absolute;
+    text-align: center;
+    color: #d41c1c;
+    font-weight: 700;
+    font-size: 67px;
+    width: 100%;
+    top: 84px;
+    background: rgba(16, 176, 255, 0.05);
+}
+
+#price-error-container, #trade-error-container {
+    display: none;
+    position: relative;
+    height: 100%;
+}
+
+#price-error-container:before, #trade-error-container:before {
+    content: "";
+    width: 100%;
+    height: 450px;
+    position: absolute;
+    background: url(../assets/grand_exchange/chart.png);
+    filter: blur(5px);
 }
 
 #price-chart-title-container, #trade-chart-title-container {
@@ -255,6 +284,7 @@ span.positive {
     width: 650px;
     border-collapse: collapse;
     font-family: cursive;
+    margin: 0 auto;
 }
 
 #table-container tr:nth-child(odd) {
@@ -389,9 +419,10 @@ input[type="number"] {
 #herblore {
     min-width: 660px;
     width: 660px;
+    margin: 0 auto;
 }
 
 #general {
-    margin-bottom: 20px;
     min-width: 720px;
+    margin: 0 auto 20px auto;
 }

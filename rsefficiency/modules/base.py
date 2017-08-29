@@ -85,6 +85,8 @@ def update_item_log(item_log, item_id, buying, selling, buy_price_ts, sell_price
         item['selling'] = selling
         item['sell_price_ts'] = sell_price_ts
 
+    item['success'] = True
+
     item_log[item_id] = item
 
 
