@@ -1,8 +1,11 @@
 {% verbatim %}
 <script id="main-template" type="text/x-handlebars-template">
     <div id="calculator-title">Calculators</div>
-    <h1 class="calculator" id="combat-calculator" data-url="/calculator/combat-calculator"><img id="attack-image" src="{{concat 'base_url' '/static/assets/calculator/attack.png'}}"/> Combat Calculator</h1>
-    <h1 class="calculator" id="prayer-calculator" data-url="/calculator/prayer-calculator"><img id="prayer-image" src="{{concat 'base_url' '/static/assets/calculator/prayer.png'}}"/> Prayer Calculator</h1>
+    <h1 class="calculator" id="combat-calculator" data-url="/calculator/combat-calculator"><img id="attack-image" class="skill-image" src="{{concat 'base_url' '/static/assets/calculator/attack.png'}}"/> Combat Calculator</h1>
+    <h1 class="calculator" id="magic-calculator" data-url="/calculator/magic-calculator"><img id="magic-image" class="skill-image" src="{{concat 'base_url' '/static/assets/calculator/magic.png'}}"/> Magic Calculator</h1>
+    <h1 class="calculator" id="prayer-calculator" data-url="/calculator/prayer-calculator"><img id="prayer-image" class="skill-image" src="{{concat 'base_url' '/static/assets/calculator/prayer.png'}}"/> Prayer Calculator</h1>
+    <h1 class="calculator" id="herblore-calculator" data-url="/calculator/herblore-calculator"><img id="herblore-image" class="skill-image" src="{{concat 'base_url' '/static/assets/calculator/herblore.png'}}"/> Herblore Calculator</h1>
+    <h1 class="calculator" id="construction-calculator" data-url="/calculator/construction-calculator"><img id="construction-image" class="skill-image" src="{{concat 'base_url' '/static/assets/calculator/construction.png'}}"/> Construction Calculator</h1>
 </script>
 {% endverbatim %}
 
@@ -126,7 +129,7 @@
                 <th scope="col">Item</th>
                 <th scope="col">Name</th>
                 <th class="sortable" scope="col">Exp</th>
-                <th class="sortable" scope="col">GP/EXP</th>
+                <th class="gp-per-exp-column sortable" scope="col">GP/EXP</th>
                 <th class="sortable" scope="col">Profit</th>
                 <th class="sortable" scope="col">Amount</th>
             </tr>
@@ -155,7 +158,7 @@
                 <th scope="col">Name</th>
                 <th scope="col">Runes</th>
                 <th class="sortable" scope="col">Exp</th>
-                <th class="sortable" scope="col">GP/EXP</th>
+                <th class="gp-per-exp-column sortable" scope="col">GP/EXP</th>
                 <th class="sortable" scope="col">Profit</th>
                 <th class="sortable" scope="col">Amount</th>
             </tr>
@@ -170,6 +173,240 @@
                 <td class="exp">{{exp}}</td>
                 <td class="gp-per-exp negative">-</td>
                 <td class="profit negative">-</td>
+                <td class="amount">{{ceil (math 83 '/' exp false) true}}</td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</script>
+{% endverbatim %}
+
+{% verbatim %}
+<script id="construction-calculator-template" type="text/x-handlebars-template">
+    <h1 id="calculator-title">Construction Calculator</h1>
+
+    <table class="table-container" id="table-details-wrapper">
+        <tbody>
+            <tr>
+                <td id="calculator-options" colspan="6">
+                    <div id="highscore-wrapper">
+                        <label id="highscore-label" for="highscore-username">Username</label>
+                        <input id="highscore-username" type="text" placeholder="Username" data-type="Construction" />
+                        <input class="highscore-submit" type="submit" />
+                    </div>
+
+                    <div id="level-wrapper">
+                        <label for="current-level-input">Current Level</label>
+                        <input class="level-input" id="current-level-input" type="text" maxlength="2" value="1" />
+                        <label for="target-level-input">Target Level</label>
+                        <input class="level-input" id="target-level-input" type="text" maxlength="2" value="2" />
+                    </div>
+
+                    <div id="exp-wrapper">
+                        <label for="current-exp-input">Current Exp</label>
+                        <input class="exp-input" id="current-exp-input" type="text" maxlength="2" value="0" />
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="calculator-options" colspan="6">
+                    <input class="calculate-submit" id="construction-submit" type="submit" value="Calculate" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2 class="subheaders">Planks</h2>
+
+    <table class="table-container">
+        <thead>
+            <tr>
+                <th scope="col">Item</th>
+                <th scope="col">Name</th>
+                <th class="sortable" scope="col">Exp</th>
+                <th class="gp-per-exp-column sortable" scope="col">GP/EXP</th>
+                <th class="sortable" scope="col">Profit</th>
+                <th class="sortable" scope="col">Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{#each plank_list}}
+            <tr class="plank" data-id="{{id}}" data-exp="{{exp}}">
+                <td> <a href="{{concat 'base_url' '/grand-exchange/' id}}"> <img title="{{name}}" src="{{concat 'base_url' '/static/assets/rs_items/icons/' file_name}}" /> </a></td>
+                <td>{{name}}</td>
+                <td class="exp">{{exp}}</td>
+                <td class="gp-per-exp negative">-</td>
+                <td class="profit negative">-</td>
+                <td class="amount">{{ceil (math 83 '/' exp false) true}}</td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</script>
+{% endverbatim %}
+
+{% verbatim %}
+<script id="magic-calculator-template" type="text/x-handlebars-template">
+    <h1 id="calculator-title">Magic Calculator</h1>
+
+    <table class="table-container" id="table-details-wrapper">
+        <tbody>
+            <tr>
+                <td id="calculator-options" colspan="6">
+                    <div id="highscore-wrapper">
+                        <label id="highscore-label" for="highscore-username">Username</label>
+                        <input id="highscore-username" type="text" placeholder="Username" data-type="Magic" />
+                        <input class="highscore-submit" type="submit" />
+                    </div>
+
+                    <div id="level-wrapper">
+                        <label for="current-level-input">Current Level</label>
+                        <input class="level-input" id="current-level-input" type="text" maxlength="2" value="1" />
+                        <label for="target-level-input">Target Level</label>
+                        <input class="level-input" id="target-level-input" type="text" maxlength="2" value="2" />
+                    </div>
+
+                    <div id="exp-wrapper">
+                        <label for="current-exp-input">Current Exp</label>
+                        <input class="exp-input" id="current-exp-input" type="text" maxlength="2" value="0" />
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="calculator-options" colspan="6">
+                    <input class="calculate-submit" id="magic-submit" type="submit" value="Calculate" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2 class="subheaders">Regular Spells</h2>
+
+    <table class="table-container">
+        <thead>
+            <tr>
+                <th class="sortable" scope="col">Magic Level</th>
+                <th scope="col">Spell</th>
+                <th scope="col">Name</th>
+                <th scope="col">Staff</th>
+                <th scope="col">Materials</th>
+                <th class="sortable" scope="col">Exp</th>
+                <th class="gp-per-exp-column sortable" scope="col">GP/EXP</th>
+                <th class="sortable" scope="col">Profit</th>
+                <th class="sortable" scope="col">Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{#each normal_book}}
+            <tr class="spell" data-id="{{id}}" data-exp="{{exp}}" data-output="{{#each output}}{{id}},{{/each}}" data-multi-output="{{#each output}}{{multiple}},{{/each}}">
+                <td>{{magic_level}}</td>
+                <td> <a href="{{concat 'base_url' '/grand-exchange/' id}}"> <img title="{{name}}" src="{{concat 'base_url' '/static/assets/magic/' file_name}}" /> </a></td>
+                <td>{{name}}</td>
+                <td> <a href="{{concat 'base_url' '/grand-exchange/' staff.id}}"> <img title="{{staff.name}}: {{staff.description}}" src="{{concat 'base_url' '/static/assets/rs_items/icons/' staff.file_name}}" /> </a></td>
+                <td class="ingredient">{{#each input}}<span class="content" data-id="{{id}}" data-multiple="{{multiple}}"><span class="multiple">{{multiple}}</span><a href="{{concat 'base_url' '/grand-exchange/' id}}"> <img class="ingredient-img" title="{{#if multiple}}{{multiple}}x{{/if}} {{name}}" src="{{concat 'base_url' '/static/assets/rs_items/icons/' file_name}}" /> </a> </span>{{/each}}{{#each runes}}<span class="content {{#if infinite}}infinite{{/if}}" data-id="{{id}}" data-multiple="{{multiple}}" data-infinite="{{infinite}}"><span class="multiple">{{multiple}}</span><a href="{{concat 'base_url' '/grand-exchange/' id}}"> <img class="ingredient-img" title="{{#if multiple}}{{multiple}}x{{/if}} {{name}}" src="{{concat 'base_url' '/static/assets/rs_items/icons/' file_name}}" /> </a> </span>{{/each}}</td>
+                <td class="exp">{{exp}}</td>
+                <td class="gp-per-exp">-</td>
+                <td class="profit">-</td>
+                <td class="amount">{{ceil (math 83 '/' exp false) true}}</td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+
+    <h2 class="subheaders">Lunar Spells</h2>
+
+    <table id="ensouled_table" class="table-container">
+        <thead>
+            <tr>
+                <th class="sortable" scope="col">Magic Level</th>
+                <th scope="col">Item</th>
+                <th scope="col">Name</th>
+                <th scope="col">Staff</th>
+                <th scope="col">Materials</th>
+                <th class="sortable" scope="col">Exp</th>
+                <th class="gp-per-exp-column sortable" scope="col">GP/EXP</th>
+                <th class="sortable" scope="col">Profit</th>
+                <th class="sortable" scope="col">Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{#each lunar_book}}
+            <tr class="spell" data-id="{{id}}" data-exp="{{exp}}" data-output="{{#each output}}{{id}},{{/each}}" data-multi-output="{{#each output}}{{multiple}},{{/each}}">
+                <td>{{magic_level}}</td>
+                <td> <a href="{{concat 'base_url' '/grand-exchange/' id}}"> <img title="{{name}}" src="{{concat 'base_url' '/static/assets/magic/' file_name}}" /> </a></td>
+                <td>{{name}}</td>
+                <td> <a href="{{concat 'base_url' '/grand-exchange/' staff.id}}"> <img title="{{staff.name}}: {{staff.description}}" src="{{concat 'base_url' '/static/assets/rs_items/icons/' staff.file_name}}" /> </a></td>
+                <td class="ingredient">{{#each input}}<span class="content" data-id="{{id}}" data-multiple="{{multiple}}"><span class="multiple">{{multiple}}</span><a href="{{concat 'base_url' '/grand-exchange/' id}}"> <img class="ingredient-img" title="{{#if multiple}}{{multiple}}x{{/if}} {{name}}" src="{{concat 'base_url' '/static/assets/rs_items/icons/' file_name}}" /> </a> </span>{{/each}}{{#each runes}}<span class="content {{#if infinite}}infinite{{/if}}" data-id="{{id}}" data-multiple="{{multiple}}" data-infinite="{{infinite}}"><span class="multiple">{{multiple}}</span><a href="{{concat 'base_url' '/grand-exchange/' id}}"> <img class="ingredient-img" title="{{#if multiple}}{{multiple}}x{{/if}} {{name}}" src="{{concat 'base_url' '/static/assets/rs_items/icons/' file_name}}" /> </a> </span>{{/each}}</td>
+                <td class="exp">{{exp}}</td>
+                <td class="gp-per-exp">-</td>
+                <td class="profit">-</td>
+                <td class="amount">{{ceil (math 83 '/' exp false) true}}</td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</script>
+{% endverbatim %}
+
+{% verbatim %}
+<script id="herblore-calculator-template" type="text/x-handlebars-template">
+    <h1 id="calculator-title">Herblore Calculator</h1>
+    <table class="table-container" id="table-details-wrapper">
+        <tbody>
+            <tr>
+                <td id="calculator-options" colspan="6">
+                    <div id="highscore-wrapper">
+                        <label id="highscore-label" for="highscore-username">Username</label>
+                        <input id="highscore-username" type="text" placeholder="Username" data-type="Herblore" />
+                        <input class="highscore-submit" type="submit" />
+                    </div>
+
+                    <div id="level-wrapper">
+                        <label for="current-level-input">Current Level</label>
+                        <input class="level-input" id="current-level-input" type="text" maxlength="2" value="1" />
+                        <label for="target-level-input">Target Level</label>
+                        <input class="level-input" id="target-level-input" type="text" maxlength="2" value="2" />
+                    </div>
+
+                    <div id="exp-wrapper">
+                        <label for="current-exp-input">Current Exp</label>
+                        <input class="exp-input" id="current-exp-input" type="text" maxlength="2" value="0" />
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="calculator-options" colspan="6">
+                    <input class="calculate-submit" id="herblore-submit" type="submit" value="Calculate" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2 class="subheaders">Potions</h2>
+
+    <table id="herblore_table" class="table-container">
+        <thead>
+            <tr>
+                <th class="sortable" scope="col">Herb Level</th>
+                <th scope="col">Item</th>
+                <th scope="col">Name</th>
+                <th scope="col">Ingredients</th>
+                <th class="sortable" scope="col">Exp</th>
+                <th class="gp-per-exp-column sortable" scope="col">GP/EXP</th>
+                <th class="sortable" scope="col">Profit</th>
+                <th class="sortable" scope="col">Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{#each herblore_list}}
+            <tr class="potion" data-id="{{potion.id}}" data-exp="{{experience}}">
+                <td>{{herblore_level}}</td>
+                <td> <a href="{{concat 'base_url' '/grand-exchange/' potion.id}}"> <img title="{{name}}" src="{{concat 'base_url' '/static/assets/rs_items/icons/' potion.file_name}}" /> </a></td>
+                <td>{{replace potion.name '(3)' ''}}</td>
+                <td class="ingredient">{{#each ingredients}}<span class="content" data-id="{{id}}" data-multiple="{{multiple}}"><span class="multiple">{{multiple}}</span><a href="{{concat 'base_url' '/grand-exchange/' id}}"> <img class="ingredient-img" title="{{multiple}}x {{name}}" src="{{concat 'base_url' '/static/assets/rs_items/icons/' file_name}}" /> </a> </span>{{/each}}</td>
+                <td class="exp">{{experience}}</td>
+                <td class="gp-per-exp">-</td>
+                <td class="profit">-</td>
                 <td class="amount">{{ceil (math 83 '/' exp false) true}}</td>
             </tr>
         {{/each}}

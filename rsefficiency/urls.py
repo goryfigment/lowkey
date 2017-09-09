@@ -40,6 +40,9 @@ urlpatterns = [
     url(r'^calculator/$', calculator.calculator, name='calculator'),
     url(r'^calculator/combat-calculator$', calculator.combat_calculator, name='combat_calculator'),
     url(r'^calculator/prayer-calculator$', calculator.prayer_calculator, name='prayer_calculator'),
+    url(r'^calculator/construction-calculator$', calculator.construction_calculator, name='construction_calculator'),
+    url(r'^calculator/herblore-calculator$', calculator.herblore_calculator, name='herblore_calculator'),
+    url(r'^calculator/magic-calculator$', calculator.magic_calculator, name='magic_calculator'),
     url(r'^calculator/highscore$', calculator.highscore, name='highscore'),
     url(r'^calculator/prices', calculator.calc_prices, name='calc_prices'),
 ]

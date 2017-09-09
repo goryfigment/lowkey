@@ -34,8 +34,8 @@
     color: #0E0E0E;
 }
 
-#attack-image, #prayer-image {
-    height: 34px;
+.skill-image {
+    width: 34px;
     padding: 0 15px;
 }
 
@@ -198,6 +198,28 @@
     cursor: pointer;
 }
 
+.sortable:not(.ascending):not(.descending):after {
+    content: "\25B4\25BE";
+    padding-left: 3px;
+    letter-spacing: -7px;
+}
+
+.sortable.ascending:after{
+    content: "\25BE";
+}
+
+.sortable.descending:after{
+    content: "\25B4";
+}
+
 .negative {
     color: #F51C23;
+}
+
+.positive {
+    color: #00F500;
+}
+
+.infinite {
+    opacity: 0.7;
 }

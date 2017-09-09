@@ -139,4 +139,3 @@ def ge_price_updater(item_log, item_id, key, start_date):
 def write_item_log(item_log):
     with open(os.path.join(os.path.dirname(__file__), '../controllers/static_data/item_log.json'), 'w') as f:
         f.write(json.dumps(item_log))
-
