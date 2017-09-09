@@ -40,7 +40,7 @@ function init() {
                     var $currentBone = $($bones[i]);
                     var boneId = $currentBone.attr('data-id');
                     var boneExp = parseFloat($currentBone.find('.exp').text());
-                    var boneSelling = -(parseInt(response[boneId]['selling']));
+                    var boneSelling = -(parseInt(response[boneId]['buying']));
                     var boneAmount = parseInt($currentBone.find('.amount').text());
 
                     $currentBone.attr('data-selling', boneSelling);
@@ -53,7 +53,7 @@ function init() {
                     var ensouledId = $currentEnsouled.attr('data-id');
                     var ensouledExp = $currentEnsouled.attr('data-exp');
                     var ensouledAmount = parseInt($currentEnsouled.find('.amount').text());
-                    var ensouledSelling = -(parseInt(response[ensouledId]['selling']));
+                    var ensouledSelling = -(parseInt(response[ensouledId]['buying']));
                     var $content = $currentEnsouled.find('.content');
 
                     for (var f = 0; f < $content.length; f++) {
@@ -80,7 +80,7 @@ function init() {
                     var $currentPlank = $($planks[i]);
                     var plankId = $currentPlank.attr('data-id');
                     var plankExp = parseFloat($currentPlank.find('.exp').text());
-                    var plankSelling = -(parseInt(response[plankId]['selling']));
+                    var plankSelling = -(parseInt(response[plankId]['buying']));
                     var plankAmount = parseInt($currentPlank.find('.amount').text());
 
                     $currentPlank.attr('data-selling', plankSelling);
@@ -162,7 +162,7 @@ function init() {
                     var potionId = $currentPotion.attr('data-id');
                     var potionExp = $currentPotion.attr('data-exp');
                     var potionAmount = parseInt($currentPotion.find('.amount').text());
-                    var potionSelling = parseInt(response[potionId]['selling']);
+                    var potionSelling = parseInt(response[potionId]['buying']);
                     var $content = $currentPotion.find('.content');
 
                     for (var f = 0; f < $content.length; f++) {
@@ -186,6 +186,46 @@ function init() {
                     $gpPerExp.text(gpPerExp);
                     $profit.text(numberCommaFormat(profit));
                     $currentPotion.attr('data-selling', potionSelling);
+                }
+
+                for (var g = 0; g < $gpPerExpColumn.length; g++) {
+                    $gpPerExpColumn[g].click();
+                    $gpPerExpColumn[g].click();
+                }
+            });
+        } else if(globals.calc_type == "Cooking") {
+            $.when(priceLookup(globals.calc_type)).done(function(response) {
+                var $food = $('.food');
+
+                for (var h = 0; h < $food.length; h++) {
+                    var $currentFood = $($food[h]);
+                    var foodId = $currentFood.attr('data-id');
+                    var foodExp = $currentFood.attr('data-exp');
+                    var foodAmount = parseInt($currentFood.find('.amount').text());
+                    var foodSelling = parseInt(response[foodId]['buying']);
+                    var $content = $currentFood.find('.content');
+
+                    for (var f = 0; f < $content.length; f++) {
+                        var $currentContent = $($content[f]);
+                        var multiple = parseInt($currentContent.attr('data-multiple'));
+                        foodSelling = foodSelling - (parseInt(response[$currentContent.attr('data-id')]['selling']) * multiple);
+                    }
+
+                    var gpPerExp = Math.round(100*(foodSelling/foodExp))/100;
+                    var profit = foodAmount*foodSelling;
+                    var $gpPerExp = $currentFood.find('.gp-per-exp');
+                    var $profit = $currentFood.find('.profit');
+
+                    if(gpPerExp > 0 && profit > 0) {
+                        $gpPerExp.addClass('positive');
+                        $profit.addClass('positive')
+                    } else {
+                        $gpPerExp.addClass('negative');
+                        $profit.addClass('negative');
+                    }
+                    $gpPerExp.text(gpPerExp);
+                    $profit.text(numberCommaFormat(profit));
+                    $currentFood.attr('data-selling', foodSelling);
                 }
 
                 for (var g = 0; g < $gpPerExpColumn.length; g++) {
@@ -411,6 +451,10 @@ $(document).ready(function() {
 
     $(document).on('click', '#herblore-submit', function () {
         calculateTargetLevel($('.potion'));
+    });
+
+    $(document).on('click', '#cooking-submit', function () {
+        calculateTargetLevel($('.food'));
     });
 
     $(document).on('click', '#magic-submit', function () {
