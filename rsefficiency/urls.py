@@ -44,6 +44,7 @@ urlpatterns = [
     url(r'^calculator/herblore-calculator$', calculator.herblore_calculator, name='herblore_calculator'),
     url(r'^calculator/magic-calculator$', calculator.magic_calculator, name='magic_calculator'),
     url(r'^calculator/cooking-calculator$', calculator.cooking_calculator, name='cooking_calculator'),
+    url(r'^calculator/crafting-calculator$', calculator.crafting_calculator, name='crafting_calculator'),
     url(r'^calculator/highscore$', calculator.highscore, name='highscore'),
     url(r'^calculator/prices', calculator.calc_prices, name='calc_prices'),
 ]

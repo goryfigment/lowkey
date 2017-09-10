@@ -82,6 +82,16 @@ def cooking_calculator(request):
     return render(request, 'calculator.html', data)
 
 
+def crafting_calculator(request):
+    data = {
+        'template': '#crafting-calculator-template',
+        'base_url': get_base_url(),
+        'calc_data': {'crafting_list': crafting_dict},
+        'calc_type': 'Crafting'
+    }
+
+    return render(request, 'calculator.html', data)
+
 def highscore(request):
     if 'username' not in request.GET and 'type' not in request.GET:
         data = {'success': False, 'error_id': 1, 'error_msg:': 'Data not set'}
@@ -124,6 +134,8 @@ def calc_prices(request):
         item_list = herblore_list
     elif calc_type == 'Cooking':
         item_list = cooking_list
+    elif calc_type == 'Crafting':
+        item_list = crafting_list
 
     urls = ['http://api.rsbuddy.com/grandExchange?a=guidePrice&i=' + i for i in item_list]
     responses = grequests.map(grequests.get(u) for u in urls)

@@ -6,6 +6,7 @@
     <h1 class="calculator" id="prayer-calculator" data-url="/calculator/prayer-calculator"><img id="prayer-image" class="skill-image" src="{{concat 'base_url' '/static/assets/calculator/prayer.png'}}"/> Prayer Calculator</h1>
     <h1 class="calculator" id="herblore-calculator" data-url="/calculator/herblore-calculator"><img id="herblore-image" class="skill-image" src="{{concat 'base_url' '/static/assets/calculator/herblore.png'}}"/> Herblore Calculator</h1>
     <h1 class="calculator" id="cooking-calculator" data-url="/calculator/cooking-calculator"><img id="cooking-image" class="skill-image" src="{{concat 'base_url' '/static/assets/calculator/cooking.png'}}"/> Cooking Calculator</h1>
+    <h1 class="calculator" id="crafting-calculator" data-url="/calculator/crafting-calculator"><img id="crafting-image" class="skill-image" src="{{concat 'base_url' '/static/assets/calculator/crafting.png'}}"/> Crafting Calculator</h1>
     <h1 class="calculator" id="construction-calculator" data-url="/calculator/construction-calculator"><img id="construction-image" class="skill-image" src="{{concat 'base_url' '/static/assets/calculator/construction.png'}}"/> Construction Calculator</h1>
 </script>
 {% endverbatim %}
@@ -469,6 +470,73 @@
         {{#each cooking_list}}
             <tr class="food" data-id="{{output.id}}" data-exp="{{exp}}">
                 <td>{{cooking_level}}</td>
+                <td> <a href="{{concat 'base_url' '/grand-exchange/' output.id}}"> <img title="{{name}}" src="{{concat 'base_url' '/static/assets/rs_items/icons/' output.file_name}}" /> </a></td>
+                <td>{{output.name}}</td>
+                <td class="ingredient">{{#each input}}<span class="content" data-id="{{id}}" data-multiple="{{multiple}}"><span class="multiple">{{multiple}}</span><a href="{{concat 'base_url' '/grand-exchange/' id}}"> <img class="ingredient-img" title="{{multiple}}x {{name}}" src="{{concat 'base_url' '/static/assets/rs_items/icons/' file_name}}" /> </a> </span>{{/each}}</td>
+                <td class="exp">{{exp}}</td>
+                <td class="gp-per-exp">-</td>
+                <td class="profit">-</td>
+                <td class="amount">{{ceil (math 83 '/' exp false) true}}</td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</script>
+{% endverbatim %}
+
+{% verbatim %}
+<script id="crafting-calculator-template" type="text/x-handlebars-template">
+    <h1 id="calculator-title">Crafting Calculator</h1>
+    <table class="table-container" id="table-details-wrapper">
+        <tbody>
+            <tr>
+                <td id="calculator-options" colspan="6">
+                    <div id="highscore-wrapper">
+                        <label id="highscore-label" for="highscore-username">Username</label>
+                        <input id="highscore-username" type="text" placeholder="Username" data-type="Crafting" />
+                        <input class="highscore-submit" type="submit" />
+                    </div>
+
+                    <div id="level-wrapper">
+                        <label for="current-level-input">Current Level</label>
+                        <input class="level-input" id="current-level-input" type="text" maxlength="2" value="1" />
+                        <label for="target-level-input">Target Level</label>
+                        <input class="level-input" id="target-level-input" type="text" maxlength="2" value="2" />
+                    </div>
+
+                    <div id="exp-wrapper">
+                        <label for="current-exp-input">Current Exp</label>
+                        <input class="exp-input" id="current-exp-input" type="text" maxlength="2" value="0" />
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="calculator-options" colspan="6">
+                    <input class="calculate-submit" id="crafting-submit" type="submit" value="Calculate" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2 class="subheaders">Craft</h2>
+
+    <table id="crafting_table" class="table-container">
+        <thead>
+            <tr>
+                <th class="sortable" scope="col">Crafting Level</th>
+                <th scope="col">Item</th>
+                <th scope="col">Name</th>
+                <th scope="col">Supplies</th>
+                <th class="sortable" scope="col">Exp</th>
+                <th class="gp-per-exp-column sortable" scope="col">GP/EXP</th>
+                <th class="sortable" scope="col">Profit</th>
+                <th class="sortable" scope="col">Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+        {{#each crafting_list}}
+            <tr class="craft" data-id="{{output.id}}" data-exp="{{exp}}">
+                <td>{{crafting_level}}</td>
                 <td> <a href="{{concat 'base_url' '/grand-exchange/' output.id}}"> <img title="{{name}}" src="{{concat 'base_url' '/static/assets/rs_items/icons/' output.file_name}}" /> </a></td>
                 <td>{{output.name}}</td>
                 <td class="ingredient">{{#each input}}<span class="content" data-id="{{id}}" data-multiple="{{multiple}}"><span class="multiple">{{multiple}}</span><a href="{{concat 'base_url' '/grand-exchange/' id}}"> <img class="ingredient-img" title="{{multiple}}x {{name}}" src="{{concat 'base_url' '/static/assets/rs_items/icons/' file_name}}" /> </a> </span>{{/each}}</td>
