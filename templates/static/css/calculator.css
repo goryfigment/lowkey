@@ -187,6 +187,10 @@
     margin: 0 3px;
 }
 
+.output_wrapper {
+    position: relative;
+}
+
 .multiple {
     position: absolute;
     left: -6px;
