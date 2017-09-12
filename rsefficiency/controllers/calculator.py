@@ -104,6 +104,17 @@ def smithing_calculator(request):
     return render(request, 'calculator.html', data)
 
 
+def fletching_calculator(request):
+    data = {
+        'template': '#fletching-calculator-template',
+        'base_url': get_base_url(),
+        'calc_data': {'fletching_list': fletching_dict},
+        'calc_type': 'Fletching'
+    }
+
+    return render(request, 'calculator.html', data)
+
+
 def highscore(request):
     if 'username' not in request.GET and 'type' not in request.GET:
         data = {'success': False, 'error_id': 1, 'error_msg:': 'Data not set'}
@@ -150,6 +161,8 @@ def calc_prices(request):
         item_list = crafting_list
     elif calc_type == 'Smithing':
         item_list = smithing_list
+    elif calc_type == 'Fletching':
+        item_list = fletching_list
 
     urls = ['http://api.rsbuddy.com/grandExchange?a=guidePrice&i=' + i for i in item_list]
     responses = grequests.map(grequests.get(u) for u in urls)

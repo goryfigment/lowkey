@@ -314,6 +314,47 @@ function init() {
                     $gpPerExpColumn[g].click();
                 }
             });
+        } else if(globals.calc_type == "Fletching") {
+            $.when(priceLookup(globals.calc_type)).done(function(response) {
+                var $item = $('.fletch');
+
+                for (var h = 0; h < $item.length; h++) {
+                    var $currentItem = $($item[h]);
+                    var itemId = $currentItem.attr('data-id');
+                    var itemExp = $currentItem.attr('data-exp');
+                    var itemAmount = parseInt($currentItem.find('.amount').text());
+                    var itemMultiple = parseInt($currentItem.find('.output').attr('data-multiple'));
+                    var itemBuying = parseInt(response[itemId]['buying']) * itemMultiple;
+                    var $content = $currentItem.find('.content');
+
+                    for (var f = 0; f < $content.length; f++) {
+                        var $currentContent = $($content[f]);
+                        var multiple = parseInt($currentContent.attr('data-multiple'));
+                        itemBuying = itemBuying - (parseInt(response[$currentContent.attr('data-id')]['selling']) * multiple);
+                    }
+
+                    var gpPerExp = Math.round(100*(itemBuying/itemExp))/100;
+                    var profit = itemAmount*itemBuying;
+                    var $gpPerExp = $currentItem.find('.gp-per-exp');
+                    var $profit = $currentItem.find('.profit');
+
+                    if(gpPerExp > 0 && profit > 0) {
+                        $gpPerExp.addClass('positive');
+                        $profit.addClass('positive')
+                    } else {
+                        $gpPerExp.addClass('negative');
+                        $profit.addClass('negative');
+                    }
+                    $gpPerExp.text(gpPerExp);
+                    $profit.text(numberCommaFormat(profit));
+                    $currentItem.attr('data-selling', itemBuying);
+                }
+
+                for (var g = 0; g < $gpPerExpColumn.length; g++) {
+                    $gpPerExpColumn[g].click();
+                    $gpPerExpColumn[g].click();
+                }
+            });
         }
     }
 }
@@ -544,6 +585,10 @@ $(document).ready(function() {
 
     $(document).on('click', '#smithing-submit', function () {
         calculateTargetLevel($('.smith'));
+    });
+
+    $(document).on('click', '#fletching-submit', function () {
+        calculateTargetLevel($('.fletch'));
     });
 
     $(document).on('click', '#magic-submit', function () {
