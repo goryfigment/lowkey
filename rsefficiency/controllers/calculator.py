@@ -183,6 +183,8 @@ def calc_prices(request):
             selling = item_log_data['selling']
             sell_quantity = 0
             sell_updated_time = item_log_data['sell_price_ts']
+            buying = item_log_data['buying']
+            buy_updated_time = item_log_data['buy_price_ts']
 
         if selling == 0:
             updated_data = ge_price_updater(item_log, item, 'sellingPrice', False)
