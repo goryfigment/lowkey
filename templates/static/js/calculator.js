@@ -40,7 +40,7 @@ function init() {
                     var $currentBone = $($bones[i]);
                     var boneId = $currentBone.attr('data-id');
                     var boneExp = parseFloat($currentBone.find('.exp').text());
-                    var boneSelling = -(parseInt(response[boneId]['buying']));
+                    var boneSelling = -(parseInt(response[boneId]['selling']));
                     var boneAmount = parseInt($currentBone.find('.amount').text());
 
                     $currentBone.attr('data-selling', boneSelling);
@@ -53,7 +53,7 @@ function init() {
                     var ensouledId = $currentEnsouled.attr('data-id');
                     var ensouledExp = $currentEnsouled.attr('data-exp');
                     var ensouledAmount = parseInt($currentEnsouled.find('.amount').text());
-                    var ensouledSelling = -(parseInt(response[ensouledId]['buying']));
+                    var ensouledSelling = -(parseInt(response[ensouledId]['selling']));
                     var $content = $currentEnsouled.find('.content');
 
                     for (var f = 0; f < $content.length; f++) {
@@ -80,7 +80,7 @@ function init() {
                     var $currentPlank = $($planks[i]);
                     var plankId = $currentPlank.attr('data-id');
                     var plankExp = parseFloat($currentPlank.find('.exp').text());
-                    var plankSelling = -(parseInt(response[plankId]['buying']));
+                    var plankSelling = -(parseInt(response[plankId]['selling']));
                     var plankAmount = parseInt($currentPlank.find('.amount').text());
 
                     $currentPlank.attr('data-selling', plankSelling);
@@ -154,209 +154,60 @@ function init() {
                 }
             });
         } else if(globals.calc_type == "Herblore") {
-            $.when(priceLookup(globals.calc_type)).done(function(response) {
-                var $potion = $('.potion');
-
-                for (var h = 0; h < $potion.length; h++) {
-                    var $currentPotion = $($potion[h]);
-                    var potionId = $currentPotion.attr('data-id');
-                    var potionExp = $currentPotion.attr('data-exp');
-                    var potionAmount = parseInt($currentPotion.find('.amount').text());
-                    var potionSelling = parseInt(response[potionId]['buying']);
-                    var $content = $currentPotion.find('.content');
-
-                    for (var f = 0; f < $content.length; f++) {
-                        var $currentContent = $($content[f]);
-                        var multiple = parseInt($currentContent.attr('data-multiple'));
-                        potionSelling = potionSelling - (parseInt(response[$currentContent.attr('data-id')]['selling']) * multiple);
-                    }
-
-                    var gpPerExp = Math.round(100*(potionSelling/potionExp))/100;
-                    var profit = potionAmount*potionSelling;
-                    var $gpPerExp = $currentPotion.find('.gp-per-exp');
-                    var $profit = $currentPotion.find('.profit');
-
-                    if(gpPerExp > 0 && profit > 0) {
-                        $gpPerExp.addClass('positive');
-                        $profit.addClass('positive')
-                    } else {
-                        $gpPerExp.addClass('negative');
-                        $profit.addClass('negative');
-                    }
-                    $gpPerExp.text(gpPerExp);
-                    $profit.text(numberCommaFormat(profit));
-                    $currentPotion.attr('data-selling', potionSelling);
-                }
-
-                for (var g = 0; g < $gpPerExpColumn.length; g++) {
-                    $gpPerExpColumn[g].click();
-                    $gpPerExpColumn[g].click();
-                }
-            });
+            fillPrices($('.potion'), false);
         } else if(globals.calc_type == "Cooking") {
-            $.when(priceLookup(globals.calc_type)).done(function(response) {
-                var $food = $('.food');
-
-                for (var h = 0; h < $food.length; h++) {
-                    var $currentFood = $($food[h]);
-                    var foodId = $currentFood.attr('data-id');
-                    var foodExp = $currentFood.attr('data-exp');
-                    var foodAmount = parseInt($currentFood.find('.amount').text());
-                    var foodSelling = parseInt(response[foodId]['buying']);
-                    var $content = $currentFood.find('.content');
-
-                    for (var f = 0; f < $content.length; f++) {
-                        var $currentContent = $($content[f]);
-                        var multiple = parseInt($currentContent.attr('data-multiple'));
-                        foodSelling = foodSelling - (parseInt(response[$currentContent.attr('data-id')]['selling']) * multiple);
-                    }
-
-                    var gpPerExp = Math.round(100*(foodSelling/foodExp))/100;
-                    var profit = foodAmount*foodSelling;
-                    var $gpPerExp = $currentFood.find('.gp-per-exp');
-                    var $profit = $currentFood.find('.profit');
-
-                    if(gpPerExp > 0 && profit > 0) {
-                        $gpPerExp.addClass('positive');
-                        $profit.addClass('positive')
-                    } else {
-                        $gpPerExp.addClass('negative');
-                        $profit.addClass('negative');
-                    }
-                    $gpPerExp.text(gpPerExp);
-                    $profit.text(numberCommaFormat(profit));
-                    $currentFood.attr('data-selling', foodSelling);
-                }
-
-                for (var g = 0; g < $gpPerExpColumn.length; g++) {
-                    $gpPerExpColumn[g].click();
-                    $gpPerExpColumn[g].click();
-                }
-            });
+            fillPrices($('.food'), false);
         } else if(globals.calc_type == "Crafting") {
-            $.when(priceLookup(globals.calc_type)).done(function(response) {
-                var $item = $('.craft');
-
-                for (var h = 0; h < $item.length; h++) {
-                    var $currentItem = $($item[h]);
-                    var itemId = $currentItem.attr('data-id');
-                    var itemExp = $currentItem.attr('data-exp');
-                    var itemAmount = parseInt($currentItem.find('.amount').text());
-                    var itemBuying = parseInt(response[itemId]['buying']);
-                    var $content = $currentItem.find('.content');
-
-                    for (var f = 0; f < $content.length; f++) {
-                        var $currentContent = $($content[f]);
-                        var multiple = parseInt($currentContent.attr('data-multiple'));
-                        itemBuying = itemBuying - (parseInt(response[$currentContent.attr('data-id')]['selling']) * multiple);
-                    }
-
-                    var gpPerExp = Math.round(100*(itemBuying/itemExp))/100;
-                    var profit = itemAmount*itemBuying;
-                    var $gpPerExp = $currentItem.find('.gp-per-exp');
-                    var $profit = $currentItem.find('.profit');
-
-                    if(gpPerExp > 0 && profit > 0) {
-                        $gpPerExp.addClass('positive');
-                        $profit.addClass('positive')
-                    } else {
-                        $gpPerExp.addClass('negative');
-                        $profit.addClass('negative');
-                    }
-                    $gpPerExp.text(gpPerExp);
-                    $profit.text(numberCommaFormat(profit));
-                    $currentItem.attr('data-selling', itemBuying);
-                }
-
-                for (var g = 0; g < $gpPerExpColumn.length; g++) {
-                    $gpPerExpColumn[g].click();
-                    $gpPerExpColumn[g].click();
-                }
-            });
+            fillPrices($('.craft'), false);
         } else if(globals.calc_type == "Smithing") {
-            $.when(priceLookup(globals.calc_type)).done(function(response) {
-                var $item = $('.smith');
-
-                for (var h = 0; h < $item.length; h++) {
-                    var $currentItem = $($item[h]);
-                    var itemId = $currentItem.attr('data-id');
-                    var itemExp = $currentItem.attr('data-exp');
-                    var itemAmount = parseInt($currentItem.find('.amount').text());
-                    var itemMultiple = parseInt($currentItem.find('.output').attr('data-multiple'));
-                    var itemBuying = parseInt(response[itemId]['buying']) * itemMultiple;
-                    var $content = $currentItem.find('.content');
-
-                    for (var f = 0; f < $content.length; f++) {
-                        var $currentContent = $($content[f]);
-                        var multiple = parseInt($currentContent.attr('data-multiple'));
-                        itemBuying = itemBuying - (parseInt(response[$currentContent.attr('data-id')]['selling']) * multiple);
-                    }
-
-                    var gpPerExp = Math.round(100*(itemBuying/itemExp))/100;
-                    var profit = itemAmount*itemBuying;
-                    var $gpPerExp = $currentItem.find('.gp-per-exp');
-                    var $profit = $currentItem.find('.profit');
-
-                    if(gpPerExp > 0 && profit > 0) {
-                        $gpPerExp.addClass('positive');
-                        $profit.addClass('positive')
-                    } else {
-                        $gpPerExp.addClass('negative');
-                        $profit.addClass('negative');
-                    }
-                    $gpPerExp.text(gpPerExp);
-                    $profit.text(numberCommaFormat(profit));
-                    $currentItem.attr('data-selling', itemBuying);
-                }
-
-                for (var g = 0; g < $gpPerExpColumn.length; g++) {
-                    $gpPerExpColumn[g].click();
-                    $gpPerExpColumn[g].click();
-                }
-            });
+            fillPrices($('.smith'), true);
         } else if(globals.calc_type == "Fletching") {
-            $.when(priceLookup(globals.calc_type)).done(function(response) {
-                var $item = $('.fletch');
-
-                for (var h = 0; h < $item.length; h++) {
-                    var $currentItem = $($item[h]);
-                    var itemId = $currentItem.attr('data-id');
-                    var itemExp = $currentItem.attr('data-exp');
-                    var itemAmount = parseInt($currentItem.find('.amount').text());
-                    var itemMultiple = parseInt($currentItem.find('.output').attr('data-multiple'));
-                    var itemBuying = parseInt(response[itemId]['buying']) * itemMultiple;
-                    var $content = $currentItem.find('.content');
-
-                    for (var f = 0; f < $content.length; f++) {
-                        var $currentContent = $($content[f]);
-                        var multiple = parseInt($currentContent.attr('data-multiple'));
-                        itemBuying = itemBuying - (parseInt(response[$currentContent.attr('data-id')]['selling']) * multiple);
-                    }
-
-                    var gpPerExp = Math.round(100*(itemBuying/itemExp))/100;
-                    var profit = itemAmount*itemBuying;
-                    var $gpPerExp = $currentItem.find('.gp-per-exp');
-                    var $profit = $currentItem.find('.profit');
-
-                    if(gpPerExp > 0 && profit > 0) {
-                        $gpPerExp.addClass('positive');
-                        $profit.addClass('positive')
-                    } else {
-                        $gpPerExp.addClass('negative');
-                        $profit.addClass('negative');
-                    }
-                    $gpPerExp.text(gpPerExp);
-                    $profit.text(numberCommaFormat(profit));
-                    $currentItem.attr('data-selling', itemBuying);
-                }
-
-                for (var g = 0; g < $gpPerExpColumn.length; g++) {
-                    $gpPerExpColumn[g].click();
-                    $gpPerExpColumn[g].click();
-                }
-            });
+            fillPrices($('.fletch'), true);
         }
     }
+}
+
+function fillPrices($item, outputHasMultiple) {
+    var $gpPerExpColumn = $('.gp-per-exp-column');
+    $.when(priceLookup(globals.calc_type)).done(function(response) {
+        for (var h = 0; h < $item.length; h++) {
+            var $currentItem = $($item[h]);
+            var itemId = $currentItem.attr('data-id');
+            var itemExp = $currentItem.attr('data-exp');
+            var itemAmount = parseInt($currentItem.find('.amount').text());
+            var itemMultiple = outputHasMultiple ? parseInt($currentItem.find('.output').attr('data-multiple')) : 1;
+            var itemBuying = parseInt(response[itemId]['buying']) * itemMultiple;
+            var $content = $currentItem.find('.content');
+
+            for (var f = 0; f < $content.length; f++) {
+                var $currentContent = $($content[f]);
+                var multiple = parseInt($currentContent.attr('data-multiple'));
+                itemBuying = itemBuying - (parseInt(response[$currentContent.attr('data-id')]['selling']) * multiple);
+            }
+
+            var gpPerExp = Math.round(100*(itemBuying/itemExp))/100;
+            var profit = itemAmount*itemBuying;
+            var $gpPerExp = $currentItem.find('.gp-per-exp');
+            var $profit = $currentItem.find('.profit');
+
+            if(gpPerExp > 0 && profit > 0) {
+                $gpPerExp.addClass('positive');
+                $profit.addClass('positive')
+            } else if(gpPerExp < 0 && profit < 0) {
+                $gpPerExp.addClass('negative');
+                $profit.addClass('negative');
+            }
+
+            $gpPerExp.text(gpPerExp);
+            $profit.text(numberCommaFormat(profit));
+            $currentItem.attr('data-selling', itemBuying);
+        }
+
+        for (var g = 0; g < $gpPerExpColumn.length; g++) {
+            $gpPerExpColumn[g].click();
+            $gpPerExpColumn[g].click();
+        }
+    });
 }
 
 function highscoreLookup(username, highscoreType) {
@@ -483,6 +334,22 @@ function fillHighscoreLevel(username, $highscoreUsername, calculateAmount) {
             localStorage.setItem("username", username);
         }
     });
+}
+
+function calculateTargetLevel($items) {
+    var targetLevel = $('#target-level-input').val();
+    var targetExp = levels[targetLevel];
+    var currentExp = parseInt($('#current-exp-input').val());
+
+    for (var i = 0; i < $items.length; i++) {
+        var $currentItem = $($items[i]);
+        var exp = parseFloat($currentItem.attr('data-exp'));
+        var selling = parseInt($currentItem.attr('data-selling'));
+        var amount = Math.ceil((targetExp - currentExp)/exp);
+
+        $currentItem.find('.amount').text(numberCommaFormat(amount));
+        $currentItem.find('.profit').text(numberCommaFormat(amount*selling));
+    }
 }
 
 function comparer(index) {
@@ -615,22 +482,6 @@ $(document).ready(function() {
             $currentItem.find('.amount').text(numberCommaFormat(amount));
         }
     });
-
-    function calculateTargetLevel($items) {
-        var targetLevel = $('#target-level-input').val();
-        var targetExp = levels[targetLevel];
-        var currentExp = parseInt($('#current-exp-input').val());
-
-        for (var i = 0; i < $items.length; i++) {
-            var $currentItem = $($items[i]);
-            var exp = parseFloat($currentItem.attr('data-exp'));
-            var selling = parseInt($currentItem.attr('data-selling'));
-            var amount = Math.ceil((targetExp - currentExp)/exp);
-
-            $currentItem.find('.amount').text(numberCommaFormat(amount));
-            $currentItem.find('.profit').text(numberCommaFormat(amount*selling));
-        }
-    }
 
     $('.sortable').click(function(){
         var $this = $(this);
